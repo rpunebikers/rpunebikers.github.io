@@ -239,9 +239,10 @@ section {
 }
 
 .nav-logo-text {
-  height: 24px;
-  width: auto;
-  object-fit: contain;
+  width: 130px;
+  height: 30px;
+  object-fit: cover;
+  object-position: center center;
 }
 
 .nav-links {
@@ -559,6 +560,15 @@ section {
   background: var(--clr-surface-2);
 }
 
+.about-visual-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  filter: invert(1) hue-rotate(180deg);
+  display: block;
+}
+
 .about-visual-placeholder {
   width: 100%;
   height: 100%;
@@ -831,9 +841,10 @@ section {
 }
 
 .footer-logo-text {
-  height: 30px;
-  width: auto;
-  object-fit: contain;
+  width: 150px;
+  height: 34px;
+  object-fit: cover;
+  object-position: center center;
 }
 .footer-brand p {
   font-size: 0.88rem;
