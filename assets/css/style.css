@@ -1209,3 +1209,132 @@ section {
 .stagger-2 { transition-delay: 0.2s; }
 .stagger-3 { transition-delay: 0.3s; }
 .stagger-4 { transition-delay: 0.4s; }
+
+/* ===== MOBILE STICKY JOIN CTA ===== */
+.mobile-join-cta {
+  display: none;
+}
+@media (max-width: 768px) {
+  .mobile-join-cta {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    padding: 0.75rem 1rem;
+    background: rgba(10, 10, 10, 0.96);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(232, 82, 10, 0.35);
+    justify-content: center;
+  }
+  .mobile-join-cta .btn {
+    width: 100%;
+    max-width: 420px;
+    justify-content: center;
+  }
+  body {
+    padding-bottom: 72px;
+  }
+}
+
+/* ===== ROUTE MAPS BUTTON ===== */
+.route-maps-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--clr-primary);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: var(--transition);
+}
+.route-maps-btn:hover {
+  color: #fff;
+}
+.route-maps-btn::before {
+  content: '↗';
+  font-size: 0.9rem;
+}
+
+/* ===== RIDER OF THE MONTH ===== */
+.rotm-banner {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.75rem 2rem;
+  background: linear-gradient(135deg, rgba(232,82,10,0.12), rgba(232,82,10,0.04));
+  border: 1px solid rgba(232,82,10,0.35);
+  border-radius: var(--radius-lg);
+  margin-top: 3rem;
+}
+.rotm-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--clr-primary);
+  margin-bottom: 0.5rem;
+}
+.rotm-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--clr-surface-2);
+  border: 2px solid var(--clr-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+.rotm-name { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.2rem; }
+.rotm-meta { font-size: 0.8rem; color: var(--clr-text-muted); }
+.rotm-quote {
+  font-style: italic;
+  font-size: 0.875rem;
+  color: var(--clr-text-muted);
+  margin-top: 0.5rem;
+  line-height: 1.6;
+  border-left: 2px solid var(--clr-primary);
+  padding-left: 0.75rem;
+}
+@media (max-width: 560px) {
+  .rotm-banner { grid-template-columns: 1fr; }
+  .rotm-avatar { width: 56px; height: 56px; font-size: 1.5rem; }
+}
+
+/* ===== INSTAGRAM CTA SECTION ===== */
+.ig-cta {
+  margin-top: 3rem;
+  padding: 2.5rem;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(131,58,180,0.1), rgba(253,29,29,0.08), rgba(252,176,69,0.06));
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-lg);
+}
+.ig-cta-icon { font-size: 2.5rem; display: block; margin-bottom: 1rem; }
+.ig-cta h3 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+.ig-cta p { color: var(--clr-text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; max-width: 44ch; margin-left: auto; margin-right: auto; }
+.ig-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: 100px;
+  background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: var(--transition);
+  border: none;
+}
+.ig-btn:hover { opacity: 0.88; transform: translateY(-2px); }
