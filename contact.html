@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contact PuneBikers — reach us on Instagram, YouTube, WhatsApp or email. Join the brotherhood." />
+  <title>Contact — PuneBikers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <nav class="navbar" aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="PuneBikers home">
+        <span class="logo-main">PuneBikers</span>
+        <span class="logo-sub">Pune's Riding Brotherhood</span>
+      </a>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="nav-links" role="list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="rides.html">Rides</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="routes.html">Routes</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="members.html">Members</a></li>
+        <li><a href="contact.html" class="btn btn-primary btn-sm nav-cta">Join Us</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main">
+
+    <header class="page-hero">
+      <div class="container">
+        <p class="page-hero-label">Get in Touch</p>
+        <h1>Join the Brotherhood</h1>
+        <p>Ready to ride? Have questions? Want to sponsor us? We'd love to hear from you.</p>
+      </div>
+    </header>
+
+    <!-- CONTACT SECTION -->
+    <section aria-labelledby="contact-title">
+      <div class="container">
+        <div class="contact-grid">
+
+          <!-- CHANNELS -->
+          <div>
+            <p class="section-label">Reach Us</p>
+            <h2 class="section-title" id="contact-title">Find Us Anywhere</h2>
+            <p class="section-desc" style="margin-bottom:2rem;">
+              We're active on all platforms. The quickest way to reach us is WhatsApp or Instagram DM.
+            </p>
+
+            <div class="contact-channels">
+              <a href="#" class="contact-channel" rel="noopener" aria-label="Follow us on Instagram">
+                <div class="contact-channel-icon" aria-hidden="true">📸</div>
+                <div class="contact-channel-info">
+                  <h3>Instagram</h3>
+                  <p>@punebikers · Daily ride content, stories &amp; reels</p>
+                </div>
+              </a>
+
+              <a href="#" class="contact-channel" rel="noopener" aria-label="Subscribe on YouTube">
+                <div class="contact-channel-icon" aria-hidden="true">▶️</div>
+                <div class="contact-channel-info">
+                  <h3>YouTube</h3>
+                  <p>PuneBikers · Full ride vlogs, route guides &amp; reviews</p>
+                </div>
+              </a>
+
+              <a href="#" class="contact-channel" rel="noopener" aria-label="Join our WhatsApp group">
+                <div class="contact-channel-icon" aria-hidden="true">💬</div>
+                <div class="contact-channel-info">
+                  <h3>WhatsApp Group</h3>
+                  <p>120+ riders · Ride plans, alerts &amp; community chat</p>
+                </div>
+              </a>
+
+              <a href="mailto:hello@punebikers.in" class="contact-channel" aria-label="Email us">
+                <div class="contact-channel-icon" aria-hidden="true">✉️</div>
+                <div class="contact-channel-info">
+                  <h3>Email</h3>
+                  <p>hello@punebikers.in · Sponsorships, press, partnerships</p>
+                </div>
+              </a>
+
+              <a href="#" class="contact-channel" rel="noopener" aria-label="Follow on Facebook">
+                <div class="contact-channel-icon" aria-hidden="true">👥</div>
+                <div class="contact-channel-info">
+                  <h3>Facebook</h3>
+                  <p>PuneBikers · Events, groups &amp; long-form ride reports</p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- FORM -->
+          <div>
+            <p class="section-label">Send a Message</p>
+            <h2 class="section-title">Get in Touch</h2>
+            <p class="section-desc" style="margin-bottom:2rem;">
+              Whether you want to join a ride, ask about membership, or explore sponsorship opportunities — fill out the form below.
+            </p>
+
+            <form class="contact-form" novalidate aria-label="Contact form">
+              <div class="form-group">
+                <label for="name">Your Name <span aria-hidden="true">*</span></label>
+                <input type="text" id="name" name="name" placeholder="Arjun Patil" required autocomplete="name" />
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email Address <span aria-hidden="true">*</span></label>
+                <input type="email" id="email" name="email" placeholder="arjun@example.com" required autocomplete="email" />
+              </div>
+
+              <div class="form-group">
+                <label for="phone">Phone / WhatsApp</label>
+                <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" autocomplete="tel" />
+              </div>
+
+              <div class="form-group">
+                <label for="subject">Subject <span aria-hidden="true">*</span></label>
+                <select id="subject" name="subject" required>
+                  <option value="" disabled selected>Select a reason…</option>
+                  <option value="join">Join PuneBikers</option>
+                  <option value="ride">Upcoming Ride Enquiry</option>
+                  <option value="event">Event Registration</option>
+                  <option value="sponsor">Sponsorship / Partnership</option>
+                  <option value="media">Media / Press</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="bike">Your Motorcycle</label>
+                <input type="text" id="bike" name="bike" placeholder="Royal Enfield Himalayan 450" />
+              </div>
+
+              <div class="form-group">
+                <label for="message">Message <span aria-hidden="true">*</span></label>
+                <textarea id="message" name="message" placeholder="Tell us about yourself, your riding experience, or your question…" required></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
+                Send Message
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- JOIN SECTION -->
+    <section style="background:var(--clr-surface);" aria-labelledby="membership-title">
+      <div class="container">
+        <p class="section-label">Membership</p>
+        <h2 class="section-title" id="membership-title">How to Join PuneBikers</h2>
+
+        <div class="about-values" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr));margin-top:2.5rem;">
+          <div class="about-value fade-up">
+            <span class="about-value-icon" aria-hidden="true">1️⃣</span>
+            <div class="about-value-text">
+              <h4>Reach Out</h4>
+              <p>Fill the form or DM us on Instagram/WhatsApp</p>
+            </div>
+          </div>
+          <div class="about-value fade-up stagger-1">
+            <span class="about-value-icon" aria-hidden="true">2️⃣</span>
+            <div class="about-value-text">
+              <h4>Attend a Meetup</h4>
+              <p>Come to our monthly meetup to meet the team</p>
+            </div>
+          </div>
+          <div class="about-value fade-up stagger-2">
+            <span class="about-value-icon" aria-hidden="true">3️⃣</span>
+            <div class="about-value-text">
+              <h4>Join a Ride</h4>
+              <p>Participate in a beginner-friendly group ride</p>
+            </div>
+          </div>
+          <div class="about-value fade-up stagger-3">
+            <span class="about-value-icon" aria-hidden="true">4️⃣</span>
+            <div class="about-value-text">
+              <h4>Welcome to the Brotherhood</h4>
+              <p>You're officially part of PuneBikers!</p>
+            </div>
+          </div>
+        </div>
+
+        <p style="color:var(--clr-text-muted);font-size:0.9rem;margin-top:2.5rem;text-align:center;">
+          Membership is open to all riders. Annual fee covers event organisation, route planning, and community support.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="logo-main">PuneBikers</span>
+          <span class="logo-sub">Pune's Riding Brotherhood</span>
+          <p>Two wheels, one tribe. Riding together since 2018 across India's most epic roads.</p>
+          <div class="footer-socials" aria-label="Social media links">
+            <a href="#" class="social-btn" aria-label="Instagram" rel="noopener">📸</a>
+            <a href="#" class="social-btn" aria-label="YouTube" rel="noopener">▶️</a>
+            <a href="#" class="social-btn" aria-label="WhatsApp" rel="noopener">💬</a>
+            <a href="#" class="social-btn" aria-label="Facebook" rel="noopener">👥</a>
+          </div>
+        </div>
+        <nav class="footer-col" aria-label="Quick links">
+          <h4>Quick Links</h4>
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="rides.html">Rides</a>
+          <a href="gallery.html">Gallery</a>
+        </nav>
+        <nav class="footer-col" aria-label="Community links">
+          <h4>Community</h4>
+          <a href="routes.html">Routes</a>
+          <a href="events.html">Events</a>
+          <a href="members.html">Members</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a href="mailto:hello@punebikers.in">hello@punebikers.in</a>
+          <a href="#">WhatsApp Group</a>
+          <a href="#">Instagram @punebikers</a>
+          <a href="#">YouTube Channel</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 PuneBikers. All rights reserved.</p>
+        <p>Ride safe. Gear up. Respect the road.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

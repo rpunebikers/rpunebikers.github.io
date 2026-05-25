@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="PuneBikers photo gallery — motorcycle photography, group rides, cinematic visuals from our journeys." />
+  <title>Gallery — PuneBikers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    .full-gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+    .full-gallery-item {
+      position: relative;
+      aspect-ratio: 4/3;
+      background: var(--clr-surface-2);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .full-gallery-item.tall { aspect-ratio: 3/4; }
+    .full-gallery-item.wide { grid-column: span 2; aspect-ratio: 16/7; }
+
+    .full-gallery-item .gallery-placeholder {
+      border-radius: var(--radius-md);
+      font-size: 3rem;
+    }
+    .full-gallery-item:hover .gallery-placeholder {
+      transform: scale(1.06);
+      opacity: 0.4;
+    }
+    .full-gallery-item .gallery-overlay {
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      padding: 1.25rem;
+    }
+    .full-gallery-item:hover .gallery-overlay { opacity: 1; }
+
+    @media (max-width: 600px) {
+      .full-gallery-item.wide { grid-column: span 1; aspect-ratio: 4/3; }
+    }
+
+    .gallery-cat-filter {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <nav class="navbar" aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="PuneBikers home">
+        <span class="logo-main">PuneBikers</span>
+        <span class="logo-sub">Pune's Riding Brotherhood</span>
+      </a>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="nav-links" role="list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="rides.html">Rides</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="routes.html">Routes</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="members.html">Members</a></li>
+        <li><a href="contact.html" class="btn btn-primary btn-sm nav-cta">Join Us</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main">
+
+    <header class="page-hero">
+      <div class="container">
+        <p class="page-hero-label">Photo Gallery</p>
+        <h1>Moments on the Road</h1>
+        <p>Every frame tells a story of adventure, brotherhood, and the open road.</p>
+      </div>
+    </header>
+
+    <section aria-labelledby="gallery-main-title">
+      <div class="container">
+        <div class="gallery-cat-filter" role="group" aria-label="Filter gallery by category">
+          <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+          <button class="filter-btn" data-filter="ladakh" aria-pressed="false">Ladakh</button>
+          <button class="filter-btn" data-filter="ghats" aria-pressed="false">Ghats</button>
+          <button class="filter-btn" data-filter="coastal" aria-pressed="false">Coastal</button>
+          <button class="filter-btn" data-filter="group" aria-pressed="false">Group Shots</button>
+          <button class="filter-btn" data-filter="bikes" aria-pressed="false">Bikes</button>
+        </div>
+
+        <div class="full-gallery-grid" role="list" aria-label="Photo gallery">
+
+          <div class="full-gallery-item wide fade-up" role="listitem" data-category="ladakh">
+            <div class="gallery-placeholder" aria-hidden="true">🏔️</div>
+            <div class="gallery-overlay"><span>Khardung La Pass, 5,359m — Ladakh 2024</span></div>
+          </div>
+
+          <div class="full-gallery-item fade-up" role="listitem" data-category="group">
+            <div class="gallery-placeholder" aria-hidden="true">🏍️</div>
+            <div class="gallery-overlay"><span>Team PuneBikers — Annual Group Photo 2024</span></div>
+          </div>
+
+          <div class="full-gallery-item tall fade-up stagger-1" role="listitem" data-category="ghats">
+            <div class="gallery-placeholder" aria-hidden="true">🌿</div>
+            <div class="gallery-overlay"><span>Tamhini Ghats — Monsoon Season</span></div>
+          </div>
+
+          <div class="full-gallery-item fade-up stagger-2" role="listitem" data-category="coastal">
+            <div class="gallery-placeholder" aria-hidden="true">🌊</div>
+            <div class="gallery-overlay"><span>Konkan Coast — NH66 Sunrise</span></div>
+          </div>
+
+          <div class="full-gallery-item fade-up" role="listitem" data-category="bikes">
+            <div class="gallery-placeholder" aria-hidden="true">🔥</div>
+            <div class="gallery-overlay"><span>Royal Enfield Himalayan — Ladakh Basecamp</span></div>
+          </div>
+
+          <div class="full-gallery-item fade-up stagger-1" role="listitem" data-category="ladakh">
+            <div class="gallery-placeholder" aria-hidden="true">🏕️</div>
+            <div class="gallery-overlay"><span>Camp Pangong — Stars Over the Lake</span></div>
+          </div>
+
+          <div class="full-gallery-item wide fade-up stagger-2" role="listitem" data-category="group">
+            <div class="gallery-placeholder" aria-hidden="true">🌅</div>
+            <div class="gallery-overlay"><span>Dawn Departure — Monsoon Ghats Ride 2024</span></div>
+          </div>
+
+          <div class="full-gallery-item fade-up" role="listitem" data-category="ghats">
+            <div class="gallery-placeholder" aria-hidden="true">🌄</div>
+            <div class="gallery-overlay"><span>Mahabaleshwar Valley View</span></div>
+          </div>
+
+          <div class="full-gallery-item fade-up stagger-1" role="listitem" data-category="bikes">
+            <div class="gallery-placeholder" aria-hidden="true">🛣️</div>
+            <div class="gallery-overlay"><span>Karnataka Highways — Empty Roads at Dawn</span></div>
+          </div>
+
+          <div class="full-gallery-item tall fade-up stagger-2" role="listitem" data-category="coastal">
+            <div class="gallery-placeholder" aria-hidden="true">🌴</div>
+            <div class="gallery-overlay"><span>Goa Beach Stop — Konkan Cruise</span></div>
+          </div>
+
+          <div class="full-gallery-item fade-up" role="listitem" data-category="ladakh">
+            <div class="gallery-placeholder" aria-hidden="true">❄️</div>
+            <div class="gallery-overlay"><span>Chang La Pass — Snow in June</span></div>
+          </div>
+
+          <div class="full-gallery-item fade-up stagger-1" role="listitem" data-category="group">
+            <div class="gallery-placeholder" aria-hidden="true">🤝</div>
+            <div class="gallery-overlay"><span>Monthly Meetup — FC Road, Pune</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="logo-main">PuneBikers</span>
+          <span class="logo-sub">Pune's Riding Brotherhood</span>
+          <p>Two wheels, one tribe. Riding together since 2018 across India's most epic roads.</p>
+          <div class="footer-socials" aria-label="Social media links">
+            <a href="#" class="social-btn" aria-label="Instagram" rel="noopener">📸</a>
+            <a href="#" class="social-btn" aria-label="YouTube" rel="noopener">▶️</a>
+            <a href="#" class="social-btn" aria-label="WhatsApp" rel="noopener">💬</a>
+            <a href="#" class="social-btn" aria-label="Facebook" rel="noopener">👥</a>
+          </div>
+        </div>
+        <nav class="footer-col" aria-label="Quick links">
+          <h4>Quick Links</h4>
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="rides.html">Rides</a>
+          <a href="gallery.html">Gallery</a>
+        </nav>
+        <nav class="footer-col" aria-label="Community links">
+          <h4>Community</h4>
+          <a href="routes.html">Routes</a>
+          <a href="events.html">Events</a>
+          <a href="members.html">Members</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a href="mailto:hello@punebikers.in">hello@punebikers.in</a>
+          <a href="#">WhatsApp Group</a>
+          <a href="#">Instagram @punebikers</a>
+          <a href="#">YouTube Channel</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 PuneBikers. All rights reserved.</p>
+        <p>Ride safe. Gear up. Respect the road.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    // Gallery category filter
+    document.querySelectorAll('.gallery-cat-filter .filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.gallery-cat-filter .filter-btn').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
+        const filter = btn.dataset.filter;
+        document.querySelectorAll('.full-gallery-item').forEach(item => {
+          item.style.display = (filter === 'all' || item.dataset.category === filter) ? '' : 'none';
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="The PuneBikers story — our mission, riding philosophy, and safety culture." />
+  <title>About — PuneBikers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    .timeline { position: relative; margin-top: 3rem; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 28px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--clr-primary), transparent);
+    }
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .timeline-dot {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--clr-surface-2);
+      border: 2px solid var(--clr-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .timeline-content {
+      padding: 1.25rem;
+      background: var(--clr-glass-bg);
+      border: 1px solid var(--clr-glass-border);
+      border-radius: var(--radius-md);
+    }
+    .timeline-year {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--clr-primary);
+      margin-bottom: 0.4rem;
+    }
+    .timeline-content h3 { font-size: 1rem; font-family: var(--font-body); font-weight: 700; margin-bottom: 0.4rem; }
+    .timeline-content p { font-size: 0.85rem; color: var(--clr-text-muted); line-height: 1.6; }
+
+    .philosophy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .philosophy-card {
+      padding: 2rem;
+      background: var(--clr-glass-bg);
+      border: 1px solid var(--clr-glass-border);
+      border-radius: var(--radius-lg);
+      transition: var(--transition);
+    }
+    .philosophy-card:hover { border-color: rgba(232,82,10,0.3); transform: translateY(-3px); }
+    .philosophy-card-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .philosophy-card h3 { font-size: 1.15rem; margin-bottom: 0.6rem; }
+    .philosophy-card p { font-size: 0.875rem; color: var(--clr-text-muted); line-height: 1.7; }
+  </style>
+</head>
+<body>
+
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <nav class="navbar" aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="PuneBikers home">
+        <span class="logo-main">PuneBikers</span>
+        <span class="logo-sub">Pune's Riding Brotherhood</span>
+      </a>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="nav-links" role="list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="rides.html">Rides</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="routes.html">Routes</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="members.html">Members</a></li>
+        <li><a href="contact.html" class="btn btn-primary btn-sm nav-cta">Join Us</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main">
+
+    <header class="page-hero">
+      <div class="container">
+        <p class="page-hero-label">About PuneBikers</p>
+        <h1>Our Story</h1>
+        <p>Born on Pune's roads. Raised by adventure. Built by brotherhood.</p>
+      </div>
+    </header>
+
+    <!-- MISSION -->
+    <section>
+      <div class="container">
+        <div class="about-grid">
+          <div>
+            <p class="section-label">Mission</p>
+            <h2 class="section-title">Why We Ride</h2>
+            <p class="section-desc" style="margin-bottom:1.5rem;">
+              PuneBikers was founded on a simple belief: motorcycles are not just vehicles — they're a way of life.
+              They demand presence, reward discipline, and grant a freedom that no other machine can.
+            </p>
+            <p class="section-desc" style="margin-bottom:1.5rem;">
+              Our mission is to build a community where every rider, regardless of experience, feels welcome,
+              safe, and inspired to explore further than they ever thought possible.
+            </p>
+            <p class="section-desc">
+              We organise rides, promote responsible motorcycling, mentor new riders, and create memories
+              that last a lifetime.
+            </p>
+          </div>
+          <div class="about-visual fade-up" aria-hidden="true">
+            <div class="about-visual-placeholder">🛣️</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section style="background:var(--clr-surface);" aria-labelledby="history-title">
+      <div class="container">
+        <p class="section-label">History</p>
+        <h2 class="section-title" id="history-title">The Journey So Far</h2>
+
+        <div class="timeline" role="list">
+          <div class="timeline-item fade-up" role="listitem">
+            <div class="timeline-dot" aria-hidden="true">🔥</div>
+            <div class="timeline-content">
+              <p class="timeline-year">2018 — The Beginning</p>
+              <h3>5 Friends. One Dream.</h3>
+              <p>Five riders met at a chai dhaba after a solo Sunday ride and decided to make it a regular thing. PuneBikers was born.</p>
+            </div>
+          </div>
+          <div class="timeline-item fade-up stagger-1" role="listitem">
+            <div class="timeline-dot" aria-hidden="true">📍</div>
+            <div class="timeline-content">
+              <p class="timeline-year">2019 — First Major Ride</p>
+              <h3>Goa or Bust</h3>
+              <p>Our first organized overnight trip. 18 riders, two breakdowns, zero regrets. The legend of PuneBikers began here.</p>
+            </div>
+          </div>
+          <div class="timeline-item fade-up stagger-2" role="listitem">
+            <div class="timeline-dot" aria-hidden="true">🤝</div>
+            <div class="timeline-content">
+              <p class="timeline-year">2021 — Community Grows</p>
+              <h3>50 Riders Strong</h3>
+              <p>Despite a global pandemic, our community doubled. Virtual meetups kept the spirit alive until we could ride again.</p>
+            </div>
+          </div>
+          <div class="timeline-item fade-up stagger-3" role="listitem">
+            <div class="timeline-dot" aria-hidden="true">🏔️</div>
+            <div class="timeline-content">
+              <p class="timeline-year">2022 — Ladakh</p>
+              <h3>The High Point</h3>
+              <p>Our first Ladakh expedition — 12 riders, 2,200 km, and a peak at Khardung La. A milestone we'll never forget.</p>
+            </div>
+          </div>
+          <div class="timeline-item fade-up" role="listitem">
+            <div class="timeline-dot" aria-hidden="true">⭐</div>
+            <div class="timeline-content">
+              <p class="timeline-year">2025 — Today</p>
+              <h3>120+ Riders. Countless Roads.</h3>
+              <p>We now organise monthly rides, annual expeditions, safety workshops, and mentorship for new riders.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHILOSOPHY -->
+    <section aria-labelledby="philosophy-title">
+      <div class="container">
+        <p class="section-label">Philosophy</p>
+        <h2 class="section-title" id="philosophy-title">How We Ride</h2>
+
+        <div class="philosophy-grid">
+          <div class="philosophy-card fade-up">
+            <div class="philosophy-card-icon" aria-hidden="true">🛡️</div>
+            <h3>Safety Is Not Optional</h3>
+            <p>Full gear is mandatory on all group rides. No exceptions. We believe arriving is more important than speed.</p>
+          </div>
+          <div class="philosophy-card fade-up stagger-1">
+            <div class="philosophy-card-icon" aria-hidden="true">🤝</div>
+            <h3>No Rider Left Behind</h3>
+            <p>We ride as a unit. Pace is set by the group, not the fastest rider. Every pit stop waits for the last bike.</p>
+          </div>
+          <div class="philosophy-card fade-up stagger-2">
+            <div class="philosophy-card-icon" aria-hidden="true">🌿</div>
+            <h3>Respect the Road</h3>
+            <p>Leave every place better than you found it. No littering. No reckless riding through villages or wildlife zones.</p>
+          </div>
+          <div class="philosophy-card fade-up stagger-3">
+            <div class="philosophy-card-icon" aria-hidden="true">📖</div>
+            <h3>Always Learning</h3>
+            <p>We run regular riding workshops, first-aid training, and mechanical basics. A better rider is a safer rider.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SAFETY CULTURE -->
+    <section style="background:var(--clr-surface);" aria-labelledby="safety-title">
+      <div class="container">
+        <p class="section-label">Safety Culture</p>
+        <h2 class="section-title" id="safety-title">Gear Up. Every Time.</h2>
+        <p class="section-desc">Our safety checklist isn't a formality — it's how we make sure everyone comes home.</p>
+
+        <div class="about-values" style="margin-top:2.5rem;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));">
+          <div class="about-value fade-up">
+            <span class="about-value-icon" aria-hidden="true">⛑️</span>
+            <div class="about-value-text">
+              <h4>Full-Face Helmet</h4>
+              <p>ISI/DOT certified required</p>
+            </div>
+          </div>
+          <div class="about-value fade-up stagger-1">
+            <span class="about-value-icon" aria-hidden="true">🧥</span>
+            <div class="about-value-text">
+              <h4>Riding Jacket</h4>
+              <p>Armoured or padded</p>
+            </div>
+          </div>
+          <div class="about-value fade-up stagger-2">
+            <span class="about-value-icon" aria-hidden="true">🥊</span>
+            <div class="about-value-text">
+              <h4>Gloves</h4>
+              <p>Riding-grade, knuckle protection</p>
+            </div>
+          </div>
+          <div class="about-value fade-up stagger-3">
+            <span class="about-value-icon" aria-hidden="true">👢</span>
+            <div class="about-value-text">
+              <h4>Riding Boots</h4>
+              <p>Ankle protection minimum</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:3rem;text-align:center;">
+          <a href="contact.html" class="btn btn-primary">Join the Brotherhood</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="logo-main">PuneBikers</span>
+          <span class="logo-sub">Pune's Riding Brotherhood</span>
+          <p>Two wheels, one tribe. Riding together since 2018 across India's most epic roads.</p>
+          <div class="footer-socials" aria-label="Social media links">
+            <a href="#" class="social-btn" aria-label="Instagram" rel="noopener">📸</a>
+            <a href="#" class="social-btn" aria-label="YouTube" rel="noopener">▶️</a>
+            <a href="#" class="social-btn" aria-label="WhatsApp" rel="noopener">💬</a>
+            <a href="#" class="social-btn" aria-label="Facebook" rel="noopener">👥</a>
+          </div>
+        </div>
+        <nav class="footer-col" aria-label="Quick links">
+          <h4>Quick Links</h4>
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="rides.html">Rides</a>
+          <a href="gallery.html">Gallery</a>
+        </nav>
+        <nav class="footer-col" aria-label="Community links">
+          <h4>Community</h4>
+          <a href="routes.html">Routes</a>
+          <a href="events.html">Events</a>
+          <a href="members.html">Members</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a href="mailto:hello@punebikers.in">hello@punebikers.in</a>
+          <a href="#">WhatsApp Group</a>
+          <a href="#">Instagram @punebikers</a>
+          <a href="#">YouTube Channel</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 PuneBikers. All rights reserved.</p>
+        <p>Ride safe. Gear up. Respect the road.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
