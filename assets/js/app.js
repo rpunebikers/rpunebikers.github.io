@@ -186,19 +186,37 @@
       });
       if (!valid) return;
 
-      const name      = form.querySelector('#name')?.value.trim()    || '';
-      const email     = form.querySelector('#email')?.value.trim()   || '';
-      const phone     = form.querySelector('#phone')?.value.trim()   || '';
-      const subjectEl = form.querySelector('#subject');
-      const subjectTxt = subjectEl?.options[subjectEl.selectedIndex]?.text || 'General Enquiry';
-      const bike      = form.querySelector('#bike')?.value.trim()    || '';
-      const message   = form.querySelector('#message')?.value.trim() || '';
+      const val = id => form.querySelector(`#${id}`)?.value.trim() || '';
+      const sel = id => { const el = form.querySelector(`#${id}`); return el?.options[el.selectedIndex]?.value ? el.options[el.selectedIndex].text : ''; };
+
+      const name       = val('name');
+      const email      = val('email');
+      const phone      = val('phone');
+      const subjectTxt = sel('subject') || 'General Enquiry';
+      const bike       = val('bike');
+      const experience = sel('experience');
+      const helmet     = sel('helmet');
+      const jacket     = sel('jacket');
+      const pants      = sel('pants');
+      const boots      = sel('boots');
+      const gloves     = sel('gloves');
+      const message    = val('message');
+
+      const gearLines = [
+        helmet  ? `Helmet: ${helmet}`         : null,
+        jacket  ? `Jacket: ${jacket}`         : null,
+        pants   ? `Pants: ${pants}`           : null,
+        boots   ? `Boots: ${boots}`           : null,
+        gloves  ? `Gloves: ${gloves}`         : null,
+      ].filter(Boolean);
 
       const body = [
-        `Name: ${name}`,
-        `Email: ${email}`,
-        phone ? `Phone / WhatsApp: ${phone}` : null,
-        bike  ? `Motorcycle: ${bike}`         : null,
+        name       ? `Name: ${name}`                        : null,
+        email      ? `Email: ${email}`                      : null,
+        phone      ? `Phone / WhatsApp: ${phone}`           : null,
+        bike       ? `Motorcycle: ${bike}`                  : null,
+        experience ? `Riding Experience: ${experience}`     : null,
+        gearLines.length ? `\nSafety Gear:\n${gearLines.join('\n')}` : null,
         '',
         message,
       ].filter(l => l !== null).join('\n');
