@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="PuneBikers ride archive — past rides, upcoming rides, ride reports and route highlights." />
+  <title>Rides — PuneBikers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <nav class="navbar" aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="PuneBikers home">
+        <span class="logo-main">r/PuneBikers</span>
+        <span class="logo-sub">Pune's Riding Brotherhood</span>
+      </a>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="nav-links" role="list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="rides.html">Rides</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="routes.html">Routes</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="members.html">Members</a></li>
+        <li><a href="contact.html" class="btn btn-primary btn-sm nav-cta">Join Us</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main">
+
+    <header class="page-hero">
+      <div class="container">
+        <p class="page-hero-label">Ride Archive</p>
+        <h1>Every Road. Every Story.</h1>
+        <p>From dawn escapes in the Ghats to week-long Himalayan expeditions — these are our rides.</p>
+      </div>
+    </header>
+
+    <!-- UPCOMING RIDES -->
+    <section aria-labelledby="upcoming-title">
+      <div class="container">
+        <p class="section-label">Upcoming</p>
+        <h2 class="section-title" id="upcoming-title">Next on the Calendar</h2>
+
+        <div class="rides-grid">
+          <article class="ride-card fade-up" data-type="ghats">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🌿</div>
+              <span class="ride-card-badge" style="background:var(--clr-accent);color:#000;">Upcoming</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📍 Tamhini Ghats</span>
+                <span>📏 180 km</span>
+                <span>📅 Jul 12</span>
+              </div>
+              <h3 class="ride-card-title">Monsoon Ghats Escape</h3>
+              <p class="ride-card-desc">Waterfalls, mist, and winding ghat roads. The Ghats in July are like riding through a painting.</p>
+            </div>
+          </article>
+
+          <article class="ride-card fade-up stagger-1" data-type="touring">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🏜️</div>
+              <span class="ride-card-badge" style="background:var(--clr-accent);color:#000;">Upcoming</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📍 Rajasthan</span>
+                <span>📏 3,200 km</span>
+                <span>📅 Sep 20</span>
+              </div>
+              <h3 class="ride-card-title">Rajasthan Desert Run</h3>
+              <p class="ride-card-desc">Jaisalmer, Jodhpur, Jaipur — the golden triangle by motorcycle. Ten days, one unforgettable loop.</p>
+            </div>
+          </article>
+
+          <article class="ride-card fade-up stagger-2" data-type="weekend">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🏕️</div>
+              <span class="ride-card-badge" style="background:var(--clr-accent);color:#000;">Upcoming</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📍 Lonavala</span>
+                <span>📏 120 km</span>
+                <span>📅 Aug 3</span>
+              </div>
+              <h3 class="ride-card-title">Overnight Lonavala Camp</h3>
+              <p class="ride-card-desc">Evening ride up to Lonavala, bonfire, stargazing, and a morning descent. Perfect weekend escape.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAST RIDES -->
+    <section style="background:var(--clr-surface);" aria-labelledby="past-rides-title">
+      <div class="container">
+        <p class="section-label">Archive</p>
+        <h2 class="section-title" id="past-rides-title">Roads We've Ridden</h2>
+
+        <div class="rides-filter" role="group" aria-label="Filter rides by type">
+          <button class="filter-btn active" data-filter="all" aria-pressed="true">All Rides</button>
+          <button class="filter-btn" data-filter="highway" aria-pressed="false">Highway</button>
+          <button class="filter-btn" data-filter="ghats" aria-pressed="false">Ghats</button>
+          <button class="filter-btn" data-filter="coastal" aria-pressed="false">Coastal</button>
+          <button class="filter-btn" data-filter="touring" aria-pressed="false">Touring</button>
+          <button class="filter-btn" data-filter="weekend" aria-pressed="false">Weekend</button>
+        </div>
+
+        <div class="rides-grid">
+          <article class="ride-card fade-up" data-type="highway">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🏔️</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📍 Ladakh</span>
+                <span>📏 2,400 km</span>
+                <span>📅 Jun 2024</span>
+              </div>
+              <h3 class="ride-card-title">Ladakh Expedition 2024</h3>
+              <p class="ride-card-desc">15 days, 12 riders. Khardung La, Chang La, Pangong Tso. Our highest achievement yet.</p>
+            </div>
+          </article>
+
+          <article class="ride-card fade-up stagger-1" data-type="coastal">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🌊</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📍 Konkan</span>
+                <span>📏 680 km</span>
+                <span>📅 Feb 2024</span>
+              </div>
+              <h3 class="ride-card-title">Konkan Coastal Cruise</h3>
+              <p class="ride-card-desc">NH66 along the Konkan coast. Fresh seafood, sea breeze, and perfect tarmac all the way to Goa.</p>
+            </div>
+          </article>
+
+          <article class="ride-card fade-up stagger-2" data-type="ghats">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🌄</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📍 Mahabaleshwar</span>
+                <span>📏 240 km</span>
+                <span>📅 Jan 2024</span>
+              </div>
+              <h3 class="ride-card-title">Mahabaleshwar Winter Ride</h3>
+              <p class="ride-card-desc">Cold air, strawberry farms, and valley viewpoints. A PuneBikers New Year tradition.</p>
+            </div>
+          </article>
+
+          <article class="ride-card fade-up" data-type="touring">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🐘</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📍 Kerala</span>
+                <span>📏 1,800 km</span>
+                <span>📅 Dec 2023</span>
+              </div>
+              <h3 class="ride-card-title">God's Own Country Tour</h3>
+              <p class="ride-card-desc">Kerala's backwaters, hill stations, and temple towns. Eight days of pure south Indian soul.</p>
+            </div>
+          </article>
+
+          <article class="ride-card fade-up stagger-1" data-type="weekend">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🌅</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📍 Alibaug</span>
+                <span>📏 160 km</span>
+                <span>📅 Nov 2023</span>
+              </div>
+              <h3 class="ride-card-title">Alibaug Beach Run</h3>
+              <p class="ride-card-desc">Quick escape to the coast. Sunrise on the beach, filter coffee, and the open road back.</p>
+            </div>
+          </article>
+
+          <article class="ride-card fade-up stagger-2" data-type="highway">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🕌</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📍 Hampi</span>
+                <span>📏 900 km</span>
+                <span>📅 Oct 2023</span>
+              </div>
+              <h3 class="ride-card-title">Hampi Heritage Ride</h3>
+              <p class="ride-card-desc">Ancient ruins, boulder landscapes, and Karnataka's famous highways. History meets motorcycles.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="logo-main">r/PuneBikers</span>
+          <span class="logo-sub">Pune's Riding Brotherhood</span>
+          <p>10k+ Reddit community. 314 active WhatsApp riders. Riding together since 2018 across India's most epic roads.</p>
+          <div class="footer-socials" aria-label="Social media links">
+            <a href="https://www.instagram.com/r.pune.bikers/" class="social-btn" aria-label="Instagram" rel="noopener">📸</a>
+            <a href="#" class="social-btn" aria-label="WhatsApp" rel="noopener">💬</a>
+          </div>
+        </div>
+        <nav class="footer-col" aria-label="Quick links">
+          <h4>Quick Links</h4>
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="rides.html">Rides</a>
+          <a href="gallery.html">Gallery</a>
+        </nav>
+        <nav class="footer-col" aria-label="Community links">
+          <h4>Community</h4>
+          <a href="routes.html">Routes</a>
+          <a href="events.html">Events</a>
+          <a href="members.html">Members</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a href="mailto:hello@punebikers.in">hello@punebikers.in</a>
+          <a href="#">WhatsApp Group</a>
+          <a href="#">Instagram @r.pune.bikers</a>
+          <a href="#">YouTube Channel</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 PuneBikers. All rights reserved.</p>
+        <p>Ride safe. Gear up. Respect the road.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
