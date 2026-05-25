@@ -168,21 +168,59 @@
     item.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
   });
 
-  // ── Contact form ──
+  // ── Contact form → Reddit modmail ──
   const form = document.querySelector('.contact-form');
   if (form) {
     form.addEventListener('submit', e => {
       e.preventDefault();
+
+      // Basic required-field validation
+      const required = form.querySelectorAll('[required]');
+      let valid = true;
+      required.forEach(field => {
+        field.style.borderColor = '';
+        if (!field.value.trim()) {
+          field.style.borderColor = '#e8520a';
+          valid = false;
+        }
+      });
+      if (!valid) return;
+
+      const name      = form.querySelector('#name')?.value.trim()    || '';
+      const email     = form.querySelector('#email')?.value.trim()   || '';
+      const phone     = form.querySelector('#phone')?.value.trim()   || '';
+      const subjectEl = form.querySelector('#subject');
+      const subjectTxt = subjectEl?.options[subjectEl.selectedIndex]?.text || 'General Enquiry';
+      const bike      = form.querySelector('#bike')?.value.trim()    || '';
+      const message   = form.querySelector('#message')?.value.trim() || '';
+
+      const body = [
+        `Name: ${name}`,
+        `Email: ${email}`,
+        phone ? `Phone / WhatsApp: ${phone}` : null,
+        bike  ? `Motorcycle: ${bike}`         : null,
+        '',
+        message,
+      ].filter(l => l !== null).join('\n');
+
+      const subject = `[${subjectTxt}] — ${name}`;
+      const url = 'https://www.reddit.com/message/compose/'
+        + '?to=/r/PuneBikers'
+        + '&subject=' + encodeURIComponent(subject)
+        + '&message=' + encodeURIComponent(body);
+
+      window.open(url, '_blank', 'noopener,noreferrer');
+
       const btn = form.querySelector('button[type="submit"]');
-      const original = btn.textContent;
-      btn.textContent = 'Message Sent!';
+      btn.textContent = 'Opening Reddit…';
       btn.disabled = true;
       btn.style.background = '#22c55e';
       setTimeout(() => {
-        btn.textContent = original;
+        btn.textContent = 'Send via Reddit';
         btn.disabled = false;
         btn.style.background = '';
         form.reset();
+        required.forEach(f => f.style.borderColor = '');
       }, 3000);
     });
   }
