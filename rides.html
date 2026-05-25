@@ -9,6 +9,24 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    .archive-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+    .archive-year-divider {
+      grid-column: 1 / -1; display: flex; align-items: center; gap: 1rem;
+      margin-top: 1rem;
+    }
+    .archive-year-divider span {
+      font-family: var(--font-display); font-size: 1.8rem; color: var(--clr-primary);
+      letter-spacing: 0.05em; white-space: nowrap;
+    }
+    .archive-year-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--clr-border);
+    }
+    .ride-num-tag {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
+      color: var(--clr-text-dim); text-transform: uppercase;
+    }
+  </style>
 </head>
 <body>
 
@@ -110,109 +128,401 @@
         <p class="section-label">Archive</p>
         <h2 class="section-title" id="past-rides-title">Roads We've Ridden</h2>
 
-        <div class="rides-filter" role="group" aria-label="Filter rides by type">
-          <button class="filter-btn active" data-filter="all" aria-pressed="true">All Rides</button>
-          <button class="filter-btn" data-filter="highway" aria-pressed="false">Highway</button>
-          <button class="filter-btn" data-filter="ghats" aria-pressed="false">Ghats</button>
-          <button class="filter-btn" data-filter="coastal" aria-pressed="false">Coastal</button>
-          <button class="filter-btn" data-filter="touring" aria-pressed="false">Touring</button>
-          <button class="filter-btn" data-filter="weekend" aria-pressed="false">Weekend</button>
+        <div class="rides-filter" role="group" aria-label="Filter rides by year">
+          <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+          <button class="filter-btn" data-filter="y2026" aria-pressed="false">2026</button>
+          <button class="filter-btn" data-filter="y2025" aria-pressed="false">2025</button>
+          <button class="filter-btn" data-filter="y2024" aria-pressed="false">2024</button>
+          <button class="filter-btn" data-filter="y2023" aria-pressed="false">2023</button>
         </div>
 
-        <div class="rides-grid">
-          <article class="ride-card fade-up" data-type="highway">
+        <div class="rides-grid archive-grid">
+          <div class="archive-year-divider"><span>2026</span></div>
+          <article class="ride-card fade-up" data-type="y2026">
             <div class="ride-card-thumb">
-              <div class="ride-card-placeholder" aria-hidden="true">🏔️</div>
+              <div class="ride-card-placeholder" aria-hidden="true">💧</div>
               <span class="ride-card-badge">Completed</span>
             </div>
             <div class="ride-card-body">
               <div class="ride-card-meta">
-                <span>📍 Ladakh</span>
-                <span>📏 2,400 km</span>
-                <span>📅 Jun 2024</span>
+                <span>📅 15 Feb 26</span><span>📏 228 km</span><span class="ride-num-tag">ride-064</span>
               </div>
-              <h3 class="ride-card-title">Ladakh Expedition 2024</h3>
-              <p class="ride-card-desc">15 days, 12 riders. Khardung La, Chang La, Pangong Tso. Our highest achievement yet.</p>
+              <h3 class="ride-card-title">Pune - Chandanapuri Waterfall View Point - Pune</h3>
             </div>
           </article>
-
-          <article class="ride-card fade-up stagger-1" data-type="coastal">
-            <div class="ride-card-thumb">
-              <div class="ride-card-placeholder" aria-hidden="true">🌊</div>
-              <span class="ride-card-badge">Completed</span>
-            </div>
-            <div class="ride-card-body">
-              <div class="ride-card-meta">
-                <span>📍 Konkan</span>
-                <span>📏 680 km</span>
-                <span>📅 Feb 2024</span>
-              </div>
-              <h3 class="ride-card-title">Konkan Coastal Cruise</h3>
-              <p class="ride-card-desc">NH66 along the Konkan coast. Fresh seafood, sea breeze, and perfect tarmac all the way to Goa.</p>
-            </div>
-          </article>
-
-          <article class="ride-card fade-up stagger-2" data-type="ghats">
+          <article class="ride-card fade-up stagger-1" data-type="y2026">
             <div class="ride-card-thumb">
               <div class="ride-card-placeholder" aria-hidden="true">🌄</div>
               <span class="ride-card-badge">Completed</span>
             </div>
             <div class="ride-card-body">
               <div class="ride-card-meta">
-                <span>📍 Mahabaleshwar</span>
-                <span>📏 240 km</span>
-                <span>📅 Jan 2024</span>
+                <span>📅 8 Feb 26</span><span>📏 151 km</span><span class="ride-num-tag">ride-063</span>
               </div>
-              <h3 class="ride-card-title">Mahabaleshwar Winter Ride</h3>
-              <p class="ride-card-desc">Cold air, strawberry farms, and valley viewpoints. A PuneBikers New Year tradition.</p>
+              <h3 class="ride-card-title">Mandhardevi Ghat</h3>
             </div>
           </article>
-
-          <article class="ride-card fade-up" data-type="touring">
+          <article class="ride-card fade-up stagger-2" data-type="y2026">
             <div class="ride-card-thumb">
-              <div class="ride-card-placeholder" aria-hidden="true">🐘</div>
+              <div class="ride-card-placeholder" aria-hidden="true">🦅</div>
               <span class="ride-card-badge">Completed</span>
             </div>
             <div class="ride-card-body">
               <div class="ride-card-meta">
-                <span>📍 Kerala</span>
-                <span>📏 1,800 km</span>
-                <span>📅 Dec 2023</span>
+                <span>📅 31 Jan 26</span><span>📏 217 km</span><span class="ride-num-tag">ride-062</span>
               </div>
-              <h3 class="ride-card-title">God's Own Country Tour</h3>
-              <p class="ride-card-desc">Kerala's backwaters, hill stations, and temple towns. Eight days of pure south Indian soul.</p>
+              <h3 class="ride-card-title">Bhigwan - Saswad Circuit</h3>
             </div>
           </article>
-
-          <article class="ride-card fade-up stagger-1" data-type="weekend">
+          <article class="ride-card fade-up" data-type="y2026">
             <div class="ride-card-thumb">
-              <div class="ride-card-placeholder" aria-hidden="true">🌅</div>
+              <div class="ride-card-placeholder" aria-hidden="true">🌿</div>
               <span class="ride-card-badge">Completed</span>
             </div>
             <div class="ride-card-body">
               <div class="ride-card-meta">
-                <span>📍 Alibaug</span>
-                <span>📏 160 km</span>
-                <span>📅 Nov 2023</span>
+                <span>📅 25 Jan 26</span><span>📏 230 km</span><span class="ride-num-tag">ride-061</span>
               </div>
-              <h3 class="ride-card-title">Alibaug Beach Run</h3>
-              <p class="ride-card-desc">Quick escape to the coast. Sunrise on the beach, filter coffee, and the open road back.</p>
+              <h3 class="ride-card-title">Beauty of Nature Point</h3>
             </div>
           </article>
-
-          <article class="ride-card fade-up stagger-2" data-type="highway">
+          <div class="archive-year-divider"><span>2025</span></div>
+          <article class="ride-card fade-up" data-type="y2025">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🏍️</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 16 Nov 25</span><span>📏 250 km</span><span class="ride-num-tag">ride-059</span>
+              </div>
+              <h3 class="ride-card-title">Ahupe Echo Point</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up stagger-1" data-type="y2025">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">💧</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 15 Jun 25</span><span>📏 185 km</span><span class="ride-num-tag">ride-058</span>
+              </div>
+              <h3 class="ride-card-title">Kumbhe Waterfall</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up stagger-2" data-type="y2025">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🌊</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 12 Jan 25</span><span>📏 236 km</span><span class="ride-num-tag">ride-054</span>
+              </div>
+              <h3 class="ride-card-title">Thane Creek</h3>
+            </div>
+          </article>
+          <div class="archive-year-divider"><span>2024</span></div>
+          <article class="ride-card fade-up" data-type="y2024">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🏰</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 29 Dec 24</span><span>📏 220 km</span><span class="ride-num-tag">ride-053</span>
+              </div>
+              <h3 class="ride-card-title">Tamhini - Raigad</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up stagger-1" data-type="y2024">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">💨</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 8 Dec 24</span><span>📏 220 km</span><span class="ride-num-tag">ride-052</span>
+              </div>
+              <h3 class="ride-card-title">Supe Windmill</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up stagger-2" data-type="y2024">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🌊</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 17 Nov 24</span><span>📏 313 km</span><span class="ride-num-tag">ride-051</span>
+              </div>
+              <h3 class="ride-card-title">Kashid Beach</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up" data-type="y2024">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🌄</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 8 Sep 24</span><span>📏 200 km</span><span class="ride-num-tag">ride-048</span>
+              </div>
+              <h3 class="ride-card-title">Malshej Ghat</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up stagger-1" data-type="y2024">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">💧</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 31 Aug 24</span><span>📏 200 km</span><span class="ride-num-tag">ride-047</span>
+              </div>
+              <h3 class="ride-card-title">Kumbhe Dam</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up stagger-2" data-type="y2024">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🏞️</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 24 Aug 24</span><span>📏 200 km</span><span class="ride-num-tag">ride-046</span>
+              </div>
+              <h3 class="ride-card-title">Dimbhe Dam</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up" data-type="y2024">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🏞️</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 11 Aug 24</span><span>📏 215 km</span><span class="ride-num-tag">ride-044</span>
+              </div>
+              <h3 class="ride-card-title">Dhom Dam Circuit</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up stagger-1" data-type="y2024">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🏍️</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 23 Jun 24</span><span>📏 300 km</span><span class="ride-num-tag">ride-042</span>
+              </div>
+              <h3 class="ride-card-title">Palasnath</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up stagger-2" data-type="y2024">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🌄</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 16 Jun 24</span><span>📏 160 km</span><span class="ride-num-tag">ride-041</span>
+              </div>
+              <h3 class="ride-card-title">Varandha Ghat</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up" data-type="y2024">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🏍️</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 5 May 24</span><span>📏 200 km</span><span class="ride-num-tag">ride-037</span>
+              </div>
+              <h3 class="ride-card-title">Mahabi Circuit</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up stagger-1" data-type="y2024">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🏞️</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 21 Apr 24</span><span>📏 200 km</span><span class="ride-num-tag">ride-036</span>
+              </div>
+              <h3 class="ride-card-title">Morbe Dam</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up stagger-2" data-type="y2024">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🏞️</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 24 Mar 24</span><span>📏 190 km</span><span class="ride-num-tag">ride-035</span>
+              </div>
+              <h3 class="ride-card-title">Pali Bhutivali Dam</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up" data-type="y2024">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🦅</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 4 Feb 24</span><span>📏 216 km</span><span class="ride-num-tag">ride-031</span>
+              </div>
+              <h3 class="ride-card-title">Bhigwan</h3>
+            </div>
+          </article>
+          <div class="archive-year-divider"><span>2023</span></div>
+          <article class="ride-card fade-up" data-type="y2023">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🏞️</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 30 Dec 23</span><span>📏 225 km</span><span class="ride-num-tag">ride-026</span>
+              </div>
+              <h3 class="ride-card-title">Dhom Dam Ride</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up stagger-1" data-type="y2023">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🌄</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 17 Dec 23</span><span>📏 210 km</span><span class="ride-num-tag">ride-025</span>
+              </div>
+              <h3 class="ride-card-title">Malshej Ghat & Manikdoh Dam</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up stagger-2" data-type="y2023">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🌙</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 30 Sep–1 Oct 23</span><span>📏 300 km</span><span class="ride-num-tag">ride-019</span>
+              </div>
+              <h3 class="ride-card-title">Overnight Ride to Shrivardhan</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up" data-type="y2023">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🏞️</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 27 Aug 23</span><span>📏 250 km</span><span class="ride-num-tag">ride-017</span>
+              </div>
+              <h3 class="ride-card-title">Dimbhe Dam Circuit</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up stagger-1" data-type="y2023">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🏞️</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 6 Aug 23</span><span>📏 200 km</span><span class="ride-num-tag">ride-015</span>
+              </div>
+              <h3 class="ride-card-title">Dhom Dam Circuit</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up stagger-2" data-type="y2023">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🌄</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 16 Jul 23</span><span>📏 210 km</span><span class="ride-num-tag">ride-014</span>
+              </div>
+              <h3 class="ride-card-title">Varandha Ghat Circuit</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up" data-type="y2023">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🏍️</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 2 Jul 23</span><span>📏 165 km</span><span class="ride-num-tag">ride-013</span>
+              </div>
+              <h3 class="ride-card-title">Khandi Circuit</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up stagger-1" data-type="y2023">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🌿</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 23 Apr 23</span><span>📏 335 km</span><span class="ride-num-tag">ride-009</span>
+              </div>
+              <h3 class="ride-card-title">Mapro Garden Circuit</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up stagger-2" data-type="y2023">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🏰</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 26 Mar 23</span><span>📏 270 km</span><span class="ride-num-tag">ride-007</span>
+              </div>
+              <h3 class="ride-card-title">Raigad Circuit</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up" data-type="y2023">
             <div class="ride-card-thumb">
               <div class="ride-card-placeholder" aria-hidden="true">🕌</div>
               <span class="ride-card-badge">Completed</span>
             </div>
             <div class="ride-card-body">
               <div class="ride-card-meta">
-                <span>📍 Hampi</span>
-                <span>📏 900 km</span>
-                <span>📅 Oct 2023</span>
+                <span>📅 19 Mar 23</span><span>📏 230 km</span><span class="ride-num-tag">ride-006</span>
               </div>
-              <h3 class="ride-card-title">Hampi Heritage Ride</h3>
-              <p class="ride-card-desc">Ancient ruins, boulder landscapes, and Karnataka's famous highways. History meets motorcycles.</p>
+              <h3 class="ride-card-title">Bhimashankar</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up stagger-1" data-type="y2023">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🌄</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 11 Mar 23</span><span>📏 200 km</span><span class="ride-num-tag">ride-005</span>
+              </div>
+              <h3 class="ride-card-title">Varandha Ghat</h3>
+            </div>
+          </article>
+          <article class="ride-card fade-up stagger-2" data-type="y2023">
+            <div class="ride-card-thumb">
+              <div class="ride-card-placeholder" aria-hidden="true">🏞️</div>
+              <span class="ride-card-badge">Completed</span>
+            </div>
+            <div class="ride-card-body">
+              <div class="ride-card-meta">
+                <span>📅 14 Jan 23</span><span>📏 200 km</span><span class="ride-num-tag">ride-001</span>
+              </div>
+              <h3 class="ride-card-title">Dhom Dam</h3>
             </div>
           </article>
         </div>
