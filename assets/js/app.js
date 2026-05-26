@@ -247,14 +247,14 @@
   const btt = document.createElement('button');
   btt.className = 'back-to-top';
   btt.setAttribute('aria-label', 'Back to top');
-  btt.innerHTML = `<svg class="btt-ring" viewBox="0 0 48 48" aria-hidden="true">
-    <circle class="btt-ring-track" cx="24" cy="24" r="21"/>
-    <circle class="btt-ring-fill"  cx="24" cy="24" r="21"/>
+  btt.innerHTML = `<svg class="btt-ring" viewBox="0 0 54 54" aria-hidden="true">
+    <circle class="btt-ring-track" cx="27" cy="27" r="24"/>
+    <circle class="btt-ring-fill"  cx="27" cy="27" r="24"/>
   </svg><span class="btt-arrow">↑</span>`;
   document.body.appendChild(btt);
 
   const ringFill = btt.querySelector('.btt-ring-fill');
-  const circumference = 2 * Math.PI * 21; // ≈ 131.95
+  const circumference = 2 * Math.PI * 24; // ≈ 150.80
   ringFill.style.strokeDasharray  = circumference;
   ringFill.style.strokeDashoffset = circumference;
 
