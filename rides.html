@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/style.css" />
   <style>
+    /* archive */
     .archive-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
     .archive-year-divider {
       grid-column: 1 / -1; display: flex; align-items: center; gap: 1rem;
@@ -26,6 +27,40 @@
       font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
       color: var(--clr-text-dim); text-transform: uppercase;
     }
+    /* page tabs */
+    .page-tabs {
+      position: sticky; top: var(--nav-height); z-index: 99;
+      background: var(--clr-bg); border-bottom: 1px solid var(--clr-border);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    }
+    .page-tabs-inner {
+      display: flex; overflow-x: auto; scrollbar-width: none;
+    }
+    .page-tabs-inner::-webkit-scrollbar { display: none; }
+    .page-tab-btn {
+      padding: 0.9rem 2rem; background: none; border: none;
+      border-bottom: 2.5px solid transparent;
+      color: var(--clr-text-muted); font-size: 0.875rem; font-weight: 600;
+      cursor: pointer; white-space: nowrap; letter-spacing: 0.04em;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .page-tab-btn:hover { color: var(--clr-text); }
+    .page-tab-btn.active { color: var(--clr-primary); border-bottom-color: var(--clr-primary); }
+    .page-tab-section { display: none; }
+    .page-tab-section.active { display: block; }
+    /* philosophy (about tab) */
+    .philosophy-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .philosophy-card {
+      padding: 2rem; background: var(--clr-glass-bg); border: 1px solid var(--clr-glass-border);
+      border-radius: var(--radius-lg); transition: var(--transition);
+    }
+    .philosophy-card:hover { border-color: rgba(232,82,10,0.3); transform: translateY(-3px); }
+    .philosophy-card-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .philosophy-card h3 { font-size: 1.15rem; margin-bottom: 0.6rem; }
+    .philosophy-card p { font-size: 0.875rem; color: var(--clr-text-muted); line-height: 1.7; }
   </style>
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://rpunebikers.github.io/rides.html" />
@@ -56,10 +91,10 @@
       </button>
       <ul class="nav-links" id="nav-links" role="list">
         <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
+        <li><a href="rides.html#about">About</a></li>
         <li><a href="rides.html">Rides</a></li>
         <li><a href="gallery.html">Gallery</a></li>
-        <li><a href="routes.html">Routes</a></li>
+        <li><a href="rides.html#routes">Routes</a></li>
         <li><a href="events.html">Events</a></li>
         <li><a href="members.html">Members</a></li>
         <li><a href="contact.html" class="btn btn-primary btn-sm nav-cta">Join Us</a></li>
@@ -71,11 +106,186 @@
 
     <header class="page-hero">
       <div class="container">
-        <p class="page-hero-label">Ride Archive</p>
-        <h1>Every Road. Every Story.</h1>
-        <p>From dawn escapes in the Ghats to week-long Himalayan expeditions — these are our rides.</p>
+        <p class="page-hero-label">PuneBikers</p>
+        <h1>Ride. Explore. Belong.</h1>
       </div>
     </header>
+
+    <!-- PAGE TABS -->
+    <div class="page-tabs" role="tablist" aria-label="Page sections">
+      <div class="container page-tabs-inner">
+        <button class="page-tab-btn" data-tab="about" role="tab">Our Story</button>
+        <button class="page-tab-btn" data-tab="routes" role="tab">Routes</button>
+        <button class="page-tab-btn active" data-tab="rides" role="tab">Rides</button>
+      </div>
+    </div>
+
+    <!-- ═══ ABOUT TAB ═══ -->
+    <div id="tab-about" class="page-tab-section">
+
+      <section>
+        <div class="container">
+          <p class="section-label">Mission</p>
+          <h2 class="section-title">Why We Ride</h2>
+          <p class="section-desc">Born from a Reddit comment in January 2023 — riding together ever since.</p>
+        </div>
+      </section>
+
+      <section style="background:var(--clr-surface);" aria-labelledby="philosophy-title">
+        <div class="container">
+          <p class="section-label">Philosophy</p>
+          <h2 class="section-title" id="philosophy-title">How We Ride</h2>
+          <div class="philosophy-grid">
+            <div class="philosophy-card fade-up">
+              <div class="philosophy-card-icon" aria-hidden="true">🛡️</div>
+              <h3>Safety Is Not Optional</h3>
+              <p>Full gear is mandatory on all group rides. No exceptions. We believe arriving is more important than speed.</p>
+            </div>
+            <div class="philosophy-card fade-up stagger-1">
+              <div class="philosophy-card-icon" aria-hidden="true">🤝</div>
+              <h3>No Rider Left Behind</h3>
+              <p>We ride as a unit. Pace is set by the group, not the fastest rider. Every pit stop waits for the last bike.</p>
+            </div>
+            <div class="philosophy-card fade-up stagger-2">
+              <div class="philosophy-card-icon" aria-hidden="true">🌿</div>
+              <h3>Respect the Road</h3>
+              <p>Leave every place better than you found it. No littering. No reckless riding through villages or wildlife zones.</p>
+            </div>
+            <div class="philosophy-card fade-up stagger-3">
+              <div class="philosophy-card-icon" aria-hidden="true">📖</div>
+              <h3>Always Learning</h3>
+              <p>We run regular riding workshops, first-aid training, and mechanical basics. A better rider is a safer rider.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="safety-title">
+        <div class="container">
+          <p class="section-label">Safety Culture</p>
+          <h2 class="section-title" id="safety-title">Gear Up. Every Time.</h2>
+          <p class="section-desc">Our safety checklist isn't a formality — it's how we make sure everyone comes home.</p>
+          <div class="about-values" style="margin-top:2.5rem;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));">
+            <div class="about-value fade-up">
+              <span class="about-value-icon" aria-hidden="true">⛑️</span>
+              <div class="about-value-text"><h4>Full-Face Helmet</h4><p>ISI/DOT certified required</p></div>
+            </div>
+            <div class="about-value fade-up stagger-1">
+              <span class="about-value-icon" aria-hidden="true">🧥</span>
+              <div class="about-value-text"><h4>Riding Jacket</h4><p>Armoured or padded</p></div>
+            </div>
+            <div class="about-value fade-up stagger-2">
+              <span class="about-value-icon" aria-hidden="true">🥊</span>
+              <div class="about-value-text"><h4>Gloves</h4><p>Riding-grade, knuckle protection</p></div>
+            </div>
+            <div class="about-value fade-up stagger-3">
+              <span class="about-value-icon" aria-hidden="true">👢</span>
+              <div class="about-value-text"><h4>Riding Boots</h4><p>Ankle protection minimum</p></div>
+            </div>
+          </div>
+          <div style="margin-top:3rem;text-align:center;">
+            <a href="contact.html" class="btn btn-primary">Join the Brotherhood</a>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /tab-about -->
+
+    <!-- ═══ ROUTES TAB ═══ -->
+    <div id="tab-routes" class="page-tab-section">
+
+      <div class="print-controls container" style="padding-top:2rem;">
+        <button class="print-btn" onclick="window.print()" aria-label="Print all routes">🖨 Print Routes</button>
+      </div>
+
+      <section aria-labelledby="ghats-title">
+        <div class="container">
+          <p class="section-label">Western Ghats</p>
+          <h2 class="section-title" id="ghats-title">The Home Range</h2>
+          <div class="routes-grid">
+            <article class="route-card fade-up">
+              <div class="route-card-header">
+                <span class="route-icon" aria-hidden="true">🌿</span>
+                <div>
+                  <p style="font-weight:700;margin-bottom:0.4rem;">Tamhini Loop</p>
+                  <span class="route-difficulty easy">Easy</span>
+                </div>
+              </div>
+              <div class="route-card-body">
+                <h3>Pune → Tamhini → Mulshi → Pune</h3>
+                <div class="route-specs">
+                  <span class="route-spec">📏 160 km</span>
+                  <span class="route-spec">⏱ 5–6 hrs</span>
+                  <span class="route-spec">⛽ 2 fuel stops</span>
+                </div>
+                <a href="https://www.google.com/maps/dir/Pune,+Maharashtra/Tamhini+Ghats/Mulshi,+Maharashtra/Pune,+Maharashtra" class="route-maps-btn" target="_blank" rel="noopener">Get Directions</a>
+              </div>
+            </article>
+            <article class="route-card fade-up stagger-1">
+              <div class="route-card-header">
+                <span class="route-icon" aria-hidden="true">🌄</span>
+                <div>
+                  <p style="font-weight:700;margin-bottom:0.4rem;">Mahabaleshwar Run</p>
+                  <span class="route-difficulty easy">Easy</span>
+                </div>
+              </div>
+              <div class="route-card-body">
+                <h3>Pune → Mahabaleshwar → Panchgani</h3>
+                <div class="route-specs">
+                  <span class="route-spec">📏 240 km</span>
+                  <span class="route-spec">⏱ 7–8 hrs</span>
+                  <span class="route-spec">⛽ 2 fuel stops</span>
+                </div>
+                <a href="https://www.google.com/maps/dir/Pune,+Maharashtra/Mahabaleshwar/Panchgani,+Maharashtra" class="route-maps-btn" target="_blank" rel="noopener">Get Directions</a>
+              </div>
+            </article>
+            <article class="route-card fade-up stagger-2">
+              <div class="route-card-header">
+                <span class="route-icon" aria-hidden="true">🏕️</span>
+                <div>
+                  <p style="font-weight:700;margin-bottom:0.4rem;">Kas Plateau Circuit</p>
+                  <span class="route-difficulty moderate">Moderate</span>
+                </div>
+              </div>
+              <div class="route-card-body">
+                <h3>Pune → Kas → Thoseghar → Satara</h3>
+                <div class="route-specs">
+                  <span class="route-spec">📏 280 km</span>
+                  <span class="route-spec">⏱ 9 hrs</span>
+                  <span class="route-spec">⛽ 3 fuel stops</span>
+                </div>
+                <a href="https://www.google.com/maps/dir/Pune,+Maharashtra/Kas+Plateau/Thoseghar+Waterfall/Satara,+Maharashtra" class="route-maps-btn" target="_blank" rel="noopener">Get Directions</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section style="background:var(--clr-surface);" aria-labelledby="coastal-title">
+        <div class="container">
+          <p class="section-label">Coastal Roads</p>
+          <h2 class="section-title" id="coastal-title">Salt & Speed</h2>
+        </div>
+      </section>
+
+      <section aria-labelledby="mountain-title">
+        <div class="container">
+          <p class="section-label">Mountain Rides</p>
+          <h2 class="section-title" id="mountain-title">Into the Himalayas</h2>
+        </div>
+      </section>
+
+      <section style="background:var(--clr-surface);" aria-labelledby="weekend-title">
+        <div class="container">
+          <p class="section-label">Weekend Escapes</p>
+          <h2 class="section-title" id="weekend-title">Short. Sharp. Satisfying.</h2>
+        </div>
+      </section>
+
+    </div><!-- /tab-routes -->
+
+    <!-- ═══ RIDES TAB ═══ -->
+    <div id="tab-rides" class="page-tab-section active">
 
     <!-- UPCOMING RIDES -->
     <section id="section-upcoming" aria-labelledby="upcoming-title">
@@ -557,6 +767,7 @@
     <a class="rides-toc-dot" data-target="section-2024" data-label="2024" role="button" tabindex="0" aria-label="Go to 2024"></a>
     <a class="rides-toc-dot" data-target="section-2023" data-label="2023" role="button" tabindex="0" aria-label="Go to 2023"></a>
   </nav>
+  </div><!-- /tab-rides -->
   </main>
 
   <footer class="footer" role="contentinfo">
@@ -576,13 +787,13 @@
         <nav class="footer-col" aria-label="Quick links">
           <h4>Quick Links</h4>
           <a href="index.html">Home</a>
-          <a href="about.html">About</a>
+          <a href="rides.html#about">About</a>
           <a href="rides.html">Rides</a>
           <a href="gallery.html">Gallery</a>
         </nav>
         <nav class="footer-col" aria-label="Community links">
           <h4>Community</h4>
-          <a href="routes.html">Routes</a>
+          <a href="rides.html#routes">Routes</a>
           <a href="events.html">Events</a>
           <a href="members.html">Members</a>
           <a href="contact.html">Contact</a>

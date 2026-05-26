@@ -386,6 +386,22 @@
     });
   }
 
+  // ── Page tabs (combined hub) ──
+  const pageTabs = document.querySelectorAll('.page-tab-btn');
+  if (pageTabs.length) {
+    const VALID = ['about', 'routes', 'rides'];
+    const switchTab = id => {
+      pageTabs.forEach(t => t.classList.toggle('active', t.dataset.tab === id));
+      document.querySelectorAll('.page-tab-section').forEach(s =>
+        s.classList.toggle('active', s.id === 'tab-' + id)
+      );
+      history.replaceState(null, '', location.pathname + (id !== 'rides' ? '#' + id : ''));
+    };
+    pageTabs.forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+    const hash = location.hash.replace('#', '');
+    switchTab(VALID.includes(hash) ? hash : 'rides');
+  }
+
   // ── Archive card flip → map preview ──
   const archiveGrid = document.querySelector('.archive-grid');
   if (archiveGrid) {
