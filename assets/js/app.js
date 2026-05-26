@@ -59,28 +59,62 @@
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
   }
 
-  // ── Counter animation ──
-  const counters = document.querySelectorAll('[data-count]');
-  if (counters.length && 'IntersectionObserver' in window) {
-    const counterIO = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const el = entry.target;
-        const target = parseInt(el.dataset.count, 10);
-        const suffix = el.dataset.suffix || '';
-        const duration = 1500;
-        const step = target / (duration / 16);
-        let current = 0;
-        const timer = setInterval(() => {
-          current = Math.min(current + step, target);
-          el.textContent = Math.floor(current) + suffix;
-          if (current >= target) clearInterval(timer);
-        }, 16);
-        counterIO.unobserve(el);
-      });
-    }, { threshold: 0.5 });
+  // ── Digital odometer ──
+  const buildOdometer = el => {
+    const target = parseInt(el.dataset.count, 10);
+    const suffix = el.dataset.suffix || '';
+    if (isNaN(target)) return;
 
-    counters.forEach(el => counterIO.observe(el));
+    const digits = String(target).split('');
+    const wrap = document.createElement('span');
+    wrap.className = 'odo-wrap';
+
+    const reels = digits.map((d, i) => {
+      const slot = document.createElement('span');
+      slot.className = 'odo-digit';
+      const reel = document.createElement('span');
+      reel.className = 'odo-reel';
+      for (let n = 0; n <= 9; n++) {
+        const s = document.createElement('span');
+        s.textContent = n;
+        reel.appendChild(s);
+      }
+      slot.appendChild(reel);
+      wrap.appendChild(slot);
+      return { reel, d: parseInt(d, 10), delay: i * 0.07 };
+    });
+
+    if (suffix) {
+      const s = document.createElement('span');
+      s.textContent = suffix;
+      wrap.appendChild(s);
+    }
+
+    el.textContent = '';
+    el.appendChild(wrap);
+
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      reels.forEach(({ reel, d, delay }) => {
+        reel.style.transitionDelay = delay + 's';
+        reel.style.transform = 'translateY(-' + d + 'em)';
+      });
+    }));
+  };
+
+  const counters = document.querySelectorAll('[data-count]');
+  if (counters.length) {
+    if ('IntersectionObserver' in window) {
+      const counterIO = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          buildOdometer(entry.target);
+          counterIO.unobserve(entry.target);
+        });
+      }, { threshold: 0.5 });
+      counters.forEach(el => counterIO.observe(el));
+    } else {
+      counters.forEach(buildOdometer);
+    }
   }
 
   // ── Filter buttons (rides page) — year + distance ──
@@ -318,9 +352,9 @@
       .then(d => {
         const subs = d.data.subscribers;
         if (!subs) return;
-        const label = subs >= 1000 ? Math.floor(subs / 1000) + 'k+' : subs + '+';
-        redditCountEl.textContent = label;
-        redditCountEl.dataset.count = subs;
+        redditCountEl.dataset.count = subs >= 1000 ? Math.floor(subs / 1000) : subs;
+        redditCountEl.dataset.suffix = subs >= 1000 ? 'k+' : '+';
+        buildOdometer(redditCountEl);
         const liveEl = redditCountEl.closest('.hero-stat').querySelector('.reddit-live');
         if (liveEl) liveEl.style.display = 'inline-flex';
       })

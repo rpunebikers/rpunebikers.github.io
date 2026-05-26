@@ -469,6 +469,29 @@ section {
   display: block;
   line-height: 1;
 }
+/* ── Digital odometer ── */
+.odo-wrap {
+  display: inline-flex;
+  align-items: flex-end;
+}
+.odo-digit {
+  overflow: hidden;
+  height: 1em;
+  line-height: 1;
+}
+.odo-reel {
+  display: flex;
+  flex-direction: column;
+  transform: translateY(0);
+  transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+.odo-reel span {
+  display: block;
+  height: 1em;
+  line-height: 1;
+  text-align: center;
+}
 .hero-stat-label {
   font-size: 0.75rem;
   color: var(--clr-text-muted);
