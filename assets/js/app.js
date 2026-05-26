@@ -247,11 +247,25 @@
   const btt = document.createElement('button');
   btt.className = 'back-to-top';
   btt.setAttribute('aria-label', 'Back to top');
-  btt.textContent = '↑';
+  btt.innerHTML = `<svg class="btt-ring" viewBox="0 0 44 44" aria-hidden="true">
+    <circle class="btt-ring-track" cx="22" cy="22" r="19"/>
+    <circle class="btt-ring-fill"  cx="22" cy="22" r="19"/>
+  </svg><span class="btt-arrow">↑</span>`;
   document.body.appendChild(btt);
-  window.addEventListener('scroll', () => {
-    btt.classList.toggle('visible', window.scrollY > 400);
-  }, { passive: true });
+
+  const ringFill = btt.querySelector('.btt-ring-fill');
+  const circumference = 2 * Math.PI * 19; // ≈ 119.38
+  ringFill.style.strokeDasharray  = circumference;
+  ringFill.style.strokeDashoffset = circumference;
+
+  const updateBtt = () => {
+    const scrolled = window.scrollY;
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = total > 0 ? scrolled / total : 0;
+    ringFill.style.strokeDashoffset = circumference * (1 - progress);
+    btt.classList.toggle('visible', scrolled > 400);
+  };
+  window.addEventListener('scroll', updateBtt, { passive: true });
   btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
   // ── Reddit live subscriber count ──
