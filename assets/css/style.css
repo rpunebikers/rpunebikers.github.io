@@ -586,6 +586,75 @@ section {
   line-height: 1.6;
 }
 
+/* ===== ARCHIVE CARD FLIP ===== */
+.archive-grid .ride-card {
+  height: 240px;
+  perspective: 900px;
+  /* background & overflow moved to front face so 3D preserve-3d works */
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+.archive-grid .ride-card-thumb {
+  aspect-ratio: unset;
+  height: 120px;
+  flex-shrink: 0;
+}
+.archive-grid .ride-card.flipped:hover,
+.archive-grid .ride-card.flipped {
+  transform: none;
+  box-shadow: none;
+}
+.ride-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.archive-grid .ride-card.flipped .ride-card-inner {
+  transform: rotateY(180deg);
+}
+.ride-card-front,
+.ride-card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.ride-card-front {
+  display: flex;
+  flex-direction: column;
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+}
+.ride-card-back {
+  transform: rotateY(180deg);
+  background: #000;
+  border: 1px solid var(--clr-border);
+  display: flex;
+  flex-direction: column;
+}
+.ride-card-back iframe {
+  flex: 1;
+  border: none;
+  width: 100%;
+  display: block;
+}
+.ride-card-map-label {
+  font-size: 0.68rem;
+  color: var(--clr-text-muted);
+  text-align: center;
+  padding: 0.35rem 0.75rem;
+  background: var(--clr-surface);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+}
+
 /* ===== ABOUT PREVIEW ===== */
 .about-preview {
   background: var(--clr-surface);
