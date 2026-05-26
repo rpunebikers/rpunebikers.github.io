@@ -9,59 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/style.css" />
-  <style>
-    /* archive */
-    .archive-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
-    .archive-year-divider {
-      grid-column: 1 / -1; display: flex; align-items: center; gap: 1rem;
-      margin-top: 1rem;
-    }
-    .archive-year-divider span {
-      font-family: var(--font-display); font-size: 1.8rem; color: var(--clr-primary);
-      letter-spacing: 0.05em; white-space: nowrap;
-    }
-    .archive-year-divider::after {
-      content: ''; flex: 1; height: 1px; background: var(--clr-border);
-    }
-    .ride-num-tag {
-      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
-      color: var(--clr-text-dim); text-transform: uppercase;
-    }
-    /* page tabs */
-    .page-tabs {
-      position: sticky; top: var(--nav-height); z-index: 99;
-      background: var(--clr-bg); border-bottom: 1px solid var(--clr-border);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    }
-    .page-tabs-inner {
-      display: flex; overflow-x: auto; scrollbar-width: none;
-    }
-    .page-tabs-inner::-webkit-scrollbar { display: none; }
-    .page-tab-btn {
-      padding: 0.9rem 2rem; background: none; border: none;
-      border-bottom: 2.5px solid transparent;
-      color: var(--clr-text-muted); font-size: 0.875rem; font-weight: 600;
-      cursor: pointer; white-space: nowrap; letter-spacing: 0.04em;
-      transition: color 0.2s, border-color 0.2s;
-    }
-    .page-tab-btn:hover { color: var(--clr-text); }
-    .page-tab-btn.active { color: var(--clr-primary); border-bottom-color: var(--clr-primary); }
-    .page-tab-section { display: none; }
-    .page-tab-section.active { display: block; }
-    /* philosophy (about tab) */
-    .philosophy-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1.5rem; margin-top: 3rem;
-    }
-    .philosophy-card {
-      padding: 2rem; background: var(--clr-glass-bg); border: 1px solid var(--clr-glass-border);
-      border-radius: var(--radius-lg); transition: var(--transition);
-    }
-    .philosophy-card:hover { border-color: rgba(232,82,10,0.3); transform: translateY(-3px); }
-    .philosophy-card-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-    .philosophy-card h3 { font-size: 1.15rem; margin-bottom: 0.6rem; }
-    .philosophy-card p { font-size: 0.875rem; color: var(--clr-text-muted); line-height: 1.7; }
-  </style>
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://rpunebikers.github.io/rides.html" />
   <meta property="og:title" content="Rides — PuneBikers" />
@@ -165,22 +112,26 @@
           <p class="section-label">Safety Culture</p>
           <h2 class="section-title" id="safety-title">Gear Up. Every Time.</h2>
           <p class="section-desc">Our safety checklist isn't a formality — it's how we make sure everyone comes home.</p>
-          <div class="about-values" style="margin-top:2.5rem;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));">
-            <div class="about-value fade-up">
-              <span class="about-value-icon" aria-hidden="true">⛑️</span>
-              <div class="about-value-text"><h4>Full-Face Helmet</h4><p>ISI/DOT certified required</p></div>
+          <div class="philosophy-grid" style="margin-top:2.5rem;">
+            <div class="philosophy-card fade-up">
+              <div class="philosophy-card-icon" aria-hidden="true">⛑️</div>
+              <h3>Full-Face Helmet</h3>
+              <p>ISI/DOT certified required</p>
             </div>
-            <div class="about-value fade-up stagger-1">
-              <span class="about-value-icon" aria-hidden="true">🧥</span>
-              <div class="about-value-text"><h4>Riding Jacket</h4><p>Armoured or padded</p></div>
+            <div class="philosophy-card fade-up stagger-1">
+              <div class="philosophy-card-icon" aria-hidden="true">🧥</div>
+              <h3>Riding Jacket</h3>
+              <p>Armoured or padded</p>
             </div>
-            <div class="about-value fade-up stagger-2">
-              <span class="about-value-icon" aria-hidden="true">🥊</span>
-              <div class="about-value-text"><h4>Gloves</h4><p>Riding-grade, knuckle protection</p></div>
+            <div class="philosophy-card fade-up stagger-2">
+              <div class="philosophy-card-icon" aria-hidden="true">🥊</div>
+              <h3>Gloves</h3>
+              <p>Riding-grade, knuckle protection</p>
             </div>
-            <div class="about-value fade-up stagger-3">
-              <span class="about-value-icon" aria-hidden="true">👢</span>
-              <div class="about-value-text"><h4>Riding Boots</h4><p>Ankle protection minimum</p></div>
+            <div class="philosophy-card fade-up stagger-3">
+              <div class="philosophy-card-icon" aria-hidden="true">👢</div>
+              <h3>Riding Boots</h3>
+              <p>Ankle protection minimum</p>
             </div>
           </div>
           <div style="margin-top:3rem;text-align:center;">

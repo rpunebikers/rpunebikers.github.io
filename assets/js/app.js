@@ -402,53 +402,51 @@
     switchTab(VALID.includes(hash) ? hash : 'rides');
   }
 
-  // ── Archive card flip → map preview ──
-  const archiveGrid = document.querySelector('.archive-grid');
-  if (archiveGrid) {
-    archiveGrid.querySelectorAll('.ride-card').forEach(card => {
-      // Wrap existing content in flip structure
-      const inner = document.createElement('div');
-      inner.className = 'ride-card-inner';
-      const front = document.createElement('div');
-      front.className = 'ride-card-front';
-      while (card.firstChild) front.appendChild(card.firstChild);
+  // ── Card flip → map preview (all .ride-card elements) ──
+  document.querySelectorAll('.ride-card').forEach(card => {
+    card.classList.add('flip-enabled');
 
-      // Extract destination name from title like "Pune - X - Pune"
-      const rawTitle = front.querySelector('.ride-card-title')?.textContent.trim() || '';
-      const dest = rawTitle
-        .replace(/^Pune\s*[-–]\s*/i, '')
-        .replace(/\s*[-–]\s*Pune\s*$/i, '')
-        .trim() || rawTitle;
-      const q = encodeURIComponent(dest + ', Maharashtra, India');
+    const inner = document.createElement('div');
+    inner.className = 'ride-card-inner';
+    const front = document.createElement('div');
+    front.className = 'ride-card-front';
+    while (card.firstChild) front.appendChild(card.firstChild);
 
-      // Build back face with lazy-loaded map
-      const back = document.createElement('div');
-      back.className = 'ride-card-back';
+    // Prefer explicit 📍 meta span, fall back to stripping "Pune - X - Pune"
+    const locationSpan = Array.from(front.querySelectorAll('.ride-card-meta span'))
+      .find(s => s.textContent.trim().startsWith('📍'));
+    const rawTitle = front.querySelector('.ride-card-title')?.textContent.trim() || '';
+    const dest = locationSpan
+      ? locationSpan.textContent.replace('📍', '').trim()
+      : rawTitle.replace(/^Pune\s*[-–]\s*/i, '').replace(/\s*[-–]\s*Pune\s*$/i, '').trim() || rawTitle;
+    const q = encodeURIComponent(dest + ', Maharashtra, India');
 
-      const iframe = document.createElement('iframe');
-      iframe.title = 'Map: ' + dest;
-      iframe.loading = 'lazy';
-      iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+    const back = document.createElement('div');
+    back.className = 'ride-card-back';
 
-      const label = document.createElement('div');
-      label.className = 'ride-card-map-label';
-      label.textContent = '📍 ' + dest + ' · tap again to close';
+    const iframe = document.createElement('iframe');
+    iframe.title = 'Map: ' + dest;
+    iframe.loading = 'lazy';
+    iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
 
-      back.appendChild(iframe);
-      back.appendChild(label);
-      inner.appendChild(front);
-      inner.appendChild(back);
-      card.appendChild(inner);
+    const label = document.createElement('div');
+    label.className = 'ride-card-map-label';
+    label.textContent = '📍 ' + dest + ' · tap again to close';
 
-      card.addEventListener('click', e => {
-        if (e.target.closest('a')) return;
-        const flipping = !card.classList.contains('flipped');
-        if (flipping && !iframe.src) {
-          iframe.src = 'https://maps.google.com/maps?q=' + q + '&output=embed&z=11';
-        }
-        card.classList.toggle('flipped');
-      });
+    back.appendChild(iframe);
+    back.appendChild(label);
+    inner.appendChild(front);
+    inner.appendChild(back);
+    card.appendChild(inner);
+
+    card.addEventListener('click', e => {
+      if (e.target.closest('a')) return;
+      const flipping = !card.classList.contains('flipped');
+      if (flipping && !iframe.src) {
+        iframe.src = 'https://maps.google.com/maps?q=' + q + '&output=embed&z=11';
+      }
+      card.classList.toggle('flipped');
     });
-  }
+  });
 
 })();
