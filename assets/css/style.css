@@ -1008,10 +1008,19 @@ section {
   border-radius: var(--radius-lg);
   overflow: hidden;
   transition: var(--transition);
+  display: flex;
+  flex-direction: column;
 }
 .route-card:hover {
   transform: translateY(-4px);
   border-color: rgba(232, 82, 10, 0.3);
+}
+
+.route-card-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .route-card-header {
@@ -1034,7 +1043,6 @@ section {
 .route-difficulty.moderate { background: rgba(234,179,8,0.15); color: #eab308; }
 .route-difficulty.hard { background: rgba(232,82,10,0.15); color: var(--clr-primary); }
 
-.route-card-body { padding: 1.25rem; }
 .route-card-body h3 {
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
@@ -1245,7 +1253,8 @@ section {
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
-  margin-top: 1.1rem;
+  margin-top: auto;
+  padding-top: 1.1rem;
   padding: 0.55rem 1rem;
   font-size: 0.8rem;
   font-weight: 700;
