@@ -243,4 +243,57 @@
     });
   }
 
+  // ── Back to top ──
+  const btt = document.createElement('button');
+  btt.className = 'back-to-top';
+  btt.setAttribute('aria-label', 'Back to top');
+  btt.textContent = '↑';
+  document.body.appendChild(btt);
+  window.addEventListener('scroll', () => {
+    btt.classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // ── Reddit live subscriber count ──
+  const redditCountEl = document.querySelector('.hero-stat-num[data-reddit-live]');
+  if (redditCountEl) {
+    fetch('https://www.reddit.com/r/PuneBikers/about.json')
+      .then(r => r.json())
+      .then(d => {
+        const subs = d.data.subscribers;
+        if (!subs) return;
+        const label = subs >= 1000 ? Math.floor(subs / 1000) + 'k+' : subs + '+';
+        redditCountEl.textContent = label;
+        redditCountEl.dataset.count = subs;
+        const liveEl = redditCountEl.closest('.hero-stat').querySelector('.reddit-live');
+        if (liveEl) liveEl.style.display = 'inline-flex';
+      })
+      .catch(() => {});
+  }
+
+  // ── Rides page dot TOC ──
+  const ridesToc = document.querySelector('.rides-toc');
+  if (ridesToc) {
+    const dots = Array.from(ridesToc.querySelectorAll('.rides-toc-dot'));
+    const targets = dots.map(d => document.getElementById(d.dataset.target)).filter(Boolean);
+
+    const setActive = () => {
+      let idx = 0;
+      targets.forEach((el, i) => {
+        if (window.scrollY + 180 >= el.offsetTop) idx = i;
+      });
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    };
+
+    window.addEventListener('scroll', setActive, { passive: true });
+    setActive();
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        const el = targets[i];
+        if (el) window.scrollTo({ top: el.offsetTop - 100, behavior: 'smooth' });
+      });
+    });
+  }
+
 })();

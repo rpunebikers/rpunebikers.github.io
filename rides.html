@@ -36,6 +36,8 @@
   <meta name="twitter:title" content="Rides — PuneBikers" />
   <meta name="twitter:description" content="PuneBikers ride archive — 65 group rides across Maharashtra and beyond. Archive, upcoming rides, and route highlights." />
   <meta name="twitter:image" content="https://rpunebikers.github.io/assets/images/logo-text.png" />
+  <link rel="icon" type="image/jpeg" href="assets/images/logo-bike.jpg" />
+  <link rel="apple-touch-icon" href="assets/images/logo-bike.jpg" />
 </head>
 <body>
 
@@ -74,7 +76,7 @@
     </header>
 
     <!-- UPCOMING RIDES -->
-    <section aria-labelledby="upcoming-title">
+    <section id="section-upcoming" aria-labelledby="upcoming-title">
       <div class="container">
         <p class="section-label">Upcoming</p>
         <h2 class="section-title" id="upcoming-title">Next on the Calendar</h2>
@@ -92,7 +94,8 @@
                 <span>📅 Jul 12</span>
               </div>
               <h3 class="ride-card-title">Monsoon Ghats Escape</h3>
-            </div>
+            
+              <a href="https://wa.me/?text=%F0%9F%8F%8D%EF%B8%8F%20Upcoming%20Ride%3A%20Monsoon%20Ghats%20Escape%0A%F0%9F%93%8D%20Tamhini%20Ghats%0A%F0%9F%93%8F%20180%20km%20%7C%20%F0%9F%93%85%20Jul%2012%0ADetails%3A%20https%3A//rpunebikers.github.io/events.html" class="wa-share-btn" target="_blank" rel="noopener" aria-label="Share on WhatsApp">💬 Share</a></div>
           </article>
 
           <article class="ride-card fade-up stagger-1" data-type="touring">
@@ -107,7 +110,8 @@
                 <span>📅 Sep 20</span>
               </div>
               <h3 class="ride-card-title">Rajasthan Desert Run</h3>
-            </div>
+            
+              <a href="https://wa.me/?text=%F0%9F%8F%8D%EF%B8%8F%20Upcoming%20Ride%3A%20Rajasthan%20Desert%20Run%0A%F0%9F%93%8D%20Jaisalmer%20Circuit%0A%F0%9F%93%8F%203%2C200%20km%20%7C%20%F0%9F%93%85%20Sep%2020%0ADetails%3A%20https%3A//rpunebikers.github.io/events.html" class="wa-share-btn" target="_blank" rel="noopener" aria-label="Share on WhatsApp">💬 Share</a></div>
           </article>
 
           <article class="ride-card fade-up stagger-2" data-type="weekend">
@@ -122,7 +126,8 @@
                 <span>📅 Aug 3</span>
               </div>
               <h3 class="ride-card-title">Overnight Lonavala Camp</h3>
-            </div>
+            
+              <a href="https://wa.me/?text=%F0%9F%8F%8D%EF%B8%8F%20Upcoming%20Ride%3A%20Overnight%20Lonavala%20Camp%0A%F0%9F%93%8D%20Lonavala%0A%F0%9F%93%8F%20120%20km%20%7C%20%F0%9F%93%85%20Aug%203%0ADetails%3A%20https%3A//rpunebikers.github.io/events.html" class="wa-share-btn" target="_blank" rel="noopener" aria-label="Share on WhatsApp">💬 Share</a></div>
           </article>
         </div>
       </div>
@@ -143,7 +148,7 @@
         </div>
 
         <div class="rides-grid archive-grid">
-          <div class="archive-year-divider"><span>2026</span></div>
+          <div class="archive-year-divider" id="section-2026"><span>2026</span></div>
           <article class="ride-card fade-up" data-type="y2026">
             <div class="ride-card-thumb">
               <div class="ride-card-placeholder" aria-hidden="true">💧</div>
@@ -192,7 +197,7 @@
               <h3 class="ride-card-title">Beauty of Nature Point</h3>
             </div>
           </article>
-          <div class="archive-year-divider"><span>2025</span></div>
+          <div class="archive-year-divider" id="section-2025"><span>2025</span></div>
           <article class="ride-card fade-up" data-type="y2025">
             <div class="ride-card-thumb">
               <div class="ride-card-placeholder" aria-hidden="true">🏍️</div>
@@ -229,7 +234,7 @@
               <h3 class="ride-card-title">Thane Creek</h3>
             </div>
           </article>
-          <div class="archive-year-divider"><span>2024</span></div>
+          <div class="archive-year-divider" id="section-2024"><span>2024</span></div>
           <article class="ride-card fade-up" data-type="y2024">
             <div class="ride-card-thumb">
               <div class="ride-card-placeholder" aria-hidden="true">🏰</div>
@@ -386,7 +391,7 @@
               <h3 class="ride-card-title">Bhigwan</h3>
             </div>
           </article>
-          <div class="archive-year-divider"><span>2023</span></div>
+          <div class="archive-year-divider" id="section-2023"><span>2023</span></div>
           <article class="ride-card fade-up" data-type="y2023">
             <div class="ride-card-thumb">
               <div class="ride-card-placeholder" aria-hidden="true">🏞️</div>
@@ -535,6 +540,15 @@
       </div>
     </section>
 
+
+  <!-- RIDES DOT TOC -->
+  <nav class="rides-toc" aria-label="Jump to section">
+    <a class="rides-toc-dot active" data-target="section-upcoming" data-label="Upcoming" role="button" tabindex="0" aria-label="Go to Upcoming"></a>
+    <a class="rides-toc-dot" data-target="section-2026" data-label="2026" role="button" tabindex="0" aria-label="Go to 2026"></a>
+    <a class="rides-toc-dot" data-target="section-2025" data-label="2025" role="button" tabindex="0" aria-label="Go to 2025"></a>
+    <a class="rides-toc-dot" data-target="section-2024" data-label="2024" role="button" tabindex="0" aria-label="Go to 2024"></a>
+    <a class="rides-toc-dot" data-target="section-2023" data-label="2023" role="button" tabindex="0" aria-label="Go to 2023"></a>
+  </nav>
   </main>
 
   <footer class="footer" role="contentinfo">

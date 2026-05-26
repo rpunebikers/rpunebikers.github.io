@@ -1356,3 +1356,180 @@ section {
   border: none;
 }
 .ig-btn:hover { opacity: 0.88; transform: translateY(-2px); }
+
+/* ===== BACK TO TOP ===== */
+.back-to-top {
+  position: fixed;
+  bottom: 5.5rem;
+  right: 1.5rem;
+  z-index: 198;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--clr-primary);
+  border: none;
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 0.3s, transform 0.3s;
+  box-shadow: 0 4px 20px rgba(232,82,10,0.45);
+}
+.back-to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+@media (max-width: 768px) {
+  .back-to-top { bottom: 5rem; right: 1rem; width: 40px; height: 40px; }
+}
+
+/* ===== ACTIVE NAV DOT ===== */
+.nav-links a { position: relative; }
+.nav-links a.active::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--clr-primary);
+}
+
+/* ===== RIDES PAGE — DOT TOC ===== */
+.rides-toc {
+  position: fixed;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+.rides-toc-dot {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: var(--transition);
+  display: block;
+  flex-shrink: 0;
+}
+.rides-toc-dot:hover,
+.rides-toc-dot.active {
+  background: var(--clr-primary);
+  border-color: var(--clr-primary);
+  transform: scale(1.4);
+}
+.rides-toc-dot::before {
+  content: attr(data-label);
+  position: absolute;
+  right: calc(100% + 0.65rem);
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--clr-surface-2);
+  color: var(--clr-text);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--clr-border);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.rides-toc-dot:hover::before,
+.rides-toc-dot.active::before {
+  opacity: 1;
+}
+@media (max-width: 960px) { .rides-toc { display: none; } }
+
+/* ===== REDDIT LIVE WIDGET ===== */
+.reddit-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--clr-text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-top: 0.35rem;
+}
+.reddit-live-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #22c55e;
+  animation: pulse-dot 2s infinite;
+  flex-shrink: 0;
+}
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+}
+
+/* ===== WHATSAPP SHARE BUTTON ===== */
+.wa-share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #25d366;
+  border: 1px solid rgba(37,211,102,0.3);
+  background: rgba(37,211,102,0.07);
+  padding: 0.4rem 0.9rem;
+  border-radius: 100px;
+  text-decoration: none;
+  transition: var(--transition);
+  margin-top: 0.75rem;
+}
+.wa-share-btn:hover { background: #25d366; color: #000; border-color: #25d366; }
+
+/* ===== PRINT CONTROLS ===== */
+.print-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+.print-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--clr-glass-border);
+  background: var(--clr-glass-bg);
+  color: var(--clr-text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.print-btn:hover { border-color: var(--clr-primary); color: var(--clr-primary); }
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  .navbar, .footer, .mobile-join-cta, .back-to-top,
+  .rides-toc, .route-maps-btn, .page-hero, .print-controls,
+  .skip-link { display: none !important; }
+  body { background: #fff !important; color: #000 !important; padding-bottom: 0 !important; }
+  .routes-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 1rem !important; }
+  .route-card { break-inside: avoid; border: 1px solid #ccc !important; background: #fff !important; box-shadow: none !important; }
+  .route-card-header { background: #f0f0f0 !important; }
+  .route-card-body h3, .route-spec, .route-difficulty { color: #000 !important; }
+  .section-title, .section-label, h1, h2, h3 { color: #000 !important; }
+  section { padding: 1rem 0 !important; }
+}
