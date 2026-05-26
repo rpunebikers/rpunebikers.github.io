@@ -48,6 +48,7 @@
   </style>
   <link rel="icon" type="image/jpeg" href="assets/images/logo-bike.jpg" />
   <link rel="apple-touch-icon" href="assets/images/logo-bike.jpg" />
+  <script>if(localStorage.getItem("pb-theme")==="light")document.documentElement.dataset.theme="light";</script>
 </head>
 <body>
 
@@ -59,6 +60,7 @@
         <img src="assets/images/logo-bike.jpg" class="nav-logo-bike" alt="" aria-hidden="true">
         <img src="assets/images/logo-text.png" class="nav-logo-text" alt="r/PuneBikers">
       </a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour theme">🌙</button>
       <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
         <span></span><span></span><span></span>
       </button>
@@ -81,6 +83,7 @@
         <span class="error-code" aria-hidden="true">404</span>
         <h1 class="error-title" id="error-title">Road Not Found</h1>
         <p class="error-desc">Looks like you've taken a wrong turn. This page doesn't exist — but plenty of great roads do.</p>
+        <p style="font-size:0.85rem;color:var(--clr-text-dim);margin-bottom:1.5rem;">Heading back home in <span id="countdown">10</span>s…</p>
         <div class="error-actions">
           <a href="index.html" class="btn btn-primary">Back to Home</a>
           <a href="rides.html" class="btn btn-outline">Explore Rides</a>
@@ -133,5 +136,15 @@
   </footer>
 
   <script src="assets/js/app.js"></script>
+  <script>
+    (function() {
+      var n = 10;
+      var el = document.getElementById('countdown');
+      var t = setInterval(function() {
+        el.textContent = --n;
+        if (n <= 0) { clearInterval(t); location.href = 'index.html'; }
+      }, 1000);
+    })();
+  </script>
 </body>
 </html>

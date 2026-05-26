@@ -83,27 +83,69 @@
     counters.forEach(el => counterIO.observe(el));
   }
 
-  // ── Filter buttons (rides page) ──
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  if (filterBtns.length) {
-    filterBtns.forEach(btn => {
+  // ── Filter buttons (rides page) — year + distance ──
+  const yearBtns = document.querySelectorAll('.filter-btn[data-filter]');
+  const distBtns = document.querySelectorAll('.filter-btn[data-dist]');
+  if (yearBtns.length) {
+    let activeYear = 'all';
+    let activeDist = 'all';
+
+    const parseKm = card => {
+      const txt = card.querySelector('.ride-card-meta')?.textContent || '';
+      const m = txt.match(/([\d,]+)\s*km/i);
+      return m ? parseInt(m[1].replace(/,/g, ''), 10) : 0;
+    };
+    const distOk = (km, f) => {
+      if (f === 'all') return true;
+      if (f === 'short') return km > 0 && km < 200;
+      if (f === 'mid')   return km >= 200 && km < 300;
+      if (f === 'long')  return km >= 300;
+      return true;
+    };
+    const applyFilters = () => {
+      document.querySelectorAll('.ride-card').forEach(card => {
+        const yearMatch = activeYear === 'all' || card.dataset.type === activeYear;
+        const distMatch = distOk(parseKm(card), activeDist);
+        card.style.display = yearMatch && distMatch ? '' : 'none';
+      });
+    };
+
+    yearBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        filterBtns.forEach(b => {
-          b.classList.remove('active');
-          b.setAttribute('aria-pressed', 'false');
-        });
+        yearBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
         btn.classList.add('active');
         btn.setAttribute('aria-pressed', 'true');
-
-        const filter = btn.dataset.filter;
-        document.querySelectorAll('.ride-card').forEach(card => {
-          if (filter === 'all' || card.dataset.type === filter) {
-            card.style.display = '';
-          } else {
-            card.style.display = 'none';
-          }
-        });
+        activeYear = btn.dataset.filter;
+        applyFilters();
       });
+    });
+    distBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        distBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
+        activeDist = btn.dataset.dist;
+        applyFilters();
+      });
+    });
+  }
+
+  // ── Theme toggle ──
+  const themeToggle = document.getElementById('theme-toggle');
+  const applyTheme = theme => {
+    if (theme === 'light') {
+      document.documentElement.dataset.theme = 'light';
+    } else {
+      delete document.documentElement.dataset.theme;
+    }
+    if (themeToggle) themeToggle.textContent = theme === 'light' ? '☀️' : '🌙';
+  };
+  applyTheme(localStorage.getItem('pb-theme') || 'dark');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('pb-theme', next);
+      applyTheme(next);
     });
   }
 
