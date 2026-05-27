@@ -33,15 +33,28 @@
     });
   }
 
-  // ── Active nav link ──
-  const currentPath = window.location.pathname.replace(/\/$/, '') || '/index.html';
-  document.querySelectorAll('.nav-links a').forEach(link => {
-    const href = link.getAttribute('href');
-    if (href === currentPath || currentPath.endsWith(href)) {
-      link.classList.add('active');
-      link.setAttribute('aria-current', 'page');
-    }
-  });
+  // ── Active nav link (hash-aware, updates on tab switch) ──
+  const updateNavActive = () => {
+    const path = window.location.pathname;
+    const hash = window.location.hash; // '' or '#about' etc.
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      const href = link.getAttribute('href');
+      const hashIdx = href.indexOf('#');
+      const hrefPath = hashIdx >= 0 ? href.slice(0, hashIdx) : href;
+      const hrefHash = hashIdx >= 0 ? href.slice(hashIdx) : null;
+
+      const pathOk = path === hrefPath || path.endsWith('/' + hrefPath);
+      // links with a hash only match when hash matches;
+      // links without a hash only match when there's no current hash
+      const hashOk = hrefHash !== null ? hash === hrefHash : hash === '';
+
+      const active = pathOk && hashOk;
+      link.classList.toggle('active', active);
+      if (active) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
+  };
+  updateNavActive();
 
   // ── Intersection Observer — fade-up animations ──
   if ('IntersectionObserver' in window) {
@@ -396,6 +409,7 @@
         s.classList.toggle('active', s.id === 'tab-' + id)
       );
       history.replaceState(null, '', location.pathname + (id !== 'rides' ? '#' + id : ''));
+      updateNavActive();
     };
     pageTabs.forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
     const hash = location.hash.replace('#', '');
