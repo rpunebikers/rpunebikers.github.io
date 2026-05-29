@@ -32,7 +32,7 @@
   --clr-border: rgba(0, 0, 0, 0.1);
   --clr-text: #111111;
   --clr-text-muted: #555555;
-  --clr-text-dim: #999999;
+  --clr-text-dim: #707070;
   --clr-glass-bg: rgba(0, 0, 0, 0.04);
   --clr-glass-border: rgba(0, 0, 0, 0.1);
   --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.12);
@@ -71,6 +71,10 @@ html {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+  /* disable 3D card flip entirely */
+  .ride-card.flip-enabled { cursor: default; }
+  .ride-card.flip-enabled.flipped .ride-card-inner { transform: none; }
+  .ride-card-back { display: none; }
 }
 
 body {
@@ -210,8 +214,9 @@ section {
 }
 
 .btn-sm {
-  padding: 0.55rem 1.25rem;
+  padding: 0.75rem 1.25rem;
   font-size: 0.85rem;
+  min-height: 44px;
 }
 
 /* ===== GLASS CARD ===== */
@@ -652,7 +657,23 @@ section {
   flex-direction: column;
   background: var(--clr-surface);
   border: 1px solid var(--clr-border);
+  cursor: pointer;
 }
+/* "tap for map" hint badge — bottom-right of the card front */
+.ride-card.flip-enabled .ride-card-front::after {
+  content: '🗺 map';
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.6rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--clr-primary);
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.ride-card.flip-enabled:hover .ride-card-front::after { opacity: 1; }
 .ride-card-back {
   transform: rotateY(180deg);
   background: #000;
@@ -690,40 +711,6 @@ section {
 
 @media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; } }
 
-.about-visual {
-  position: relative;
-  aspect-ratio: 4/3;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  background: var(--clr-surface-2);
-}
-
-.about-visual-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-  filter: invert(1) hue-rotate(180deg);
-  display: block;
-}
-
-.about-visual-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 5rem;
-  opacity: 0.15;
-  background: linear-gradient(135deg, #1f1f1f, #111);
-}
-
-.about-visual-overlay {
-  position: absolute;
-  bottom: 1.5rem;
-  left: 1.5rem;
-  right: 1.5rem;
-}
 
 .about-values {
   display: grid;
@@ -1551,7 +1538,8 @@ section {
   line-height: 1;
 }
 @media (max-width: 768px) {
-  .back-to-top { bottom: 5rem; right: 1rem; width: 40px; height: 40px; }
+  /* sit above the 72px mobile sticky CTA */
+  .back-to-top { bottom: calc(72px + 1rem); right: 1rem; width: 40px; height: 40px; }
 }
 
 /* ===== ACTIVE NAV DOT ===== */
@@ -1858,6 +1846,38 @@ section {
 .philosophy-card h3 { font-size: 1.15rem; margin-bottom: 0.6rem; }
 .philosophy-card p { font-size: 0.875rem; color: var(--clr-text-muted); line-height: 1.7; }
 
+
+/* ===== 404 PAGE ===== */
+.error-section {
+  min-height: calc(100vh - var(--nav-height));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 1.5rem;
+}
+.error-code {
+  font-family: var(--font-display);
+  font-size: clamp(7rem, 20vw, 14rem);
+  line-height: 1;
+  color: var(--clr-primary);
+  opacity: 0.18;
+  display: block;
+  margin-bottom: -2rem;
+}
+.error-title {
+  font-size: clamp(1.6rem, 4vw, 2.5rem);
+  font-family: var(--font-display);
+  letter-spacing: 0.06em;
+  margin-bottom: 1rem;
+}
+.error-desc {
+  color: var(--clr-text-muted);
+  max-width: 38ch;
+  margin: 0 auto 2rem;
+  line-height: 1.7;
+}
+.error-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
 /* ===== PRINT STYLES ===== */
 @media print {

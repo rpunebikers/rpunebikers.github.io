@@ -260,10 +260,20 @@
   // ── Contact form → Reddit modmail ──
   const form = document.querySelector('.contact-form');
   if (form) {
+    // Pre-fill subject from URL param (?subject=event etc.)
+    const subjectParam = new URLSearchParams(location.search).get('subject');
+    if (subjectParam) {
+      const sel = form.querySelector('#subject');
+      if (sel) {
+        const match = Array.from(sel.options).find(o => o.value === subjectParam);
+        if (match) sel.value = match.value;
+      }
+    }
+
     form.addEventListener('submit', e => {
       e.preventDefault();
 
-      // Basic required-field validation
+      // Required-field validation
       const required = form.querySelectorAll('[required]');
       let valid = true;
       required.forEach(field => {
@@ -273,6 +283,12 @@
           valid = false;
         }
       });
+      // Email format validation
+      const emailField = form.querySelector('#email');
+      if (emailField && emailField.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField.value.trim())) {
+        emailField.style.borderColor = '#e8520a';
+        valid = false;
+      }
       if (!valid) return;
 
       const val = id => form.querySelector(`#${id}`)?.value.trim() || '';
@@ -357,21 +373,36 @@
   window.addEventListener('scroll', updateBtt, { passive: true });
   btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-  // ── Reddit live subscriber count ──
+  // ── Reddit live subscriber count (cached 1 hr) ──
   const redditCountEl = document.querySelector('.hero-stat-num[data-reddit-live]');
   if (redditCountEl) {
-    fetch('https://www.reddit.com/r/PuneBikers/about.json')
-      .then(r => r.json())
-      .then(d => {
-        const subs = d.data.subscribers;
-        if (!subs) return;
-        redditCountEl.dataset.count = subs >= 1000 ? Math.floor(subs / 1000) : subs;
-        redditCountEl.dataset.suffix = subs >= 1000 ? 'k+' : '+';
-        buildOdometer(redditCountEl);
-        const liveEl = redditCountEl.closest('.hero-stat').querySelector('.reddit-live');
-        if (liveEl) liveEl.style.display = 'inline-flex';
-      })
-      .catch(() => {});
+    const CACHE_KEY = 'pb-reddit';
+    const CACHE_TTL = 60 * 60 * 1000;
+    const applyCount = (count, suffix) => {
+      redditCountEl.dataset.count = count;
+      redditCountEl.dataset.suffix = suffix;
+      buildOdometer(redditCountEl);
+      const liveEl = redditCountEl.closest('.hero-stat')?.querySelector('.reddit-live');
+      if (liveEl) liveEl.style.display = 'inline-flex';
+    };
+    try {
+      const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
+      if (cached && Date.now() - cached.ts < CACHE_TTL) {
+        applyCount(cached.count, cached.suffix);
+      } else {
+        fetch('https://www.reddit.com/r/PuneBikers/about.json')
+          .then(r => r.json())
+          .then(d => {
+            const subs = d.data.subscribers;
+            if (!subs) return;
+            const count = subs >= 1000 ? Math.floor(subs / 1000) : subs;
+            const suffix = subs >= 1000 ? 'k+' : '+';
+            localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), count, suffix }));
+            applyCount(count, suffix);
+          })
+          .catch(() => {});
+      }
+    } catch (_) {}
   }
 
   // ── Rides page dot TOC ──
@@ -416,7 +447,8 @@
     switchTab(VALID.includes(hash) ? hash : 'rides');
   }
 
-  // ── Card flip → map preview (all .ride-card elements) ──
+  // ── Card flip → map preview (skipped for prefers-reduced-motion) ──
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   document.querySelectorAll('.ride-card').forEach(card => {
     card.classList.add('flip-enabled');
 
