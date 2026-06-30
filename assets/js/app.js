@@ -353,8 +353,10 @@
         // Ride registration — save directly to Firebase, no Reddit
         const _fbConf = window.PB_FIREBASE;
         if (_fbConf && _fbConf.databaseURL && !_fbConf.databaseURL.includes('YOUR-PROJECT')) {
-          const emailKey = email.replace(/\./g, ',').replace(/@/g, '_at_');
-          fetch(_fbConf.databaseURL + '/scheduledRides/' + rideIdParam + '/registrations/' + emailKey + '.json', {
+          // Key matches mod app's sanitizeKey(name): replace Firebase-illegal chars with _
+          const nameKey = name.replace(/\./g, '_').replace(/#/g, '_').replace(/\$/g, '_')
+            .replace(/\[/g, '_').replace(/\]/g, '_').replace(/\//g, '_').trim();
+          fetch(_fbConf.databaseURL + '/scheduledRides/' + rideIdParam + '/registrations/' + encodeURIComponent(nameKey) + '.json', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, phone, bike, notes: message, registeredAt: Date.now() }),
