@@ -7,11 +7,11 @@
  */
 window.PB_FIREBASE = {
   // Realtime Database URL  (required for rides + registrations)
-  databaseURL:  'https://YOUR-PROJECT-default-rtdb.firebaseio.com',
+  databaseURL:  'https://rpbmodapp-478617-default-rtdb.asia-southeast1.firebasedatabase.app',
 
   // These four are only needed for admin.html (Firebase Auth)
-  apiKey:       'YOUR-API-KEY',
-  authDomain:   'YOUR-PROJECT.firebaseapp.com',
-  projectId:    'YOUR-PROJECT-ID',
-  appId:        'YOUR-APP-ID',
+  apiKey:       'AIzaSyCVLEZJUchFys-GKd7uujFNYwImiGW10Rc',
+  authDomain:   'rpbmodapp-478617.firebaseapp.com',
+  projectId:    'rpbmodapp-478617',
+  appId:        '1:159976337146:android:01863d0fb7baf79b1c6343',
 };

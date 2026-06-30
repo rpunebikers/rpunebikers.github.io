@@ -64,10 +64,11 @@
     .icon-btn:hover { border-color: var(--clr-primary); color: var(--clr-primary); }
     .icon-btn.del:hover { border-color: #e55; color: #e55; }
     .status-pill { display: inline-block; padding: 0.15rem 0.55rem; border-radius: 99px; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
-    .sp-open { background: rgba(240,165,0,0.15); color: var(--clr-accent); }
-    .sp-full { background: rgba(232,82,10,0.15); color: var(--clr-primary); }
-    .sp-planning { background: rgba(136,136,136,0.12); color: #888; }
+    .sp-open      { background: rgba(240,165,0,0.15); color: var(--clr-accent); }
+    .sp-scheduled { background: rgba(240,165,0,0.15); color: var(--clr-accent); }
+    .sp-active    { background: rgba(34,197,94,0.15); color: #22c55e; }
     .sp-cancelled { background: rgba(100,100,100,0.12); color: #666; }
+    .sp-completed { background: rgba(100,100,100,0.12); color: #888; }
 
     /* ─── Registrations table ─── */
     .reg-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
@@ -159,16 +160,19 @@
           <input type="hidden" id="edit-key" />
 
           <div class="form-row">
-            <div class="fgroup"><label>Title *</label><input id="f-title" placeholder="Monsoon Ghats Escape" /></div>
-            <div class="fgroup"><label>Location *</label><input id="f-location" placeholder="Tamhini Ghats" /></div>
+            <div class="fgroup"><label>Ride Name *</label><input id="f-title" placeholder="Monsoon Ghats Escape" /></div>
+            <div class="fgroup"><label>Meeting Point *</label><input id="f-location" placeholder="Shivajinagar, Pune" /></div>
+          </div>
+          <div class="form-row">
+            <div class="fgroup"><label>Destination *</label><input id="f-destination" placeholder="Tamhini Ghats" /></div>
+            <div class="fgroup"><label>Distance (km)</label><input id="f-distance" type="number" placeholder="180" /></div>
           </div>
           <div class="form-row triple">
-            <div class="fgroup"><label>Distance (km) *</label><input id="f-distance" type="number" placeholder="180" /></div>
-            <div class="fgroup"><label>Date *</label><input id="f-date" placeholder="Jul 12, 2026" /></div>
-            <div class="fgroup"><label>Total Spots</label><input id="f-spots" type="number" placeholder="20" /></div>
-          </div>
-          <div class="form-row triple">
+            <div class="fgroup"><label>Date &amp; Time *</label><input id="f-date" placeholder="Mon 12 Jul, 9:00 AM" /></div>
+            <div class="fgroup"><label>Max Riders</label><input id="f-spots" type="number" placeholder="20" /></div>
             <div class="fgroup"><label>Emoji</label><input id="f-emoji" maxlength="4" placeholder="🌿" /></div>
+          </div>
+          <div class="form-row">
             <div class="fgroup">
               <label>Type</label>
               <select id="f-type">
@@ -183,14 +187,12 @@
             <div class="fgroup">
               <label>Status</label>
               <select id="f-status">
-                <option value="open">Open</option>
-                <option value="full">Full</option>
-                <option value="planning">Planning</option>
+                <option value="scheduled">Scheduled</option>
                 <option value="cancelled">Cancelled</option>
               </select>
             </div>
           </div>
-          <div class="fgroup"><label>Short Note (optional)</label><input id="f-notes" placeholder="Helmets and rain gear mandatory" /></div>
+          <div class="fgroup"><label>Notes (optional)</label><input id="f-notes" placeholder="Helmets and rain gear mandatory" /></div>
 
           <div class="btn-row">
             <button class="btn btn-primary" id="save-btn" onclick="saveRide()">Add Ride</button>
@@ -219,12 +221,13 @@
                 <tr>
                   <th>Name</th>
                   <th>Ride</th>
-                  <th>Contact</th>
+                  <th>Phone</th>
                   <th>Bike</th>
+                  <th>Instagram</th>
                   <th>Date</th>
                 </tr>
               </thead>
-              <tbody id="reg-tbody"><tr><td colspan="5" class="reg-empty">Loading…</td></tr></tbody>
+              <tbody id="reg-tbody"><tr><td colspan="6" class="reg-empty">Loading…</td></tr></tbody>
             </table>
           </div>
         </div>
@@ -295,8 +298,7 @@
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('admin-ui').style.display = '';
       document.getElementById('admin-email').textContent = user.email;
-      loadRides();
-      loadRegistrations();
+      loadRides(); // loadRegistrations() is called inside loadRides after ridesCache updates
     }
 
     // ── Tabs ──
@@ -315,10 +317,12 @@
     function loadRides() {
       const spinner = document.getElementById('rides-spinner');
       spinner.style.display = '';
-      db.ref('rides/upcoming').on('value', snap => {
+      // scheduledRides path mirrors the mod app schema
+      db.ref('scheduledRides').on('value', snap => {
         spinner.style.display = 'none';
         ridesCache = snap.val() || {};
         renderRideList();
+        loadRegistrations(); // derive registrations from same snapshot
         updateRegRideFilter();
       });
     }
@@ -330,85 +334,105 @@
         el.innerHTML = '<p class="no-rides">No upcoming rides. Add one below.</p>';
         return;
       }
-      const sorted = entries.sort((a, b) => (a[1].sortOrder || 0) - (b[1].sortOrder || 0) || (a[1].date || '').localeCompare(b[1].date || ''));
+      const sorted = entries.sort((a, b) =>
+        (a[1].sortOrder || 0) - (b[1].sortOrder || 0) ||
+        (a[1].rideDate || '').localeCompare(b[1].rideDate || ''));
       el.innerHTML = sorted.map(([key, r]) =>
         '<div class="ride-row">' +
           '<span class="ride-row-emoji">' + (r.emoji || '🏍️') + '</span>' +
           '<div class="ride-row-info">' +
-            '<strong>' + r.title + '</strong>' +
-            '<span>📍 ' + r.location + ' · 📏 ' + r.distance + ' km · 📅 ' + r.date +
-            (r.spots ? ' · ' + r.spots + ' spots' : '') + '</span>' +
+            '<strong>' + (r.rideName || '') + '</strong>' +
+            '<span>📍 ' + (r.meetingPoint || '') +
+            (r.destination && r.destination !== r.meetingPoint ? ' → ' + r.destination : '') +
+            ' · 📅 ' + (r.rideDate || '') +
+            (r.maxRiders ? ' · ' + r.maxRiders + ' max' : '') + '</span>' +
           '</div>' +
-          '<span class="status-pill sp-' + (r.status || 'open') + '">' + (r.status || 'open') + '</span>' +
+          '<span class="status-pill sp-' + (r.status || 'scheduled') + '">' + (r.status || 'scheduled') + '</span>' +
           '<div class="ride-row-actions">' +
             '<button class="icon-btn" onclick="editRide(\'' + key + '\')" aria-label="Edit">✏️</button>' +
-            '<button class="icon-btn del" onclick="deleteRide(\'' + key + '\',\'' + r.title.replace(/'/g, '') + '\')" aria-label="Delete">🗑️</button>' +
+            '<button class="icon-btn del" onclick="deleteRide(\'' + key + '\',\'' + (r.rideName || '').replace(/'/g, '') + '\')" aria-label="Delete">🗑️</button>' +
           '</div>' +
         '</div>'
       ).join('');
     }
 
     window.saveRide = () => {
-      const title    = document.getElementById('f-title').value.trim();
-      const location = document.getElementById('f-location').value.trim();
-      const distance = parseInt(document.getElementById('f-distance').value, 10);
-      const date     = document.getElementById('f-date').value.trim();
-      if (!title || !location || !distance || !date) {
-        alert('Title, Location, Distance and Date are required.');
+      const rideName     = document.getElementById('f-title').value.trim();
+      const meetingPoint = document.getElementById('f-location').value.trim();
+      const destination  = document.getElementById('f-destination').value.trim();
+      const rideDate     = document.getElementById('f-date').value.trim();
+      if (!rideName || !meetingPoint || !destination || !rideDate) {
+        alert('Ride Name, Meeting Point, Destination and Date are required.');
         return;
       }
       const key = document.getElementById('edit-key').value;
       const ride = {
-        title, location, distance, date,
+        rideName, meetingPoint, destination, rideDate,
         type:   document.getElementById('f-type').value,
         emoji:  document.getElementById('f-emoji').value.trim() || '🏍️',
         status: document.getElementById('f-status').value,
       };
-      const spots = parseInt(document.getElementById('f-spots').value, 10);
-      if (spots) ride.spots = spots;
+      const maxRiders = parseInt(document.getElementById('f-spots').value, 10);
+      if (maxRiders) ride.maxRiders = maxRiders;
+      const distance = parseInt(document.getElementById('f-distance').value, 10);
+      if (distance) ride.distance = distance;
       const notes = document.getElementById('f-notes').value.trim();
       if (notes) ride.notes = notes;
 
-      const ref = key ? db.ref('rides/upcoming/' + key) : db.ref('rides/upcoming').push();
-      ref.set(ride).then(() => {
+      const flash = () => {
         const notice = document.getElementById('save-notice');
         notice.classList.add('show');
         setTimeout(() => notice.classList.remove('show'), 2500);
         cancelEdit();
-      }).catch(e => alert('Save failed: ' + e.message));
+      };
+
+      if (key) {
+        // Update existing ride — use update() to preserve sub-collections (registrations, etc.)
+        db.ref('scheduledRides/' + key).update(ride)
+          .then(flash)
+          .catch(e => alert('Save failed: ' + e.message));
+      } else {
+        // Create new ride — set rideId to the push key, matching mod app convention
+        const newRef = db.ref('scheduledRides').push();
+        ride.rideId = newRef.key;
+        newRef.set(ride)
+          .then(flash)
+          .catch(e => alert('Save failed: ' + e.message));
+      }
     };
 
     window.editRide = key => {
       const r = ridesCache[key];
       if (!r) return;
-      document.getElementById('edit-key').value    = key;
-      document.getElementById('f-title').value     = r.title || '';
-      document.getElementById('f-location').value  = r.location || '';
-      document.getElementById('f-distance').value  = r.distance || '';
-      document.getElementById('f-date').value      = r.date || '';
-      document.getElementById('f-spots').value     = r.spots || '';
-      document.getElementById('f-emoji').value     = r.emoji || '';
-      document.getElementById('f-type').value      = r.type || 'general';
-      document.getElementById('f-status').value    = r.status || 'open';
-      document.getElementById('f-notes').value     = r.notes || '';
+      document.getElementById('edit-key').value         = key;
+      document.getElementById('f-title').value          = r.rideName      || '';
+      document.getElementById('f-location').value       = r.meetingPoint  || '';
+      document.getElementById('f-destination').value    = r.destination   || '';
+      document.getElementById('f-distance').value       = r.distance      || '';
+      document.getElementById('f-date').value           = r.rideDate      || '';
+      document.getElementById('f-spots').value          = r.maxRiders     || '';
+      document.getElementById('f-emoji').value          = r.emoji         || '';
+      document.getElementById('f-type').value           = r.type          || 'general';
+      document.getElementById('f-status').value         = r.status        || 'scheduled';
+      document.getElementById('f-notes').value          = r.notes         || '';
       document.getElementById('form-heading').textContent = 'Edit Ride';
-      document.getElementById('save-btn').textContent = 'Save Changes';
+      document.getElementById('save-btn').textContent  = 'Save Changes';
       document.getElementById('cancel-btn').style.display = '';
       document.getElementById('form-heading').scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
     window.deleteRide = (key, title) => {
       if (!confirm('Delete "' + title + '"? This cannot be undone.')) return;
-      db.ref('rides/upcoming/' + key).remove().catch(e => alert('Delete failed: ' + e.message));
+      db.ref('scheduledRides/' + key).remove().catch(e => alert('Delete failed: ' + e.message));
     };
 
     window.cancelEdit = () => {
       document.getElementById('edit-key').value = '';
-      ['f-title','f-location','f-distance','f-date','f-spots','f-emoji','f-notes'].forEach(id => {
+      ['f-title','f-location','f-destination','f-distance','f-date','f-spots','f-emoji','f-notes'].forEach(id => {
         document.getElementById(id).value = '';
       });
       document.getElementById('f-type').value   = 'ghats';
-      document.getElementById('f-status').value = 'open';
+      document.getElementById('f-status').value = 'scheduled';
       document.getElementById('form-heading').textContent = 'Add New Ride';
       document.getElementById('save-btn').textContent = 'Add Ride';
       document.getElementById('cancel-btn').style.display = 'none';
@@ -418,16 +442,18 @@
     let allRegs = [];
 
     function loadRegistrations() {
-      const spinner = document.getElementById('reg-spinner');
-      spinner.style.display = '';
-      db.ref('registrations').on('value', snap => {
-        spinner.style.display = 'none';
-        const data = snap.val() || {};
-        allRegs = Object.entries(data)
-          .map(([id, r]) => ({ ...r, _id: id }))
-          .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-        filterRegs();
+      allRegs = [];
+      Object.entries(ridesCache).forEach(([rideId, ride]) => {
+        const rideName = ride.rideName || rideId;
+        Object.entries(ride.registrations || {}).forEach(([key, r]) => {
+          allRegs.push({ ...r, _id: rideId + '/' + key, ride: rideName, timestamp: r.registeredAt || 0 });
+        });
+        Object.entries(ride.waitlist || {}).forEach(([key, r]) => {
+          allRegs.push({ ...r, _id: rideId + '/waitlist/' + key, ride: rideName + ' (waitlist)', timestamp: r.joinedAt || 0 });
+        });
       });
+      allRegs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+      filterRegs();
     }
 
     function updateRegRideFilter() {
@@ -445,27 +471,25 @@
         const rideMatch = !rideFilter || (r.ride || '').toLowerCase() === rideFilter;
         const searchMatch = !search ||
           (r.name || '').toLowerCase().includes(search) ||
-          (r.email || '').toLowerCase().includes(search) ||
-          (r.phone || '').toLowerCase().includes(search);
+          (r.phone || '').toLowerCase().includes(search) ||
+          (r.instagram || '').toLowerCase().includes(search);
         return rideMatch && searchMatch;
       });
       document.getElementById('reg-count').textContent = filtered.length + ' / ' + allRegs.length + ' registrations';
       const tbody = document.getElementById('reg-tbody');
       if (!filtered.length) {
-        tbody.innerHTML = '<tr><td colspan="5" class="reg-empty">' +
+        tbody.innerHTML = '<tr><td colspan="6" class="reg-empty">' +
           (allRegs.length ? 'No matches.' : 'No registrations yet.') + '</td></tr>';
         return;
       }
       tbody.innerHTML = filtered.map(r => {
         const d = r.timestamp ? new Date(r.timestamp).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : '—';
-        const gear = Array.isArray(r.gear) && r.gear.length ? r.gear.join(', ') : '';
         return '<tr>' +
-          '<td><strong>' + (r.name || '—') + '</strong>' +
-            (r.experience ? '<div class="reg-meta">' + r.experience + '</div>' : '') +
-          '</td>' +
-          '<td>' + (r.ride || r.subject || '—') + '</td>' +
-          '<td>' + (r.email || '') + (r.phone ? '<div class="reg-meta">' + r.phone + '</div>' : '') + '</td>' +
-          '<td>' + (r.bike || '—') + (gear ? '<div class="reg-meta">' + gear + '</div>' : '') + '</td>' +
+          '<td><strong>' + (r.name || '—') + '</strong></td>' +
+          '<td>' + (r.ride || '—') + '</td>' +
+          '<td>' + (r.phone || '—') + '</td>' +
+          '<td>' + (r.bike || '—') + '</td>' +
+          '<td>' + (r.instagram || '—') + '</td>' +
           '<td style="white-space:nowrap;">' + d + '</td>' +
         '</tr>';
       }).join('');

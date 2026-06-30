@@ -361,8 +361,8 @@
             subject: subjectTxt,
             ride: rideParam || '',
             gear: gearLines,
-            message,
-            timestamp: Date.now(),
+            notes: message,
+            registeredAt: Date.now(),
           }),
         }).catch(() => {});
       }
@@ -533,14 +533,32 @@
 
     const fbConf = window.PB_FIREBASE;
     const ridesUrl = (fbConf && fbConf.databaseURL && !fbConf.databaseURL.includes('YOUR-PROJECT'))
-      ? fbConf.databaseURL + '/rides/upcoming.json'
+      ? fbConf.databaseURL + '/scheduledRides.json'
       : 'assets/data/rides.json';
 
     const normaliseRides = (data, fromFirebase) => {
       if (fromFirebase) {
         if (!data) return [];
+        // scheduledRides schema: rideName, rideDate, meetingPoint, destination, maxRiders, notes, status
         return Object.entries(data)
-          .map(([id, r]) => ({ ...r, _fbKey: id }))
+          .filter(([, r]) => r.status !== 'cancelled' && r.status !== 'completed')
+          .map(([id, r]) => ({
+            _fbKey:    id,
+            title:     r.rideName || '',
+            location:  r.meetingPoint
+              ? (r.destination && r.destination !== r.meetingPoint
+                  ? r.meetingPoint + ' → ' + r.destination
+                  : r.meetingPoint)
+              : (r.destination || ''),
+            distance:  r.distance   || 0,
+            date:      r.rideDate   || '',
+            emoji:     r.emoji      || '🏍️',
+            status:    (r.status === 'scheduled' || r.status === 'active') ? 'open' : (r.status || 'open'),
+            spots:     r.maxRiders  || 0,
+            notes:     r.notes      || '',
+            type:      r.type       || 'general',
+            sortOrder: r.sortOrder  || 0,
+          }))
           .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0) || (a.date || '').localeCompare(b.date || ''));
       }
       return data.upcoming || [];
