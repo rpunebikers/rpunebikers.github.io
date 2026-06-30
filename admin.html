@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ride Admin — PuneBikers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" type="image/jpeg" href="assets/images/logo-bike.jpg" />
+  <script>if(localStorage.getItem("pb-theme")==="light")document.documentElement.dataset.theme="light";</script>
+  <style>
+    .admin-wrap { max-width: 860px; margin: 0 auto; padding: calc(var(--nav-height) + 3rem) 1.5rem 4rem; }
+    .admin-title { font-family: var(--font-display); font-size: 2.5rem; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+    .admin-sub { color: var(--clr-text-muted); font-size: 0.875rem; margin-bottom: 2.5rem; }
+    .admin-section { background: var(--clr-glass-bg); border: 1px solid var(--clr-glass-border); border-radius: var(--radius-lg); padding: 1.75rem; margin-bottom: 2rem; }
+    .admin-section h2 { font-size: 1rem; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 1.25rem; color: var(--clr-primary); text-transform: uppercase; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .form-row.triple { grid-template-columns: 1fr 1fr 1fr; }
+    @media (max-width: 600px) { .form-row, .form-row.triple { grid-template-columns: 1fr; } }
+    .form-group label { display: block; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--clr-text-muted); margin-bottom: 0.4rem; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 0.7rem 0.9rem; border-radius: var(--radius-sm);
+      border: 1px solid var(--clr-glass-border); background: var(--clr-surface);
+      color: var(--clr-text); font-family: var(--font-body); font-size: 0.9rem;
+      box-sizing: border-box;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: none; border-color: var(--clr-primary);
+    }
+    .btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.25rem; }
+    .ride-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .ride-list-item {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 0.9rem 1.1rem; background: var(--clr-surface);
+      border: 1px solid var(--clr-border); border-radius: var(--radius-md);
+    }
+    .ride-list-item .ride-emoji { font-size: 1.6rem; flex-shrink: 0; }
+    .ride-list-info { flex: 1; min-width: 0; }
+    .ride-list-info strong { display: block; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ride-list-info span { font-size: 0.78rem; color: var(--clr-text-muted); }
+    .ride-list-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+    .btn-icon { width: 34px; height: 34px; border-radius: var(--radius-sm); border: 1px solid var(--clr-glass-border); background: var(--clr-glass-bg); color: var(--clr-text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; transition: var(--transition); }
+    .btn-icon:hover { border-color: var(--clr-primary); color: var(--clr-primary); }
+    .btn-icon.danger:hover { border-color: #e55; color: #e55; }
+    .status-badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: var(--radius-sm); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+    .status-open { background: rgba(240,165,0,0.15); color: var(--clr-accent); }
+    .status-full { background: rgba(232,82,10,0.15); color: var(--clr-primary); }
+    .status-planning { background: rgba(136,136,136,0.15); color: #888; }
+    .status-cancelled { background: rgba(100,100,100,0.15); color: #666; }
+    .json-output { font-family: monospace; font-size: 0.78rem; background: #0a0a0a; color: #9ef; padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--clr-glass-border); white-space: pre; overflow-x: auto; margin-top: 1rem; max-height: 340px; overflow-y: auto; }
+    .how-to { font-size: 0.85rem; color: var(--clr-text-muted); line-height: 1.8; }
+    .how-to ol { padding-left: 1.2rem; margin-top: 0.5rem; }
+    .how-to li { margin-bottom: 0.4rem; }
+    .how-to a { color: var(--clr-primary); }
+    .copy-success { color: #4caf50; font-size: 0.8rem; margin-left: 0.75rem; opacity: 0; transition: opacity 0.3s; }
+    .copy-success.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="PuneBikers home">
+        <img src="assets/images/logo-bike.jpg" class="nav-logo-bike" alt="" aria-hidden="true">
+        <img src="assets/images/logo-text.png" class="nav-logo-text" alt="r/PuneBikers">
+      </a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour theme">🌙</button>
+    </div>
+  </nav>
+
+  <main id="main">
+    <div class="admin-wrap">
+
+      <p class="admin-title">Ride Admin</p>
+      <p class="admin-sub">Manage upcoming rides. Changes here update the JSON — paste it to GitHub to go live.</p>
+
+      <!-- EXISTING RIDES -->
+      <div class="admin-section">
+        <h2>Upcoming Rides</h2>
+        <div id="ride-list" class="ride-list">
+          <p style="color:var(--clr-text-muted);font-size:0.875rem;">Loading…</p>
+        </div>
+      </div>
+
+      <!-- ADD / EDIT FORM -->
+      <div class="admin-section">
+        <h2 id="form-heading">Add New Ride</h2>
+        <input type="hidden" id="edit-id" />
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-title">Ride Title *</label>
+            <input id="f-title" type="text" placeholder="Monsoon Ghats Escape" />
+          </div>
+          <div class="form-group">
+            <label for="f-location">Location *</label>
+            <input id="f-location" type="text" placeholder="Tamhini Ghats" />
+          </div>
+        </div>
+
+        <div class="form-row triple">
+          <div class="form-group">
+            <label for="f-distance">Distance (km) *</label>
+            <input id="f-distance" type="number" placeholder="180" min="1" />
+          </div>
+          <div class="form-group">
+            <label for="f-date">Date *</label>
+            <input id="f-date" type="text" placeholder="Jul 12, 2026" />
+          </div>
+          <div class="form-group">
+            <label for="f-spots">Total Spots</label>
+            <input id="f-spots" type="number" placeholder="20" min="1" />
+          </div>
+        </div>
+
+        <div class="form-row triple">
+          <div class="form-group">
+            <label for="f-emoji">Emoji</label>
+            <input id="f-emoji" type="text" placeholder="🌿" maxlength="4" />
+          </div>
+          <div class="form-group">
+            <label for="f-type">Ride Type</label>
+            <select id="f-type">
+              <option value="ghats">Ghats</option>
+              <option value="coastal">Coastal</option>
+              <option value="touring">Touring</option>
+              <option value="weekend">Weekend</option>
+              <option value="overnight">Overnight</option>
+              <option value="general">General</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f-status">Status</label>
+            <select id="f-status">
+              <option value="open">Open — registration live</option>
+              <option value="full">Full — no more spots</option>
+              <option value="planning">Planning — date TBD</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:0;">
+          <label for="f-notes">Short Note (optional)</label>
+          <input id="f-notes" type="text" placeholder="Helmets and rain gear mandatory" />
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" id="save-btn" onclick="saveRide()">Add Ride</button>
+          <button class="btn btn-outline" id="cancel-btn" onclick="cancelEdit()" style="display:none;">Cancel</button>
+        </div>
+      </div>
+
+      <!-- JSON EXPORT -->
+      <div class="admin-section">
+        <h2>Export JSON</h2>
+        <p class="how-to">
+          After adding or editing rides, copy the JSON below and paste it into
+          <code>assets/data/rides.json</code> on GitHub to publish your changes live.
+        </p>
+        <div class="btn-row" style="margin-top:1rem;">
+          <button class="btn btn-outline" onclick="copyJson()">Copy JSON</button>
+          <span class="copy-success" id="copy-msg">Copied!</span>
+        </div>
+        <div id="json-output" class="json-output"></div>
+
+        <div class="how-to" style="margin-top:1.5rem;">
+          <strong>How to publish:</strong>
+          <ol>
+            <li>Click <strong>Copy JSON</strong> above.</li>
+            <li>Go to your repo on GitHub → <code>assets/data/rides.json</code></li>
+            <li>Click the pencil icon to edit → paste the copied JSON → commit.</li>
+            <li>GitHub Pages redeploys in ~1 minute. Done.</li>
+          </ol>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    let rides = [];
+    let editingId = null;
+
+    // Load from rides.json, fall back to localStorage draft
+    fetch('assets/data/rides.json')
+      .then(r => r.json())
+      .then(data => {
+        const draft = localStorage.getItem('pb-admin-rides');
+        rides = draft ? JSON.parse(draft) : (data.upcoming || []);
+        renderList();
+        renderJson();
+      })
+      .catch(() => {
+        const draft = localStorage.getItem('pb-admin-rides');
+        rides = draft ? JSON.parse(draft) : [];
+        renderList();
+        renderJson();
+      });
+
+    function renderList() {
+      const el = document.getElementById('ride-list');
+      if (!rides.length) {
+        el.innerHTML = '<p style="color:var(--clr-text-muted);font-size:0.875rem;">No rides yet. Add one below.</p>';
+        return;
+      }
+      el.innerHTML = rides.map((r, i) => {
+        const sc = 'status-' + (r.status || 'open');
+        return '<div class="ride-list-item">' +
+          '<span class="ride-emoji">' + (r.emoji || '🏍️') + '</span>' +
+          '<div class="ride-list-info">' +
+            '<strong>' + r.title + '</strong>' +
+            '<span>📍 ' + r.location + ' &nbsp;·&nbsp; 📏 ' + r.distance + ' km &nbsp;·&nbsp; 📅 ' + r.date +
+            (r.spots ? ' &nbsp;·&nbsp; ' + r.spots + ' spots' : '') + '</span>' +
+          '</div>' +
+          '<span class="status-badge ' + sc + '">' + (r.status || 'open') + '</span>' +
+          '<div class="ride-list-actions">' +
+            '<button class="btn-icon" onclick="editRide(' + i + ')" aria-label="Edit">✏️</button>' +
+            '<button class="btn-icon danger" onclick="deleteRide(' + i + ')" aria-label="Delete">🗑️</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function renderJson() {
+      const json = JSON.stringify({ upcoming: rides }, null, 2);
+      document.getElementById('json-output').textContent = json;
+    }
+
+    function saveRide() {
+      const title    = document.getElementById('f-title').value.trim();
+      const location = document.getElementById('f-location').value.trim();
+      const distance = parseInt(document.getElementById('f-distance').value, 10);
+      const date     = document.getElementById('f-date').value.trim();
+      if (!title || !location || !distance || !date) {
+        alert('Title, Location, Distance and Date are required.');
+        return;
+      }
+      const ride = {
+        id:       editingId || title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') + '-' + Date.now(),
+        title,
+        location,
+        distance,
+        date,
+        type:     document.getElementById('f-type').value,
+        emoji:    document.getElementById('f-emoji').value.trim() || '🏍️',
+        status:   document.getElementById('f-status').value,
+        spots:    parseInt(document.getElementById('f-spots').value, 10) || null,
+        notes:    document.getElementById('f-notes').value.trim(),
+      };
+      if (ride.spots === null) delete ride.spots;
+      if (!ride.notes) delete ride.notes;
+
+      if (editingId) {
+        const idx = rides.findIndex(r => r.id === editingId);
+        if (idx >= 0) rides[idx] = ride;
+      } else {
+        rides.push(ride);
+      }
+      localStorage.setItem('pb-admin-rides', JSON.stringify(rides));
+      cancelEdit();
+      renderList();
+      renderJson();
+    }
+
+    function editRide(i) {
+      const r = rides[i];
+      editingId = r.id;
+      document.getElementById('f-title').value    = r.title || '';
+      document.getElementById('f-location').value = r.location || '';
+      document.getElementById('f-distance').value = r.distance || '';
+      document.getElementById('f-date').value     = r.date || '';
+      document.getElementById('f-spots').value    = r.spots || '';
+      document.getElementById('f-emoji').value    = r.emoji || '';
+      document.getElementById('f-type').value     = r.type || 'general';
+      document.getElementById('f-status').value   = r.status || 'open';
+      document.getElementById('f-notes').value    = r.notes || '';
+      document.getElementById('form-heading').textContent = 'Edit Ride';
+      document.getElementById('save-btn').textContent = 'Save Changes';
+      document.getElementById('cancel-btn').style.display = '';
+      document.getElementById('form-heading').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function deleteRide(i) {
+      if (!confirm('Delete "' + rides[i].title + '"?')) return;
+      rides.splice(i, 1);
+      localStorage.setItem('pb-admin-rides', JSON.stringify(rides));
+      renderList();
+      renderJson();
+    }
+
+    function cancelEdit() {
+      editingId = null;
+      ['f-title','f-location','f-distance','f-date','f-spots','f-emoji','f-notes'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('f-type').value = 'ghats';
+      document.getElementById('f-status').value = 'open';
+      document.getElementById('form-heading').textContent = 'Add New Ride';
+      document.getElementById('save-btn').textContent = 'Add Ride';
+      document.getElementById('cancel-btn').style.display = 'none';
+    }
+
+    function copyJson() {
+      const json = JSON.stringify({ upcoming: rides }, null, 2);
+      navigator.clipboard.writeText(json).then(() => {
+        const msg = document.getElementById('copy-msg');
+        msg.classList.add('show');
+        setTimeout(() => msg.classList.remove('show'), 2500);
+      });
+    }
+  </script>
+</body>
+</html>

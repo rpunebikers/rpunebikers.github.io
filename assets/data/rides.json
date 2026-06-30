@@ -1,0 +1,40 @@
+{
+  "upcoming": [
+    {
+      "id": "monsoon-ghats-2026-07",
+      "title": "Monsoon Ghats Escape",
+      "location": "Tamhini Ghats",
+      "distance": 180,
+      "date": "Jul 12, 2026",
+      "type": "ghats",
+      "emoji": "🌿",
+      "status": "open",
+      "spots": 20,
+      "notes": ""
+    },
+    {
+      "id": "lonavala-camp-2026-08",
+      "title": "Overnight Lonavala Camp",
+      "location": "Lonavala",
+      "distance": 120,
+      "date": "Aug 3, 2026",
+      "type": "weekend",
+      "emoji": "🏕️",
+      "status": "open",
+      "spots": 25,
+      "notes": ""
+    },
+    {
+      "id": "rajasthan-desert-2026-09",
+      "title": "Rajasthan Desert Run",
+      "location": "Rajasthan",
+      "distance": 3200,
+      "date": "Sep 20, 2026",
+      "type": "touring",
+      "emoji": "🏜️",
+      "status": "open",
+      "spots": 15,
+      "notes": ""
+    }
+  ]
+}

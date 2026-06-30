@@ -260,13 +260,28 @@
   // ── Contact form → Reddit modmail ──
   const form = document.querySelector('.contact-form');
   if (form) {
-    // Pre-fill subject from URL param (?subject=event etc.)
-    const subjectParam = new URLSearchParams(location.search).get('subject');
+    const urlParams = new URLSearchParams(location.search);
+    // Pre-fill subject from URL param (?subject=ride etc.)
+    const subjectParam = urlParams.get('subject');
     if (subjectParam) {
       const sel = form.querySelector('#subject');
       if (sel) {
         const match = Array.from(sel.options).find(o => o.value === subjectParam);
         if (match) sel.value = match.value;
+      }
+    }
+    // Pre-fill ride name when coming from a ride registration button
+    const rideParam = urlParams.get('ride');
+    if (rideParam) {
+      const banner = document.getElementById('ride-banner');
+      if (banner) {
+        banner.style.display = 'flex';
+        banner.innerHTML = '<span>🏍️</span><span>Registering for: <strong>' + rideParam + '</strong></span>';
+      }
+      const msgField = form.querySelector('#message');
+      if (msgField && !msgField.value) {
+        msgField.value = 'I\'d like to register for: ' + rideParam + '\n\n';
+        msgField.setSelectionRange(msgField.value.length, msgField.value.length);
       }
     }
 
@@ -445,6 +460,85 @@
     pageTabs.forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
     const hash = location.hash.replace('#', '');
     switchTab(VALID.includes(hash) ? hash : 'rides');
+  }
+
+  // ── Upcoming rides — load from rides.json and render ──
+  const upcomingContainer = document.getElementById('upcoming-rides-container');
+  if (upcomingContainer) {
+    const STAGGER = ['fade-up', 'fade-up stagger-1', 'fade-up stagger-2', 'fade-up stagger-3'];
+    const STATUS_LABEL = { open: 'Upcoming', full: 'Full', planning: 'Coming Soon', cancelled: 'Cancelled' };
+    const STATUS_COLOR = { open: 'var(--clr-accent)', full: '#e8520a', planning: '#888', cancelled: '#555' };
+
+    const renderRideCard = (ride, idx) => {
+      const km = ride.distance >= 1000
+        ? (ride.distance / 1000).toFixed(1).replace(/\.0$/, '') + ',000'
+        : ride.distance;
+      const status = ride.status || 'open';
+      const label = STATUS_LABEL[status] || 'Upcoming';
+      const color = STATUS_COLOR[status] || STATUS_COLOR.open;
+      const isOpen = status === 'open';
+
+      const waText = encodeURIComponent(
+        '🏍️ Upcoming Ride: ' + ride.title +
+        '\n📍 ' + ride.location +
+        '\n📏 ' + km + ' km | 📅 ' + ride.date +
+        '\nDetails: https://rpunebikers.github.io/rides.html'
+      );
+      const registerUrl = 'contact.html?subject=ride&ride=' + encodeURIComponent(ride.title);
+
+      const article = document.createElement('article');
+      article.className = 'ride-card ' + (STAGGER[idx % STAGGER.length] || 'fade-up');
+      article.dataset.type = ride.type || 'general';
+      article.innerHTML =
+        '<div class="ride-card-thumb">' +
+          '<div class="ride-card-placeholder" aria-hidden="true">' + (ride.emoji || '🏍️') + '</div>' +
+          '<span class="ride-card-badge" style="background:' + color + ';color:#000;">' + label + '</span>' +
+          (ride.spots ? '<span class="ride-spots-badge">' + ride.spots + ' spots</span>' : '') +
+        '</div>' +
+        '<div class="ride-card-body">' +
+          '<div class="ride-card-meta">' +
+            '<span>📍 ' + ride.location + '</span>' +
+            '<span>📏 ' + km + ' km</span>' +
+            '<span>📅 ' + ride.date + '</span>' +
+          '</div>' +
+          '<h3 class="ride-card-title">' + ride.title + '</h3>' +
+          (ride.notes ? '<p class="ride-card-desc" style="font-size:0.78rem;">' + ride.notes + '</p>' : '') +
+          '<div class="ride-card-actions">' +
+            (isOpen
+              ? '<a href="' + registerUrl + '" class="btn btn-primary btn-sm">Register</a>'
+              : '<span class="btn btn-sm ride-btn-disabled">' + label + '</span>') +
+            '<a href="https://wa.me/?text=' + waText + '" class="wa-share-btn" target="_blank" rel="noopener" aria-label="Share on WhatsApp">💬 Share</a>' +
+          '</div>' +
+        '</div>';
+      return article;
+    };
+
+    fetch('assets/data/rides.json')
+      .then(r => r.json())
+      .then(data => {
+        const rides = (data.upcoming || []);
+        upcomingContainer.innerHTML = '';
+        if (!rides.length) {
+          upcomingContainer.innerHTML = '<p style="color:var(--clr-text-muted);">No upcoming rides listed yet. Check back soon.</p>';
+          return;
+        }
+        rides.forEach((ride, i) => {
+          const card = renderRideCard(ride, i);
+          upcomingContainer.appendChild(card);
+        });
+        // Re-run fade-up observer on newly rendered cards
+        if ('IntersectionObserver' in window) {
+          const io = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+          }, { threshold: 0.1 });
+          upcomingContainer.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+        } else {
+          upcomingContainer.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+        }
+      })
+      .catch(() => {
+        upcomingContainer.innerHTML = '<p style="color:var(--clr-text-muted);">Could not load upcoming rides.</p>';
+      });
   }
 
   // ── Card flip → map preview (skipped for prefers-reduced-motion) ──

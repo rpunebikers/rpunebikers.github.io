@@ -1652,6 +1652,61 @@ section {
 }
 .wa-share-btn:hover { background: #25d366; color: #000; border-color: #25d366; }
 
+/* ===== RIDE CARD ACTIONS (register + share row) ===== */
+.ride-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.85rem;
+  flex-wrap: wrap;
+}
+.ride-btn-disabled {
+  opacity: 0.45;
+  cursor: default;
+  pointer-events: none;
+  background: var(--clr-glass-bg);
+  border: 1px solid var(--clr-glass-border);
+  color: var(--clr-text-muted);
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+}
+/* spots remaining badge on card thumb */
+.ride-spots-badge {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(0,0,0,0.72);
+  color: #fff;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+}
+/* loading placeholder */
+.upcoming-loading {
+  color: var(--clr-text-muted);
+  font-size: 0.9rem;
+  padding: 1rem 0;
+}
+/* ride registration banner on contact page */
+.ride-register-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  margin-bottom: 1.5rem;
+  background: rgba(232,82,10,0.1);
+  border: 1px solid rgba(232,82,10,0.3);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--clr-text);
+}
+.ride-register-banner span:first-child { font-size: 1.4rem; }
+
 /* ===== PRINT CONTROLS ===== */
 .print-controls {
   display: flex;

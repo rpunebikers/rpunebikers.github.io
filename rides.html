@@ -243,55 +243,9 @@
       <div class="container">
         <p class="section-label">Upcoming</p>
         <h2 class="section-title" id="upcoming-title">Next on the Calendar</h2>
-
-        <div class="rides-grid">
-          <article class="ride-card fade-up" data-type="ghats">
-            <div class="ride-card-thumb">
-              <div class="ride-card-placeholder" aria-hidden="true">🌿</div>
-              <span class="ride-card-badge" style="background:var(--clr-accent);color:#000;">Upcoming</span>
-            </div>
-            <div class="ride-card-body">
-              <div class="ride-card-meta">
-                <span>📍 Tamhini Ghats</span>
-                <span>📏 180 km</span>
-                <span>📅 Jul 12</span>
-              </div>
-              <h3 class="ride-card-title">Monsoon Ghats Escape</h3>
-            
-              <a href="https://wa.me/?text=%F0%9F%8F%8D%EF%B8%8F%20Upcoming%20Ride%3A%20Monsoon%20Ghats%20Escape%0A%F0%9F%93%8D%20Tamhini%20Ghats%0A%F0%9F%93%8F%20180%20km%20%7C%20%F0%9F%93%85%20Jul%2012%0ADetails%3A%20https%3A//rpunebikers.github.io/events.html" class="wa-share-btn" target="_blank" rel="noopener" aria-label="Share on WhatsApp">💬 Share</a></div>
-          </article>
-
-          <article class="ride-card fade-up stagger-1" data-type="touring">
-            <div class="ride-card-thumb">
-              <div class="ride-card-placeholder" aria-hidden="true">🏜️</div>
-              <span class="ride-card-badge" style="background:var(--clr-accent);color:#000;">Upcoming</span>
-            </div>
-            <div class="ride-card-body">
-              <div class="ride-card-meta">
-                <span>📍 Rajasthan</span>
-                <span>📏 3,200 km</span>
-                <span>📅 Sep 20</span>
-              </div>
-              <h3 class="ride-card-title">Rajasthan Desert Run</h3>
-            
-              <a href="https://wa.me/?text=%F0%9F%8F%8D%EF%B8%8F%20Upcoming%20Ride%3A%20Rajasthan%20Desert%20Run%0A%F0%9F%93%8D%20Jaisalmer%20Circuit%0A%F0%9F%93%8F%203%2C200%20km%20%7C%20%F0%9F%93%85%20Sep%2020%0ADetails%3A%20https%3A//rpunebikers.github.io/events.html" class="wa-share-btn" target="_blank" rel="noopener" aria-label="Share on WhatsApp">💬 Share</a></div>
-          </article>
-
-          <article class="ride-card fade-up stagger-2" data-type="weekend">
-            <div class="ride-card-thumb">
-              <div class="ride-card-placeholder" aria-hidden="true">🏕️</div>
-              <span class="ride-card-badge" style="background:var(--clr-accent);color:#000;">Upcoming</span>
-            </div>
-            <div class="ride-card-body">
-              <div class="ride-card-meta">
-                <span>📍 Lonavala</span>
-                <span>📏 120 km</span>
-                <span>📅 Aug 3</span>
-              </div>
-              <h3 class="ride-card-title">Overnight Lonavala Camp</h3>
-            
-              <a href="https://wa.me/?text=%F0%9F%8F%8D%EF%B8%8F%20Upcoming%20Ride%3A%20Overnight%20Lonavala%20Camp%0A%F0%9F%93%8D%20Lonavala%0A%F0%9F%93%8F%20120%20km%20%7C%20%F0%9F%93%85%20Aug%203%0ADetails%3A%20https%3A//rpunebikers.github.io/events.html" class="wa-share-btn" target="_blank" rel="noopener" aria-label="Share on WhatsApp">💬 Share</a></div>
-          </article>
+        <div id="upcoming-rides-container" class="rides-grid" aria-live="polite">
+          <!-- Loaded from assets/data/rides.json -->
+          <p class="upcoming-loading">Loading rides…</p>
         </div>
       </div>
     </section>
