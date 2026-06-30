@@ -341,30 +341,44 @@
         message,
       ].filter(l => l !== null).join('\n');
 
-      const subject = `[${subjectTxt}] — ${name}`;
-      const url = 'https://www.reddit.com/message/compose/'
-        + '?to=/r/PuneBikers'
-        + '&subject=' + encodeURIComponent(subject)
-        + '&message=' + encodeURIComponent(body);
+      const _params = new URLSearchParams(location.search);
+      const rideParam = _params.get('ride') || '';
+      const rideIdParam = _params.get('rideId') || '';
 
-      window.open(url, '_blank', 'noopener,noreferrer');
+      const btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.style.background = '#22c55e';
 
-      // Save to Firebase RTDB if configured
-      const _fbConf = window.PB_FIREBASE;
-      if (_fbConf && _fbConf.databaseURL && !_fbConf.databaseURL.includes('YOUR-PROJECT')) {
-        const _params = new URLSearchParams(location.search);
-        const rideParam = _params.get('ride') || '';
-        const rideIdParam = _params.get('rideId') || '';
-        if (rideIdParam) {
-          // Write into the ride's own registrations sub-collection (visible in mod app)
+      if (rideIdParam) {
+        // Ride registration — save directly to Firebase, no Reddit
+        const _fbConf = window.PB_FIREBASE;
+        if (_fbConf && _fbConf.databaseURL && !_fbConf.databaseURL.includes('YOUR-PROJECT')) {
           const emailKey = email.replace(/\./g, ',').replace(/@/g, '_at_');
           fetch(_fbConf.databaseURL + '/scheduledRides/' + rideIdParam + '/registrations/' + emailKey + '.json', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, phone, bike, notes: message, registeredAt: Date.now() }),
           }).catch(() => {});
-        } else {
-          // Generic contact / no ride selected — save to flat registrations path
+        }
+        btn.textContent = 'Registered!';
+        setTimeout(() => {
+          btn.textContent = 'Register';
+          btn.disabled = false;
+          btn.style.background = '';
+          form.reset();
+          required.forEach(f => f.style.borderColor = '');
+        }, 3000);
+      } else {
+        // Group joining / general enquiry — open Reddit modmail
+        const subject = `[${subjectTxt}] — ${name}`;
+        const redditUrl = 'https://www.reddit.com/message/compose/'
+          + '?to=/r/PuneBikers'
+          + '&subject=' + encodeURIComponent(subject)
+          + '&message=' + encodeURIComponent(body);
+        window.open(redditUrl, '_blank', 'noopener,noreferrer');
+
+        const _fbConf = window.PB_FIREBASE;
+        if (_fbConf && _fbConf.databaseURL && !_fbConf.databaseURL.includes('YOUR-PROJECT')) {
           fetch(_fbConf.databaseURL + '/registrations.json', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -378,19 +392,16 @@
             }),
           }).catch(() => {});
         }
-      }
 
-      const btn = form.querySelector('button[type="submit"]');
-      btn.textContent = 'Opening Reddit…';
-      btn.disabled = true;
-      btn.style.background = '#22c55e';
-      setTimeout(() => {
-        btn.textContent = 'Send via Reddit';
-        btn.disabled = false;
-        btn.style.background = '';
-        form.reset();
-        required.forEach(f => f.style.borderColor = '');
-      }, 3000);
+        btn.textContent = 'Opening Reddit…';
+        setTimeout(() => {
+          btn.textContent = 'Send via Reddit';
+          btn.disabled = false;
+          btn.style.background = '';
+          form.reset();
+          required.forEach(f => f.style.borderColor = '');
+        }, 3000);
+      }
     });
   }
 
