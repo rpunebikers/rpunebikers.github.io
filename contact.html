@@ -143,6 +143,11 @@
               </div>
 
               <div class="form-group">
+                <label for="instagram">Instagram Handle</label>
+                <input type="text" id="instagram" name="instagram" placeholder="@yourusername" autocomplete="username" />
+              </div>
+
+              <div class="form-group">
                 <label for="subject">Subject <span aria-hidden="true">*</span></label>
                 <select id="subject" name="subject" required>
                   <option value="" disabled selected>Select a reason…</option>
@@ -233,10 +238,10 @@
                 <textarea id="message" name="message" placeholder="Tell us about yourself, your riding experience, or your question…" required></textarea>
               </div>
 
-              <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
+              <button type="submit" id="contact-submit-btn" class="btn btn-primary" style="width:100%;justify-content:center;">
                 Send via Reddit
               </button>
-              <p style="font-size:0.75rem;color:var(--clr-text-dim);margin-top:0.75rem;text-align:center;">
+              <p id="contact-submit-note" style="font-size:0.75rem;color:var(--clr-text-dim);margin-top:0.75rem;text-align:center;">
                 Submitting opens Reddit's message compose with your details pre-filled — log in and hit Send to reach our modmail.
               </p>
             </form>

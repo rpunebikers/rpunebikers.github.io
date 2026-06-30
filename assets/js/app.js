@@ -271,7 +271,8 @@
       }
     }
     // Pre-fill ride name when coming from a ride registration button
-    const rideParam = urlParams.get('ride');
+    const rideParam   = urlParams.get('ride');
+    const rideIdParam0 = urlParams.get('rideId');
     if (rideParam) {
       const banner = document.getElementById('ride-banner');
       if (banner) {
@@ -283,6 +284,13 @@
         msgField.value = 'I\'d like to register for: ' + rideParam + '\n\n';
         msgField.setSelectionRange(msgField.value.length, msgField.value.length);
       }
+    }
+    // Switch button label and hint for ride registrations (no Reddit needed)
+    if (rideIdParam0) {
+      const submitBtn  = document.getElementById('contact-submit-btn');
+      const submitNote = document.getElementById('contact-submit-note');
+      if (submitBtn)  submitBtn.textContent  = 'Register for Ride';
+      if (submitNote) submitNote.textContent = 'Your details are saved directly — no Reddit account needed.';
     }
 
     form.addEventListener('submit', e => {
@@ -312,6 +320,7 @@
       const name       = val('name');
       const email      = val('email');
       const phone      = val('phone');
+      const instagram  = val('instagram');
       const subjectTxt = sel('subject') || 'General Enquiry';
       const bike       = val('bike');
       const experience = sel('experience');
@@ -359,12 +368,12 @@
           fetch(_fbConf.databaseURL + '/scheduledRides/' + rideIdParam + '/registrations/' + encodeURIComponent(nameKey) + '.json', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, phone, bike, notes: message, registeredAt: Date.now() }),
+            body: JSON.stringify({ name, email, phone, bike, instagram, notes: message, registeredAt: Date.now() }),
           }).catch(() => {});
         }
         btn.textContent = 'Registered!';
         setTimeout(() => {
-          btn.textContent = 'Register';
+          btn.textContent = 'Register for Ride';
           btn.disabled = false;
           btn.style.background = '';
           form.reset();
