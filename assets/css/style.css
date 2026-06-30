@@ -474,6 +474,7 @@ section {
   display: block;
   line-height: 1;
 }
+[data-count] { visibility: hidden; }
 /* ── Digital odometer ── */
 .odo-wrap {
   display: inline-flex;

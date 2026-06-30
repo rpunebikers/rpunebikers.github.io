@@ -113,6 +113,7 @@
 
     el.textContent = '';
     el.appendChild(wrap);
+    el.style.visibility = 'visible';
 
     requestAnimationFrame(() => requestAnimationFrame(() => {
       reels.forEach(({ reel, d, delay }) => {
