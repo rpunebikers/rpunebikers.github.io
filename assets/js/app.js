@@ -352,19 +352,32 @@
       // Save to Firebase RTDB if configured
       const _fbConf = window.PB_FIREBASE;
       if (_fbConf && _fbConf.databaseURL && !_fbConf.databaseURL.includes('YOUR-PROJECT')) {
-        const rideParam = new URLSearchParams(location.search).get('ride') || '';
-        fetch(_fbConf.databaseURL + '/registrations.json', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name, email, phone, bike, experience,
-            subject: subjectTxt,
-            ride: rideParam || '',
-            gear: gearLines,
-            notes: message,
-            registeredAt: Date.now(),
-          }),
-        }).catch(() => {});
+        const _params = new URLSearchParams(location.search);
+        const rideParam = _params.get('ride') || '';
+        const rideIdParam = _params.get('rideId') || '';
+        if (rideIdParam) {
+          // Write into the ride's own registrations sub-collection (visible in mod app)
+          const emailKey = email.replace(/\./g, ',').replace(/@/g, '_at_');
+          fetch(_fbConf.databaseURL + '/scheduledRides/' + rideIdParam + '/registrations/' + emailKey + '.json', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, phone, bike, notes: message, registeredAt: Date.now() }),
+          }).catch(() => {});
+        } else {
+          // Generic contact / no ride selected — save to flat registrations path
+          fetch(_fbConf.databaseURL + '/registrations.json', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name, email, phone, bike, experience,
+              subject: subjectTxt,
+              ride: rideParam,
+              gear: gearLines,
+              notes: message,
+              registeredAt: Date.now(),
+            }),
+          }).catch(() => {});
+        }
       }
 
       const btn = form.querySelector('button[type="submit"]');
@@ -502,7 +515,7 @@
         '\n📏 ' + km + ' km | 📅 ' + ride.date +
         '\nDetails: https://rpunebikers.github.io/rides.html'
       );
-      const registerUrl = 'contact.html?subject=ride&ride=' + encodeURIComponent(ride.title);
+      const registerUrl = 'contact.html?subject=ride&ride=' + encodeURIComponent(ride.title) + (ride._fbKey ? '&rideId=' + encodeURIComponent(ride._fbKey) : '');
 
       const article = document.createElement('article');
       article.className = 'ride-card ' + (STAGGER[idx % STAGGER.length] || 'fade-up');
