@@ -458,12 +458,14 @@
       if (cached && Date.now() - cached.ts < CACHE_TTL) {
         applyCount(cached.count, cached.suffix);
       } else {
-        fetch('https://www.reddit.com/r/PuneBikers/about.json')
-          .then(r => r.json())
+        fetch('https://www.reddit.com/r/PuneBikers/about.json?raw_json=1', {
+            headers: { 'Accept': 'application/json' },
+          })
+          .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
           .then(d => {
-            const subs = d.data.subscribers;
+            const subs = d?.data?.subscribers;
             if (!subs) return;
-            const count = subs >= 1000 ? Math.round(subs / 1000) : subs;
+            const count = subs >= 1000 ? Math.floor(subs / 1000) : subs;
             const suffix = subs >= 1000 ? 'k+' : '+';
             localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), count, suffix }));
             applyCount(count, suffix);
