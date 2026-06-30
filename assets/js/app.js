@@ -349,6 +349,24 @@
 
       window.open(url, '_blank', 'noopener,noreferrer');
 
+      // Save to Firebase RTDB if configured
+      const _fbConf = window.PB_FIREBASE;
+      if (_fbConf && _fbConf.databaseURL && !_fbConf.databaseURL.includes('YOUR-PROJECT')) {
+        const rideParam = new URLSearchParams(location.search).get('ride') || '';
+        fetch(_fbConf.databaseURL + '/registrations.json', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name, email, phone, bike, experience,
+            subject: subjectTxt,
+            ride: rideParam || '',
+            gear: gearLines,
+            message,
+            timestamp: Date.now(),
+          }),
+        }).catch(() => {});
+      }
+
       const btn = form.querySelector('button[type="submit"]');
       btn.textContent = 'Opening Reddit…';
       btn.disabled = true;
@@ -513,10 +531,26 @@
       return article;
     };
 
-    fetch('assets/data/rides.json')
+    const fbConf = window.PB_FIREBASE;
+    const ridesUrl = (fbConf && fbConf.databaseURL && !fbConf.databaseURL.includes('YOUR-PROJECT'))
+      ? fbConf.databaseURL + '/rides/upcoming.json'
+      : 'assets/data/rides.json';
+
+    const normaliseRides = (data, fromFirebase) => {
+      if (fromFirebase) {
+        if (!data) return [];
+        return Object.entries(data)
+          .map(([id, r]) => ({ ...r, _fbKey: id }))
+          .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0) || (a.date || '').localeCompare(b.date || ''));
+      }
+      return data.upcoming || [];
+    };
+
+    fetch(ridesUrl)
       .then(r => r.json())
       .then(data => {
-        const rides = (data.upcoming || []);
+        const fromFb = ridesUrl !== 'assets/data/rides.json';
+        const rides = normaliseRides(data, fromFb);
         upcomingContainer.innerHTML = '';
         if (!rides.length) {
           upcomingContainer.innerHTML = '<p style="color:var(--clr-text-muted);">No upcoming rides listed yet. Check back soon.</p>';
@@ -526,7 +560,6 @@
           const card = renderRideCard(ride, i);
           upcomingContainer.appendChild(card);
         });
-        // Re-run fade-up observer on newly rendered cards
         if ('IntersectionObserver' in window) {
           const io = new IntersectionObserver(entries => {
             entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
