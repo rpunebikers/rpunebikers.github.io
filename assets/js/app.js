@@ -573,14 +573,19 @@
         return Object.entries(data)
           .filter(([, r]) => r.status !== 'cancelled' && r.status !== 'completed')
           .map(([id, r]) => {
-            let distance = r.distance || 0;
+            // Prefer totalDistanceKm (real road distance via Google Directions API)
+            // Fall back to Haversine straight-line sum if not available
+            let distance = r.totalDistanceKm ? Math.round(r.totalDistanceKm) : (r.distance || 0);
             if (!distance && r.startLat && r.startLng && r.endLat && r.endLng) {
               const coords = [[r.startLat, r.startLng]];
               if (Array.isArray(r.haltCoords)) {
                 r.haltCoords.forEach(c => {
-                  const lat = c.latitude ?? c.lat ?? c[0];
-                  const lng = c.longitude ?? c.lng ?? c[1];
-                  if (lat != null && lng != null) coords.push([lat, lng]);
+                  // haltCoords are stored as "lat,lng" strings by the mod app
+                  if (typeof c !== 'string') return;
+                  const parts = c.split(',');
+                  const lat = parseFloat(parts[0]);
+                  const lng = parseFloat(parts[1]);
+                  if (!isNaN(lat) && !isNaN(lng)) coords.push([lat, lng]);
                 });
               }
               coords.push([r.endLat, r.endLng]);
