@@ -74,15 +74,23 @@
 
   // ── Digital odometer ──
   const buildOdometer = el => {
-    const target = parseInt(el.dataset.count, 10);
+    const raw = String(el.dataset.count);
+    const target = parseFloat(raw);
     const suffix = el.dataset.suffix || '';
     if (isNaN(target)) return;
 
-    const digits = String(target).split('');
     const wrap = document.createElement('span');
     wrap.className = 'odo-wrap';
 
-    const reels = digits.map((d, i) => {
+    const reels = [];
+    raw.split('').forEach(ch => {
+      if (ch === '.') {
+        const dot = document.createElement('span');
+        dot.textContent = '.';
+        dot.style.cssText = 'display:inline-block;line-height:1;margin:0 0.05em;';
+        wrap.appendChild(dot);
+        return;
+      }
       const slot = document.createElement('span');
       slot.className = 'odo-digit';
       const reel = document.createElement('span');
@@ -94,7 +102,7 @@
       }
       slot.appendChild(reel);
       wrap.appendChild(slot);
-      return { reel, d: parseInt(d, 10), delay: i * 0.07 };
+      reels.push({ reel, d: parseInt(ch, 10), delay: reels.length * 0.07 });
     });
 
     if (suffix) {
@@ -465,7 +473,7 @@
           .then(d => {
             const subs = d?.data?.subscribers;
             if (!subs) return;
-            const count = subs >= 1000 ? Math.floor(subs / 1000) : subs;
+            const count = subs >= 1000 ? (Math.floor(subs / 100) / 10).toFixed(1) : subs;
             const suffix = subs >= 1000 ? 'k+' : '+';
             localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), count, suffix }));
             applyCount(count, suffix);
