@@ -523,7 +523,7 @@
       const waText = encodeURIComponent(
         '🏍️ Upcoming Ride: ' + ride.title +
         '\n📍 ' + ride.location +
-        '\n📏 ' + km + ' km | 📅 ' + ride.date +
+        (km ? '\n📏 ' + km + ' km' : '') + ' | 📅 ' + ride.date +
         '\nDetails: https://rpunebikers.github.io/rides.html'
       );
       const registerUrl = 'contact.html?subject=ride&ride=' + encodeURIComponent(ride.title) + (ride._fbKey ? '&rideId=' + encodeURIComponent(ride._fbKey) : '');
@@ -540,7 +540,7 @@
         '<div class="ride-card-body">' +
           '<div class="ride-card-meta">' +
             '<span>📍 ' + ride.location + '</span>' +
-            '<span>📏 ' + km + ' km</span>' +
+            (km ? '<span>📏 ' + km + ' km</span>' : '') +
             '<span>📅 ' + ride.date + '</span>' +
           '</div>' +
           '<h3 class="ride-card-title">' + ride.title + '</h3>' +
@@ -560,29 +560,53 @@
       ? fbConf.databaseURL + '/scheduledRides.json'
       : 'assets/data/rides.json';
 
+    const haversineKm = (lat1, lng1, lat2, lng2) => {
+      const R = 6371, toRad = x => x * Math.PI / 180;
+      const dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1);
+      const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng/2)**2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    };
+
     const normaliseRides = (data, fromFirebase) => {
       if (fromFirebase) {
         if (!data) return [];
-        // scheduledRides schema: rideName, rideDate, meetingPoint, destination, maxRiders, notes, status
         return Object.entries(data)
           .filter(([, r]) => r.status !== 'cancelled' && r.status !== 'completed')
-          .map(([id, r]) => ({
-            _fbKey:    id,
-            title:     r.rideName || '',
-            location:  r.meetingPoint
-              ? (r.destination && r.destination !== r.meetingPoint
-                  ? r.meetingPoint + ' → ' + r.destination
-                  : r.meetingPoint)
-              : (r.destination || ''),
-            distance:  r.distance   || 0,
-            date:      r.rideDate   || '',
-            emoji:     r.emoji      || '🏍️',
-            status:    (r.status === 'scheduled' || r.status === 'active') ? 'open' : (r.status || 'open'),
-            spots:     r.maxRiders  || 0,
-            notes:     r.notes      || '',
-            type:      r.type       || 'general',
-            sortOrder: r.sortOrder  || 0,
-          }))
+          .map(([id, r]) => {
+            let distance = r.distance || 0;
+            if (!distance && r.startLat && r.startLng && r.endLat && r.endLng) {
+              const coords = [[r.startLat, r.startLng]];
+              if (Array.isArray(r.haltCoords)) {
+                r.haltCoords.forEach(c => {
+                  const lat = c.latitude ?? c.lat ?? c[0];
+                  const lng = c.longitude ?? c.lng ?? c[1];
+                  if (lat != null && lng != null) coords.push([lat, lng]);
+                });
+              }
+              coords.push([r.endLat, r.endLng]);
+              for (let i = 1; i < coords.length; i++) {
+                distance += haversineKm(coords[i-1][0], coords[i-1][1], coords[i][0], coords[i][1]);
+              }
+              distance = Math.round(distance);
+            }
+            return {
+              _fbKey:    id,
+              title:     r.rideName || '',
+              location:  r.meetingPoint
+                ? (r.destination && r.destination !== r.meetingPoint
+                    ? r.meetingPoint + ' → ' + r.destination
+                    : r.meetingPoint)
+                : (r.destination || ''),
+              distance,
+              date:      r.rideDate   || '',
+              emoji:     r.emoji      || '🏍️',
+              status:    (r.status === 'scheduled' || r.status === 'active') ? 'open' : (r.status || 'open'),
+              spots:     r.maxRiders  || 0,
+              notes:     r.notes      || '',
+              type:      r.type       || 'general',
+              sortOrder: r.sortOrder  || 0,
+            };
+          })
           .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0) || (a.date || '').localeCompare(b.date || ''));
       }
       return data.upcoming || [];
