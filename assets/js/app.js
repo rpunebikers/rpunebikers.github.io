@@ -463,7 +463,7 @@
           .then(d => {
             const subs = d.data.subscribers;
             if (!subs) return;
-            const count = subs >= 1000 ? Math.floor(subs / 1000) : subs;
+            const count = subs >= 1000 ? Math.round(subs / 1000) : subs;
             const suffix = subs >= 1000 ? 'k+' : '+';
             localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), count, suffix }));
             applyCount(count, suffix);
