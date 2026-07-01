@@ -561,9 +561,11 @@
         '</div>' +
         '<div class="ride-card-body">' +
           '<div class="ride-card-meta">' +
-            '<span>📍 ' + ride.location + '</span>' +
-            (km ? '<span>📏 ' + km + ' km</span>' : '') +
-            '<span>📅 ' + ride.date + '</span>' +
+            '<span class="ride-meta-route">📍 ' + ride.location + '</span>' +
+            '<div class="ride-meta-pills">' +
+              (km ? '<span>📏 ' + km + ' km</span>' : '') +
+              '<span>📅 ' + ride.date + '</span>' +
+            '</div>' +
           '</div>' +
           '<h3 class="ride-card-title">' + ride.title + '</h3>' +
           (ride.notes ? '<p class="ride-card-desc" style="font-size:0.78rem;">' + ride.notes + '</p>' : '') +

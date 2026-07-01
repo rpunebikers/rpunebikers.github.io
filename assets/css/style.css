@@ -596,13 +596,28 @@ section {
 .ride-card-body { padding: 1.25rem; }
 .ride-card-meta {
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.35rem;
   font-size: 0.75rem;
   color: var(--clr-text-muted);
   margin-bottom: 0.6rem;
   font-weight: 500;
 }
 .ride-card-meta span { display: flex; align-items: center; gap: 0.3rem; }
+.ride-meta-route {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.45;
+  word-break: break-word;
+}
+.ride-meta-pills {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
 .ride-card-title {
   font-size: 1.15rem;
   font-weight: 700;
