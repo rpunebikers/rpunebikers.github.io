@@ -646,6 +646,8 @@
     };
 
     const setupRiderFlip = (card, regs) => {
+      // Measure natural height before flip-enabled's 240px rule kicks in
+      const naturalHeight = card.offsetHeight;
       card.classList.add('flip-enabled', 'flip-riders');
       const inner = document.createElement('div');
       inner.className = 'ride-card-inner';
@@ -684,6 +686,8 @@
       inner.appendChild(front);
       inner.appendChild(back);
       card.appendChild(inner);
+      // Pin the card to its natural height so flip back panel matches
+      if (naturalHeight > 0) card.style.height = naturalHeight + 'px';
       card.addEventListener('click', e => {
         if (e.target.closest('a')) return;
         card.classList.toggle('flipped');

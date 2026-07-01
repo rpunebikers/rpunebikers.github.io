@@ -648,6 +648,12 @@ section {
   height: 120px;
   flex-shrink: 0;
 }
+/* Upcoming ride cards: restore natural thumb size (not the archive 120px) */
+.ride-card.flip-riders .ride-card-thumb {
+  aspect-ratio: 16/10;
+  height: auto;
+  flex-shrink: 0;
+}
 .ride-card.flip-enabled.flipped:hover,
 .ride-card.flip-enabled.flipped {
   transform: none;
