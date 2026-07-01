@@ -1990,6 +1990,79 @@ section {
 }
 .error-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
+/* ===== SMALL MOBILE (≤ 480 px) ===== */
+@media (max-width: 480px) {
+  /* single-column all auto-fill grids */
+  .rides-grid,
+  .routes-grid,
+  .philosophy-grid,
+  .core-team-grid,
+  .full-gallery-grid,
+  .archive-grid,
+  .events-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* about-values: 1 col on tiny screens */
+  .about-values {
+    grid-template-columns: 1fr;
+  }
+
+  /* hero stats: wrap so they don't squeeze */
+  .hero-stats {
+    flex-wrap: wrap;
+    gap: 1.25rem 2rem;
+  }
+
+  /* page tab buttons: smaller touch targets */
+  .page-tab-btn {
+    padding: 0.65rem 1.1rem;
+    font-size: 0.8rem;
+  }
+
+  /* contact channels: tighter on small screens */
+  .contact-channel {
+    gap: 0.85rem;
+    padding: 1rem;
+  }
+  .contact-channel-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  /* members join CTA: less vertical padding */
+  .join-cta {
+    padding: 2rem 1.25rem;
+    margin-top: 2rem;
+  }
+
+  /* member expanded card: shorter avatar band */
+  .member-card-expanded .member-avatar,
+  .member-card-expanded .member-avatar-icon {
+    height: 140px;
+  }
+
+  /* gallery & ride filter buttons: tighter */
+  .filter-btn {
+    padding: 0.35rem 0.9rem;
+    font-size: 0.78rem;
+  }
+  .gallery-cat-filter {
+    gap: 0.35rem;
+  }
+
+  /* ig-cta: less side padding */
+  .ig-cta {
+    padding: 1.75rem 1rem;
+  }
+}
+
+/* hide scroll indicator on mobile — overlaps sticky join CTA */
+@media (max-width: 768px) {
+  .scroll-indicator { display: none; }
+}
+
 /* ===== PRINT STYLES ===== */
 @media print {
   .navbar, .footer, .mobile-join-cta, .back-to-top,
