@@ -621,11 +621,60 @@
               notes:     r.notes      || '',
               type:      r.type       || 'general',
               sortOrder: r.sortOrder  || 0,
+              registrations: Object.values(r.registrations || {})
+                .filter(reg => reg && reg.name)
+                .sort((a, b) => (a.registeredAt || 0) - (b.registeredAt || 0))
+                .map(reg => ({ name: reg.name, bike: reg.bike || '' })),
             };
           })
           .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0) || (a.date || '').localeCompare(b.date || ''));
       }
       return data.upcoming || [];
+    };
+
+    const setupRiderFlip = (card, regs) => {
+      card.classList.add('flip-enabled', 'flip-riders');
+      const inner = document.createElement('div');
+      inner.className = 'ride-card-inner';
+      const front = document.createElement('div');
+      front.className = 'ride-card-front';
+      while (card.firstChild) front.appendChild(card.firstChild);
+
+      const back = document.createElement('div');
+      back.className = 'ride-card-back ride-card-back--riders';
+
+      const hdr = document.createElement('p');
+      hdr.className = 'ride-reg-header';
+      hdr.textContent = regs.length
+        ? '🏍️ ' + regs.length + (regs.length === 1 ? ' rider' : ' riders') + ' registered'
+        : '🏍️ No registrations yet';
+      back.appendChild(hdr);
+
+      if (regs.length) {
+        const ul = document.createElement('ul');
+        ul.className = 'ride-reg-list';
+        regs.forEach(reg => {
+          const li = document.createElement('li');
+          li.className = 'ride-reg-item';
+          li.innerHTML = '<span class="ride-reg-name">' + reg.name + '</span>' +
+            (reg.bike ? '<span class="ride-reg-bike">' + reg.bike + '</span>' : '');
+          ul.appendChild(li);
+        });
+        back.appendChild(ul);
+      }
+
+      const hint = document.createElement('div');
+      hint.className = 'ride-card-map-label';
+      hint.textContent = 'tap again to close';
+      back.appendChild(hint);
+
+      inner.appendChild(front);
+      inner.appendChild(back);
+      card.appendChild(inner);
+      card.addEventListener('click', e => {
+        if (e.target.closest('a')) return;
+        card.classList.toggle('flipped');
+      });
     };
 
     fetch(ridesUrl)
@@ -638,9 +687,10 @@
           upcomingContainer.innerHTML = '<p style="color:var(--clr-text-muted);">No upcoming rides listed yet. Check back soon.</p>';
           return;
         }
-        rides.forEach((ride, i) => {
+        const cards = rides.map((ride, i) => {
           const card = renderRideCard(ride, i);
           upcomingContainer.appendChild(card);
+          return card;
         });
         if ('IntersectionObserver' in window) {
           const io = new IntersectionObserver(entries => {
@@ -649,6 +699,9 @@
           upcomingContainer.querySelectorAll('.fade-up').forEach(el => io.observe(el));
         } else {
           upcomingContainer.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+        }
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          cards.forEach((card, i) => setupRiderFlip(card, rides[i].registrations || []));
         }
       })
       .catch(() => {

@@ -659,7 +659,7 @@ section {
   border: 1px solid var(--clr-border);
   cursor: pointer;
 }
-/* "tap for map" hint badge — bottom-right of the card front */
+/* "tap for map/riders" hint badge — bottom-right of the card front */
 .ride-card.flip-enabled .ride-card-front::after {
   content: '🗺 map';
   position: absolute;
@@ -673,6 +673,7 @@ section {
   pointer-events: none;
   transition: opacity 0.2s;
 }
+.ride-card.flip-riders .ride-card-front::after { content: '👥 riders'; }
 .ride-card.flip-enabled:hover .ride-card-front::after { opacity: 1; }
 .ride-card-back {
   transform: rotateY(180deg);
@@ -697,6 +698,54 @@ section {
   overflow: hidden;
   text-overflow: ellipsis;
   flex-shrink: 0;
+}
+
+/* Riders back panel */
+.ride-card-back--riders {
+  background: var(--clr-surface);
+}
+.ride-reg-header {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--clr-text);
+  padding: 0.65rem 1rem 0.5rem;
+  border-bottom: 1px solid var(--clr-border);
+  flex-shrink: 0;
+  margin: 0;
+}
+.ride-reg-list {
+  flex: 1;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.ride-reg-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.38rem 1rem;
+  border-bottom: 1px solid var(--clr-border);
+}
+.ride-reg-item:last-child { border-bottom: none; }
+.ride-reg-name {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--clr-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.ride-reg-bike {
+  font-size: 0.7rem;
+  color: var(--clr-text-muted);
+  flex-shrink: 0;
+  max-width: 48%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ===== ABOUT PREVIEW ===== */
