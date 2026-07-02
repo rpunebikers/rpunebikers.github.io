@@ -1,0 +1,40 @@
+name: Update Reddit Stats
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Fetch Reddit stats
+        run: |
+          DATA=$(curl -sf \
+            -A "Mozilla/5.0 (compatible; PuneBikers-site/1.0; +https://rpunebikers.github.io)" \
+            "https://www.reddit.com/r/PuneBikers/about.json?raw_json=1") || exit 0
+
+          SUBS=$(echo "$DATA" | jq '.data.subscribers // empty')
+          ONLINE=$(echo "$DATA" | jq '.data.active_user_count // empty')
+
+          [ -z "$SUBS" ] && exit 0
+
+          echo "{\"subscribers\":$SUBS,\"active_user_count\":${ONLINE:-0},\"updated\":$(date +%s)}" \
+            > assets/data/reddit-stats.json
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/data/reddit-stats.json
+          git diff --staged --quiet && exit 0
+          git commit -m "chore: update Reddit stats [skip ci]"
+          git push

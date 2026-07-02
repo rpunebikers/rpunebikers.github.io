@@ -474,6 +474,7 @@ section {
   display: block;
   line-height: 1;
 }
+[data-count] { visibility: hidden; }
 /* ── Digital odometer ── */
 .odo-wrap {
   display: inline-flex;
@@ -595,13 +596,28 @@ section {
 .ride-card-body { padding: 1.25rem; }
 .ride-card-meta {
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.35rem;
   font-size: 0.75rem;
   color: var(--clr-text-muted);
   margin-bottom: 0.6rem;
   font-weight: 500;
 }
 .ride-card-meta span { display: flex; align-items: center; gap: 0.3rem; }
+.ride-meta-route {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.45;
+  word-break: break-word;
+}
+.ride-meta-pills {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
 .ride-card-title {
   font-size: 1.15rem;
   font-weight: 700;
@@ -618,6 +634,9 @@ section {
 .ride-card.flip-enabled {
   height: 240px;
   perspective: 900px;
+  -webkit-perspective: 900px;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   background: transparent;
   border-color: transparent;
   box-shadow: none;
@@ -626,6 +645,17 @@ section {
 .ride-card.flip-enabled .ride-card-thumb {
   aspect-ratio: unset;
   height: 120px;
+  touch-action: manipulation;
+}
+.ride-card.flip-enabled .ride-card-thumb {
+  aspect-ratio: unset;
+  height: 120px;
+  flex-shrink: 0;
+}
+/* Upcoming ride cards: restore natural thumb size (not the archive 120px) */
+.ride-card.flip-riders .ride-card-thumb {
+  aspect-ratio: 16/10;
+  height: auto;
   flex-shrink: 0;
 }
 .ride-card.flip-enabled.flipped:hover,
@@ -639,6 +669,9 @@ section {
   height: 100%;
   transform-style: preserve-3d;
   transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-transition: -webkit-transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .ride-card.flip-enabled.flipped .ride-card-inner {
   transform: rotateY(180deg);
@@ -751,6 +784,13 @@ section {
 /* ===== ABOUT PREVIEW ===== */
 .about-preview {
   background: var(--clr-surface);
+}
+
+.about-grid {
+  display: block;
+  max-width: 720px;
+}
+
 }
 
 .about-grid {
@@ -1384,7 +1424,7 @@ section {
 }
 .fade-up.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
 }
 
 .stagger-1 { transition-delay: 0.1s; }
@@ -1982,6 +2022,79 @@ section {
   line-height: 1.7;
 }
 .error-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+/* ===== SMALL MOBILE (≤ 480 px) ===== */
+@media (max-width: 480px) {
+  /* single-column all auto-fill grids */
+  .rides-grid,
+  .routes-grid,
+  .philosophy-grid,
+  .core-team-grid,
+  .full-gallery-grid,
+  .archive-grid,
+  .events-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* about-values: 1 col on tiny screens */
+  .about-values {
+    grid-template-columns: 1fr;
+  }
+
+  /* hero stats: wrap so they don't squeeze */
+  .hero-stats {
+    flex-wrap: wrap;
+    gap: 1.25rem 2rem;
+  }
+
+  /* page tab buttons: smaller touch targets */
+  .page-tab-btn {
+    padding: 0.65rem 1.1rem;
+    font-size: 0.8rem;
+  }
+
+  /* contact channels: tighter on small screens */
+  .contact-channel {
+    gap: 0.85rem;
+    padding: 1rem;
+  }
+  .contact-channel-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  /* members join CTA: less vertical padding */
+  .join-cta {
+    padding: 2rem 1.25rem;
+    margin-top: 2rem;
+  }
+
+  /* member expanded card: shorter avatar band */
+  .member-card-expanded .member-avatar,
+  .member-card-expanded .member-avatar-icon {
+    height: 140px;
+  }
+
+  /* gallery & ride filter buttons: tighter */
+  .filter-btn {
+    padding: 0.35rem 0.9rem;
+    font-size: 0.78rem;
+  }
+  .gallery-cat-filter {
+    gap: 0.35rem;
+  }
+
+  /* ig-cta: less side padding */
+  .ig-cta {
+    padding: 1.75rem 1rem;
+  }
+}
+
+/* hide scroll indicator on mobile — overlaps sticky join CTA */
+@media (max-width: 768px) {
+  .scroll-indicator { display: none; }
+}
 
 /* ===== PRINT STYLES ===== */
 @media print {

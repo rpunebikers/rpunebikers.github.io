@@ -83,6 +83,23 @@
     wrap.className = 'odo-wrap';
 
     const reels = digits.map((d, i) => {
+    const raw = String(el.dataset.count);
+    const target = parseFloat(raw);
+    const suffix = el.dataset.suffix || '';
+    if (isNaN(target)) return;
+
+    const wrap = document.createElement('span');
+    wrap.className = 'odo-wrap';
+
+    const reels = [];
+    raw.split('').forEach(ch => {
+      if (ch === '.') {
+        const dot = document.createElement('span');
+        dot.textContent = '.';
+        dot.style.cssText = 'display:inline-block;line-height:1;margin:0 0.05em;';
+        wrap.appendChild(dot);
+        return;
+      }
       const slot = document.createElement('span');
       slot.className = 'odo-digit';
       const reel = document.createElement('span');
@@ -95,6 +112,7 @@
       slot.appendChild(reel);
       wrap.appendChild(slot);
       return { reel, d: parseInt(d, 10), delay: i * 0.07 };
+      reels.push({ reel, d: parseInt(ch, 10), delay: reels.length * 0.07 });
     });
 
     if (suffix) {
@@ -105,6 +123,7 @@
 
     el.textContent = '';
     el.appendChild(wrap);
+    el.style.visibility = 'visible';
 
     requestAnimationFrame(() => requestAnimationFrame(() => {
       reels.forEach(({ reel, d, delay }) => {
@@ -498,6 +517,89 @@
     });
   }
 
+    });
+  }
+
+  // ── Back to top ──
+  const btt = document.createElement('button');
+  btt.className = 'back-to-top';
+  btt.setAttribute('aria-label', 'Back to top');
+  btt.innerHTML = `<svg class="btt-ring" viewBox="0 0 54 54" aria-hidden="true">
+    <circle class="btt-ring-track" cx="27" cy="27" r="24"/>
+    <circle class="btt-ring-fill"  cx="27" cy="27" r="24"/>
+  </svg><span class="btt-arrow">↑</span>`;
+  document.body.appendChild(btt);
+
+  const ringFill = btt.querySelector('.btt-ring-fill');
+  const circumference = 2 * Math.PI * 24; // ≈ 150.80
+  ringFill.style.strokeDasharray  = circumference;
+  ringFill.style.strokeDashoffset = circumference;
+
+  const updateBtt = () => {
+    const scrolled = window.scrollY;
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = total > 0 ? scrolled / total : 0;
+    ringFill.style.strokeDashoffset = circumference * (1 - progress);
+    btt.classList.toggle('visible', scrolled > 400);
+  };
+  window.addEventListener('scroll', updateBtt, { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // ── Reddit stats — read from pre-fetched JSON (updated every 5 min by GitHub Actions) ──
+  const redditCountEl = document.querySelector('.hero-stat-num[data-reddit-live]');
+  if (redditCountEl) {
+    const applyCount = (count, suffix) => {
+      redditCountEl.dataset.count = count;
+      redditCountEl.dataset.suffix = suffix;
+      buildOdometer(redditCountEl);
+      const liveEl = redditCountEl.closest('.hero-stat')?.querySelector('.reddit-live');
+      if (liveEl) liveEl.style.display = 'inline-flex';
+    };
+    const applyOnline = (online) => {
+      const stat = document.getElementById('reddit-online-stat');
+      const num = document.getElementById('reddit-online-num');
+      if (!stat || !num) return;
+      num.textContent = online;
+      stat.style.display = '';
+    };
+    fetch('assets/data/reddit-stats.json?_=' + Math.floor(Date.now() / 300000))
+      .then(r => r.json())
+      .then(d => {
+        const subs = d?.subscribers;
+        if (!subs) return;
+        const count = subs >= 1000 ? (Math.floor(subs / 100) / 10).toFixed(1) : subs;
+        const suffix = subs >= 1000 ? 'k+' : '+';
+        applyCount(count, suffix);
+        if (d.active_user_count) applyOnline(d.active_user_count);
+      })
+      .catch(() => {});
+  }
+
+  // ── Rides page dot TOC ──
+  const ridesToc = document.querySelector('.rides-toc');
+  if (ridesToc) {
+    const dots = Array.from(ridesToc.querySelectorAll('.rides-toc-dot'));
+    const targets = dots.map(d => document.getElementById(d.dataset.target)).filter(Boolean);
+
+    const setActive = () => {
+      let idx = 0;
+      targets.forEach((el, i) => {
+        if (window.scrollY + 180 >= el.offsetTop) idx = i;
+      });
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    };
+
+    window.addEventListener('scroll', setActive, { passive: true });
+    setActive();
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        const el = targets[i];
+        if (el) window.scrollTo({ top: el.offsetTop - 100, behavior: 'smooth' });
+      });
+    });
+  }
+
   // ── Page tabs (combined hub) ──
   const pageTabs = document.querySelectorAll('.page-tab-btn');
   if (pageTabs.length) {
@@ -553,6 +655,11 @@
             '<span>📍 ' + ride.location + '</span>' +
             (km ? '<span>📏 ' + km + ' km</span>' : '') +
             '<span>📅 ' + ride.date + '</span>' +
+            '<span class="ride-meta-route">📍 ' + ride.location + '</span>' +
+            '<div class="ride-meta-pills">' +
+              (km ? '<span>📏 ' + km + ' km</span>' : '') +
+              '<span>📅 ' + ride.date + '</span>' +
+            '</div>' +
           '</div>' +
           '<h3 class="ride-card-title">' + ride.title + '</h3>' +
           (ride.notes ? '<p class="ride-card-desc" style="font-size:0.78rem;">' + ride.notes + '</p>' : '') +
@@ -633,6 +740,8 @@
     };
 
     const setupRiderFlip = (card, regs) => {
+      // Measure natural height before flip-enabled's 240px rule kicks in
+      const naturalHeight = card.offsetHeight;
       card.classList.add('flip-enabled', 'flip-riders');
       const inner = document.createElement('div');
       inner.className = 'ride-card-inner';
@@ -671,6 +780,8 @@
       inner.appendChild(front);
       inner.appendChild(back);
       card.appendChild(inner);
+      // Pin the card to its natural height so flip back panel matches
+      if (naturalHeight > 0) card.style.height = naturalHeight + 'px';
       card.addEventListener('click', e => {
         if (e.target.closest('a')) return;
         card.classList.toggle('flipped');
