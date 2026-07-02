@@ -471,7 +471,7 @@
     };
     try {
       const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
-      if (cached && Date.now() - cached.ts < CACHE_TTL) {
+      if (cached && Date.now() - cached.ts < CACHE_TTL && cached.online != null) {
         applyCount(cached.count, cached.suffix);
         if (cached.online) applyOnline(cached.online);
       } else {
