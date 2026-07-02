@@ -450,11 +450,9 @@
   window.addEventListener('scroll', updateBtt, { passive: true });
   btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-  // ── Reddit live subscriber count (cached 1 hr) ──
+  // ── Reddit stats — read from pre-fetched JSON (updated every 5 min by GitHub Actions) ──
   const redditCountEl = document.querySelector('.hero-stat-num[data-reddit-live]');
   if (redditCountEl) {
-    const CACHE_KEY = 'pb-reddit';
-    const CACHE_TTL = 60 * 60 * 1000;
     const applyCount = (count, suffix) => {
       redditCountEl.dataset.count = count;
       redditCountEl.dataset.suffix = suffix;
@@ -469,29 +467,17 @@
       num.textContent = online;
       stat.style.display = '';
     };
-    try {
-      const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
-      if (cached && Date.now() - cached.ts < CACHE_TTL && cached.online != null) {
-        applyCount(cached.count, cached.suffix);
-        if (cached.online) applyOnline(cached.online);
-      } else {
-        fetch('https://www.reddit.com/r/PuneBikers/about.json?raw_json=1', {
-            headers: { 'Accept': 'application/json' },
-          })
-          .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-          .then(d => {
-            const subs = d?.data?.subscribers;
-            if (!subs) return;
-            const count = subs >= 1000 ? (Math.floor(subs / 100) / 10).toFixed(1) : subs;
-            const suffix = subs >= 1000 ? 'k+' : '+';
-            const online = d?.data?.active_user_count || 0;
-            localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), count, suffix, online }));
-            applyCount(count, suffix);
-            if (online) applyOnline(online);
-          })
-          .catch(() => {});
-      }
-    } catch (_) {}
+    fetch('assets/data/reddit-stats.json?_=' + Math.floor(Date.now() / 300000))
+      .then(r => r.json())
+      .then(d => {
+        const subs = d?.subscribers;
+        if (!subs) return;
+        const count = subs >= 1000 ? (Math.floor(subs / 100) / 10).toFixed(1) : subs;
+        const suffix = subs >= 1000 ? 'k+' : '+';
+        applyCount(count, suffix);
+        if (d.active_user_count) applyOnline(d.active_user_count);
+      })
+      .catch(() => {});
   }
 
   // ── Rides page dot TOC ──
