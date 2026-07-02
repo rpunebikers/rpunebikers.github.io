@@ -641,6 +641,10 @@ section {
   border-color: transparent;
   box-shadow: none;
   overflow: visible;
+}
+.ride-card.flip-enabled .ride-card-thumb {
+  aspect-ratio: unset;
+  height: 120px;
   touch-action: manipulation;
 }
 .ride-card.flip-enabled .ride-card-thumb {
@@ -664,6 +668,7 @@ section {
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
   -webkit-transform-style: preserve-3d;
   transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
   -webkit-transition: -webkit-transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
@@ -779,6 +784,13 @@ section {
 /* ===== ABOUT PREVIEW ===== */
 .about-preview {
   background: var(--clr-surface);
+}
+
+.about-grid {
+  display: block;
+  max-width: 720px;
+}
+
 }
 
 .about-grid {
