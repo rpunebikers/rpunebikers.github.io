@@ -462,10 +462,18 @@
       const liveEl = redditCountEl.closest('.hero-stat')?.querySelector('.reddit-live');
       if (liveEl) liveEl.style.display = 'inline-flex';
     };
+    const applyOnline = (online) => {
+      const stat = document.getElementById('reddit-online-stat');
+      const num = document.getElementById('reddit-online-num');
+      if (!stat || !num) return;
+      num.textContent = online;
+      stat.style.display = '';
+    };
     try {
       const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
       if (cached && Date.now() - cached.ts < CACHE_TTL) {
         applyCount(cached.count, cached.suffix);
+        if (cached.online) applyOnline(cached.online);
       } else {
         fetch('https://www.reddit.com/r/PuneBikers/about.json?raw_json=1', {
             headers: { 'Accept': 'application/json' },
@@ -476,8 +484,10 @@
             if (!subs) return;
             const count = subs >= 1000 ? (Math.floor(subs / 100) / 10).toFixed(1) : subs;
             const suffix = subs >= 1000 ? 'k+' : '+';
-            localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), count, suffix }));
+            const online = d?.data?.active_user_count || 0;
+            localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), count, suffix, online }));
             applyCount(count, suffix);
+            if (online) applyOnline(online);
           })
           .catch(() => {});
       }
