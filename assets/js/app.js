@@ -475,7 +475,7 @@
         const count = subs >= 1000 ? (Math.floor(subs / 100) / 10).toFixed(1) : subs;
         const suffix = subs >= 1000 ? 'k+' : '+';
         applyCount(count, suffix);
-        if (d.active_user_count) applyOnline(d.active_user_count);
+        if (d.active_user_count != null) applyOnline(d.active_user_count);
       })
       .catch(() => {});
   }
