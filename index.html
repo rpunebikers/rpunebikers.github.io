@@ -9,6 +9,18 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/style.css" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://rpunebikers.github.io/" />
+  <meta property="og:title" content="r/PuneBikers — Two Wheels. One Tribe." />
+  <meta property="og:description" content="r/PuneBikers — Pune's premier motorcycle touring brotherhood. Rides, events, and community for passionate riders." />
+  <meta property="og:image" content="https://rpunebikers.github.io/assets/images/logo-text.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="r/PuneBikers — Two Wheels. One Tribe." />
+  <meta name="twitter:description" content="r/PuneBikers — Pune's premier motorcycle touring brotherhood. Rides, events, and community for passionate riders." />
+  <meta name="twitter:image" content="https://rpunebikers.github.io/assets/images/logo-text.png" />
+  <link rel="icon" type="image/jpeg" href="assets/images/logo-bike.jpg" />
+  <link rel="apple-touch-icon" href="assets/images/logo-bike.jpg" />
+  <script>if(localStorage.getItem("pb-theme")==="light")document.documentElement.dataset.theme="light";</script>
 </head>
 <body>
 
@@ -18,18 +30,19 @@
   <nav class="navbar" aria-label="Main navigation">
     <div class="container nav-inner">
       <a href="index.html" class="nav-logo" aria-label="PuneBikers home">
-        <span class="logo-main">r/PuneBikers</span>
-        <span class="logo-sub">Pune's Riding Brotherhood</span>
+        <img src="assets/images/logo-bike.jpg" class="nav-logo-bike" alt="" aria-hidden="true">
+        <img src="assets/images/logo-text.png" class="nav-logo-text" alt="r/PuneBikers">
       </a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour theme">🌙</button>
       <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-links" id="nav-links" role="list">
         <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
+        <li><a href="rides.html#about">About</a></li>
         <li><a href="rides.html">Rides</a></li>
         <li><a href="gallery.html">Gallery</a></li>
-        <li><a href="routes.html">Routes</a></li>
+        <li><a href="rides.html#routes">Routes</a></li>
         <li><a href="events.html">Events</a></li>
         <li><a href="members.html">Members</a></li>
         <li><a href="contact.html" class="btn btn-primary btn-sm nav-cta">Join Us</a></li>
@@ -52,17 +65,23 @@
         </h1>
         <p class="hero-subtitle">
           We ride beyond roads, explore beyond horizons, and build bonds beyond miles.
-          r/r/PuneBikers — where every journey becomes a story.
+          r/punebikers — where every journey becomes a story.
         </p>
         <div class="hero-actions">
           <a href="rides.html" class="btn btn-primary">Explore Rides</a>
-          <a href="about.html" class="btn btn-outline">Our Story</a>
+          <a href="rides.html#about" class="btn btn-outline">Our Story</a>
         </div>
 
         <div class="hero-stats" aria-label="Community statistics">
           <div class="hero-stat">
-            <span class="hero-stat-num" data-count="10" data-suffix="k+">10k+</span>
+            <span class="hero-stat-num" data-count="11.6" data-suffix="k+" data-reddit-live>11.6k+</span>
             <span class="hero-stat-label">Reddit Community</span>
+            <span class="reddit-live" style="display:none;"><span class="reddit-live-dot"></span>Live</span>
+          </div>
+          <div class="hero-stat" id="reddit-online-stat" style="display:none;">
+            <span class="hero-stat-num" id="reddit-online-num">—</span>
+            <span class="hero-stat-label">Online Now</span>
+            <span class="reddit-live"><span class="reddit-live-dot"></span>Live</span>
           </div>
           <div class="hero-stat">
             <span class="hero-stat-num" data-count="314" data-suffix="+">314+</span>
@@ -73,7 +92,7 @@
             <span class="hero-stat-label">Rides Done</span>
           </div>
           <div class="hero-stat">
-            <span class="hero-stat-num" data-count="6" data-suffix="">6</span>
+            <span class="hero-stat-num" data-count="3" data-suffix="">3</span>
             <span class="hero-stat-label">Years Strong</span>
           </div>
         </div>
@@ -85,32 +104,6 @@
       </div>
     </section>
 
-    <!-- STATS BAR -->
-    <div class="stats-bar" aria-label="Club highlights">
-      <div class="container stats-bar-inner">
-        <div class="stat-item">
-          <span class="stat-num" data-count="10" data-suffix="k+">10k+</span>
-          <span class="stat-label">Reddit Members</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num" data-count="314" data-suffix="+">314+</span>
-          <span class="stat-label">WhatsApp Members</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num" data-count="65" data-suffix="+">65+</span>
-          <span class="stat-label">Rides Done</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num" data-count="25000" data-suffix="+">25000+</span>
-          <span class="stat-label">Total Kms</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num" data-count="6" data-suffix="">6</span>
-          <span class="stat-label">Years Strong</span>
-        </div>
-      </div>
-    </div>
-
     <!-- FEATURED RIDES -->
     <section aria-labelledby="featured-rides-title">
       <div class="container">
@@ -119,51 +112,51 @@
         <p class="section-desc">Epic journeys through India's most breathtaking landscapes — from the Sahyadris to the Himalayas.</p>
 
         <div class="rides-grid">
-          <article class="ride-card fade-up" data-type="highway">
+          <article class="ride-card fade-up" data-type="completed">
             <div class="ride-card-thumb">
-              <div class="ride-card-placeholder" aria-hidden="true">🏔️</div>
+              <div class="ride-card-placeholder" aria-hidden="true">🌿</div>
               <span class="ride-card-badge">Completed</span>
             </div>
             <div class="ride-card-body">
               <div class="ride-card-meta">
-                <span>📍 Ladakh</span>
-                <span>📏 2,400 km</span>
-                <span>📅 Jun 2024</span>
+                <span>📍 Mapro Garden</span>
+                <span>📏 335 km</span>
+                <span>📅 23 Apr 23</span>
               </div>
-              <h3 class="ride-card-title">Ladakh Expedition 2024</h3>
-              <p class="ride-card-desc">15 days through the world's highest motorable passes. Khardung La, Chang La, and back.</p>
+              <h3 class="ride-card-title">Mapro Garden Circuit</h3>
+              <p class="ride-card-desc ride-num-tag">ride-009</p>
             </div>
           </article>
 
-          <article class="ride-card fade-up stagger-1" data-type="coastal">
+          <article class="ride-card fade-up stagger-1" data-type="completed">
             <div class="ride-card-thumb">
               <div class="ride-card-placeholder" aria-hidden="true">🌊</div>
               <span class="ride-card-badge">Completed</span>
             </div>
             <div class="ride-card-body">
               <div class="ride-card-meta">
-                <span>📍 Konkan Coast</span>
-                <span>📏 680 km</span>
-                <span>📅 Feb 2024</span>
+                <span>📍 Kashid Beach</span>
+                <span>📏 313 km</span>
+                <span>📅 17 Nov 24</span>
               </div>
-              <h3 class="ride-card-title">Konkan Coastal Cruise</h3>
-              <p class="ride-card-desc">NH66 paradise — sea views, sea food, and salty winds all the way to Goa.</p>
+              <h3 class="ride-card-title">Kashid Beach</h3>
+              <p class="ride-card-desc ride-num-tag">ride-051</p>
             </div>
           </article>
 
-          <article class="ride-card fade-up stagger-2" data-type="ghats">
+          <article class="ride-card fade-up stagger-2" data-type="completed">
             <div class="ride-card-thumb">
-              <div class="ride-card-placeholder" aria-hidden="true">🌿</div>
-              <span class="ride-card-badge">Upcoming</span>
+              <div class="ride-card-placeholder" aria-hidden="true">🌙</div>
+              <span class="ride-card-badge">Completed</span>
             </div>
             <div class="ride-card-body">
               <div class="ride-card-meta">
-                <span>📍 Western Ghats</span>
-                <span>📏 420 km</span>
-                <span>📅 Jul 2025</span>
+                <span>📍 Shrivardhan</span>
+                <span>📏 300 km</span>
+                <span>📅 30 Sep–1 Oct 23</span>
               </div>
-              <h3 class="ride-card-title">Ghats Monsoon Ride</h3>
-              <p class="ride-card-desc">Mist, waterfalls, and emerald valleys. The Ghats in monsoon are pure magic.</p>
+              <h3 class="ride-card-title">Overnight Ride to Shrivardhan</h3>
+              <p class="ride-card-desc ride-num-tag">ride-019</p>
             </div>
           </article>
         </div>
@@ -178,23 +171,11 @@
     <section class="about-preview" aria-labelledby="about-preview-title">
       <div class="container">
         <div class="about-grid">
-          <div class="about-visual fade-up" aria-hidden="true">
-            <div class="about-visual-placeholder">🏍️</div>
-            <div class="about-visual-overlay">
-              <div class="glass-card" style="padding:1rem 1.25rem;">
-                <p style="font-size:0.75rem;color:var(--clr-text-muted);margin-bottom:0.2rem;">Est.</p>
-                <p style="font-size:1.5rem;font-family:var(--font-display);letter-spacing:0.05em;">2018</p>
-                <p style="font-size:0.75rem;color:var(--clr-text-muted);">Born in Pune. Riding the World.</p>
-              </div>
-            </div>
-          </div>
-
           <div>
             <p class="section-label">About Us</p>
             <h2 class="section-title" id="about-preview-title">Brotherhood Built<br>on Open Roads</h2>
             <p class="section-desc">
-              PuneBikers started as a small group of passionate riders who believed that motorcycles are more than machines — they're freedom.
-              Six years later, we're 10,000+ on Reddit, 314 on WhatsApp, and still riding strong.
+              Born from a Reddit comment in January 2023 — now 10,000+ on Reddit, 314 on WhatsApp, and still riding strong.
             </p>
 
             <div class="about-values">
@@ -228,7 +209,7 @@
               </div>
             </div>
 
-            <a href="about.html" class="btn btn-primary mt-3" style="display:inline-flex;">Read Our Story</a>
+            <a href="rides.html#about" class="btn btn-primary mt-3" style="display:inline-flex;">Read Our Story</a>
           </div>
         </div>
       </div>
@@ -339,9 +320,11 @@
     <div class="container">
       <div class="footer-inner">
         <div class="footer-brand">
-          <span class="logo-main">r/PuneBikers</span>
-          <span class="logo-sub">Pune's Riding Brotherhood</span>
-          <p>10k+ Reddit community. 314 active WhatsApp riders. Riding together since 2018 across India's most epic roads.</p>
+          <div class="footer-brand-logo">
+            <img src="assets/images/logo-bike.jpg" class="footer-logo-bike" alt="" aria-hidden="true">
+            <img src="assets/images/logo-text.png" class="footer-logo-text" alt="r/PuneBikers">
+          </div>
+          <p>10k+ Reddit community. 314 active WhatsApp riders. Born from a Reddit comment in Jan 2023 — riding together ever since.</p>
           <div class="footer-socials" aria-label="Social media links">
             <a href="https://www.instagram.com/r.pune.bikers/" class="social-btn" aria-label="Instagram" rel="noopener">📸</a>
             <a href="#" class="social-btn" aria-label="WhatsApp" rel="noopener">💬</a>
@@ -350,13 +333,13 @@
         <nav class="footer-col" aria-label="Quick links">
           <h4>Quick Links</h4>
           <a href="index.html">Home</a>
-          <a href="about.html">About</a>
+          <a href="rides.html#about">About</a>
           <a href="rides.html">Rides</a>
           <a href="gallery.html">Gallery</a>
         </nav>
         <nav class="footer-col" aria-label="Community links">
           <h4>Community</h4>
-          <a href="routes.html">Routes</a>
+          <a href="rides.html#routes">Routes</a>
           <a href="events.html">Events</a>
           <a href="members.html">Members</a>
           <a href="contact.html">Contact</a>
@@ -365,7 +348,7 @@
           <h4>Contact</h4>
           <a href="mailto:hello@punebikers.in">hello@punebikers.in</a>
           <a href="#">WhatsApp Group</a>
-          <a href="#">Instagram @r.pune.bikers</a>
+          <a href="https://www.instagram.com/r.pune.bikers/" rel="noopener">Instagram @r.pune.bikers</a>
           <a href="#">YouTube Channel</a>
         </div>
       </div>
@@ -377,5 +360,11 @@
   </footer>
 
   <script src="assets/js/app.js"></script>
+
+  <!-- MOBILE STICKY JOIN CTA -->
+  <div class="mobile-join-cta" aria-hidden="true">
+    <a href="contact.html" class="btn btn-primary">Join the Ride &rarr;</a>
+  </div>
+
 </body>
 </html>

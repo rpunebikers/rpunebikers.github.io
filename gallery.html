@@ -9,50 +9,18 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/style.css" />
-  <style>
-    .full-gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1rem;
-      margin-top: 2.5rem;
-    }
-    .full-gallery-item {
-      position: relative;
-      aspect-ratio: 4/3;
-      background: var(--clr-surface-2);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      cursor: pointer;
-    }
-    .full-gallery-item.tall { aspect-ratio: 3/4; }
-    .full-gallery-item.wide { grid-column: span 2; aspect-ratio: 16/7; }
-
-    .full-gallery-item .gallery-placeholder {
-      border-radius: var(--radius-md);
-      font-size: 3rem;
-    }
-    .full-gallery-item:hover .gallery-placeholder {
-      transform: scale(1.06);
-      opacity: 0.4;
-    }
-    .full-gallery-item .gallery-overlay {
-      border-radius: var(--radius-md);
-      font-size: 0.85rem;
-      padding: 1.25rem;
-    }
-    .full-gallery-item:hover .gallery-overlay { opacity: 1; }
-
-    @media (max-width: 600px) {
-      .full-gallery-item.wide { grid-column: span 1; aspect-ratio: 4/3; }
-    }
-
-    .gallery-cat-filter {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.5rem;
-    }
-  </style>
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://rpunebikers.github.io/gallery.html" />
+  <meta property="og:title" content="Gallery — PuneBikers" />
+  <meta property="og:description" content="PuneBikers photo gallery — motorcycle photography, group rides, cinematic visuals from our journeys." />
+  <meta property="og:image" content="https://rpunebikers.github.io/assets/images/logo-text.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Gallery — PuneBikers" />
+  <meta name="twitter:description" content="PuneBikers photo gallery — motorcycle photography, group rides, cinematic visuals from our journeys." />
+  <meta name="twitter:image" content="https://rpunebikers.github.io/assets/images/logo-text.png" />
+  <link rel="icon" type="image/jpeg" href="assets/images/logo-bike.jpg" />
+  <link rel="apple-touch-icon" href="assets/images/logo-bike.jpg" />
+  <script>if(localStorage.getItem("pb-theme")==="light")document.documentElement.dataset.theme="light";</script>
 </head>
 <body>
 
@@ -61,18 +29,19 @@
   <nav class="navbar" aria-label="Main navigation">
     <div class="container nav-inner">
       <a href="index.html" class="nav-logo" aria-label="PuneBikers home">
-        <span class="logo-main">r/PuneBikers</span>
-        <span class="logo-sub">Pune's Riding Brotherhood</span>
+        <img src="assets/images/logo-bike.jpg" class="nav-logo-bike" alt="" aria-hidden="true">
+        <img src="assets/images/logo-text.png" class="nav-logo-text" alt="r/PuneBikers">
       </a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour theme">🌙</button>
       <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-links" id="nav-links" role="list">
         <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
+        <li><a href="rides.html#about">About</a></li>
         <li><a href="rides.html">Rides</a></li>
         <li><a href="gallery.html">Gallery</a></li>
-        <li><a href="routes.html">Routes</a></li>
+        <li><a href="rides.html#routes">Routes</a></li>
         <li><a href="events.html">Events</a></li>
         <li><a href="members.html">Members</a></li>
         <li><a href="contact.html" class="btn btn-primary btn-sm nav-cta">Join Us</a></li>
@@ -105,63 +74,72 @@
 
           <div class="full-gallery-item wide fade-up" role="listitem" data-category="ladakh">
             <div class="gallery-placeholder" aria-hidden="true">🏔️</div>
-            <div class="gallery-overlay"><span>Khardung La Pass, 5,359m — Ladakh 2024</span></div>
+            <div class="gallery-overlay"><span>Ladakh</span></div>
           </div>
 
           <div class="full-gallery-item fade-up" role="listitem" data-category="group">
             <div class="gallery-placeholder" aria-hidden="true">🏍️</div>
-            <div class="gallery-overlay"><span>Team PuneBikers — Annual Group Photo 2024</span></div>
+            <div class="gallery-overlay"><span>Group Ride</span></div>
           </div>
 
           <div class="full-gallery-item tall fade-up stagger-1" role="listitem" data-category="ghats">
             <div class="gallery-placeholder" aria-hidden="true">🌿</div>
-            <div class="gallery-overlay"><span>Tamhini Ghats — Monsoon Season</span></div>
+            <div class="gallery-overlay"><span>Tamhini Ghats</span></div>
           </div>
 
           <div class="full-gallery-item fade-up stagger-2" role="listitem" data-category="coastal">
             <div class="gallery-placeholder" aria-hidden="true">🌊</div>
-            <div class="gallery-overlay"><span>Konkan Coast — NH66 Sunrise</span></div>
+            <div class="gallery-overlay"><span>Konkan Coast</span></div>
           </div>
 
           <div class="full-gallery-item fade-up" role="listitem" data-category="bikes">
             <div class="gallery-placeholder" aria-hidden="true">🔥</div>
-            <div class="gallery-overlay"><span>Royal Enfield Himalayan — Ladakh Basecamp</span></div>
+            <div class="gallery-overlay"><span>Ladakh Basecamp</span></div>
           </div>
 
           <div class="full-gallery-item fade-up stagger-1" role="listitem" data-category="ladakh">
             <div class="gallery-placeholder" aria-hidden="true">🏕️</div>
-            <div class="gallery-overlay"><span>Camp Pangong — Stars Over the Lake</span></div>
+            <div class="gallery-overlay"><span>Pangong Lake</span></div>
           </div>
 
           <div class="full-gallery-item wide fade-up stagger-2" role="listitem" data-category="group">
             <div class="gallery-placeholder" aria-hidden="true">🌅</div>
-            <div class="gallery-overlay"><span>Dawn Departure — Monsoon Ghats Ride 2024</span></div>
+            <div class="gallery-overlay"><span>Dawn Departure</span></div>
           </div>
 
           <div class="full-gallery-item fade-up" role="listitem" data-category="ghats">
             <div class="gallery-placeholder" aria-hidden="true">🌄</div>
-            <div class="gallery-overlay"><span>Mahabaleshwar Valley View</span></div>
+            <div class="gallery-overlay"><span>Mahabaleshwar</span></div>
           </div>
 
           <div class="full-gallery-item fade-up stagger-1" role="listitem" data-category="bikes">
             <div class="gallery-placeholder" aria-hidden="true">🛣️</div>
-            <div class="gallery-overlay"><span>Karnataka Highways — Empty Roads at Dawn</span></div>
+            <div class="gallery-overlay"><span>Karnataka Highways</span></div>
           </div>
 
           <div class="full-gallery-item tall fade-up stagger-2" role="listitem" data-category="coastal">
             <div class="gallery-placeholder" aria-hidden="true">🌴</div>
-            <div class="gallery-overlay"><span>Goa Beach Stop — Konkan Cruise</span></div>
+            <div class="gallery-overlay"><span>Goa</span></div>
           </div>
 
           <div class="full-gallery-item fade-up" role="listitem" data-category="ladakh">
             <div class="gallery-placeholder" aria-hidden="true">❄️</div>
-            <div class="gallery-overlay"><span>Chang La Pass — Snow in June</span></div>
+            <div class="gallery-overlay"><span>Chang La Pass</span></div>
           </div>
 
           <div class="full-gallery-item fade-up stagger-1" role="listitem" data-category="group">
             <div class="gallery-placeholder" aria-hidden="true">🤝</div>
-            <div class="gallery-overlay"><span>Monthly Meetup — FC Road, Pune</span></div>
+            <div class="gallery-overlay"><span>Monthly Meetup, Pune</span></div>
           </div>
+        </div>
+
+        <div class="ig-cta fade-up">
+          <span class="ig-cta-icon" aria-hidden="true">📸</span>
+          <h3>More Photos on Instagram</h3>
+          <p>Daily ride content, stories, reels, and behind-the-scenes from every journey.</p>
+          <a href="https://www.instagram.com/r.pune.bikers/" class="ig-btn" target="_blank" rel="noopener" aria-label="Follow r/PuneBikers on Instagram">
+            Follow @r.pune.bikers
+          </a>
         </div>
       </div>
     </section>
@@ -172,9 +150,11 @@
     <div class="container">
       <div class="footer-inner">
         <div class="footer-brand">
-          <span class="logo-main">r/PuneBikers</span>
-          <span class="logo-sub">Pune's Riding Brotherhood</span>
-          <p>10k+ Reddit community. 314 active WhatsApp riders. Riding together since 2018 across India's most epic roads.</p>
+          <div class="footer-brand-logo">
+            <img src="assets/images/logo-bike.jpg" class="footer-logo-bike" alt="" aria-hidden="true">
+            <img src="assets/images/logo-text.png" class="footer-logo-text" alt="r/PuneBikers">
+          </div>
+          <p>10k+ Reddit community. 314 active WhatsApp riders. Born from a Reddit comment in Jan 2023 — riding together ever since.</p>
           <div class="footer-socials" aria-label="Social media links">
             <a href="https://www.instagram.com/r.pune.bikers/" class="social-btn" aria-label="Instagram" rel="noopener">📸</a>
             <a href="#" class="social-btn" aria-label="WhatsApp" rel="noopener">💬</a>
@@ -183,13 +163,13 @@
         <nav class="footer-col" aria-label="Quick links">
           <h4>Quick Links</h4>
           <a href="index.html">Home</a>
-          <a href="about.html">About</a>
+          <a href="rides.html#about">About</a>
           <a href="rides.html">Rides</a>
           <a href="gallery.html">Gallery</a>
         </nav>
         <nav class="footer-col" aria-label="Community links">
           <h4>Community</h4>
-          <a href="routes.html">Routes</a>
+          <a href="rides.html#routes">Routes</a>
           <a href="events.html">Events</a>
           <a href="members.html">Members</a>
           <a href="contact.html">Contact</a>
@@ -198,7 +178,7 @@
           <h4>Contact</h4>
           <a href="mailto:hello@punebikers.in">hello@punebikers.in</a>
           <a href="#">WhatsApp Group</a>
-          <a href="#">Instagram @r.pune.bikers</a>
+          <a href="https://www.instagram.com/r.pune.bikers/" rel="noopener">Instagram @r.pune.bikers</a>
           <a href="#">YouTube Channel</a>
         </div>
       </div>
@@ -227,5 +207,11 @@
       });
     });
   </script>
+
+  <!-- MOBILE STICKY JOIN CTA -->
+  <div class="mobile-join-cta" aria-hidden="true">
+    <a href="contact.html" class="btn btn-primary">Join the Ride &rarr;</a>
+  </div>
+
 </body>
 </html>

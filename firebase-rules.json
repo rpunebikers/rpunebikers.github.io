@@ -1,0 +1,15 @@
+{
+  "rules": {
+    "rides": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "registrations": {
+      ".read": "auth != null",
+      "$regId": {
+        ".write": "!data.exists()",
+        ".validate": "newData.hasChildren(['name', 'email', 'timestamp'])"
+      }
+    }
+  }
+}

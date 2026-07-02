@@ -9,111 +9,18 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/style.css" />
-  <style>
-    .member-card-expanded {
-      text-align: left;
-      padding: 0;
-      overflow: hidden;
-    }
-    .member-card-expanded .member-card-inner {
-      padding: 1.5rem;
-    }
-    .member-card-expanded .member-avatar {
-      width: 100%;
-      height: 180px;
-      border-radius: 0;
-      margin: 0 0 1rem;
-      border: none;
-    }
-    .member-card-expanded .member-avatar-icon {
-      width: 100%;
-      height: 180px;
-      background: linear-gradient(135deg, var(--clr-surface-2), var(--clr-surface));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3.5rem;
-      opacity: 0.4;
-    }
-    .member-social {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-    .member-social-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: var(--clr-glass-bg);
-      border: 1px solid var(--clr-glass-border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-      transition: var(--transition);
-      cursor: pointer;
-    }
-    .member-social-btn:hover { background: var(--clr-primary); border-color: var(--clr-primary); }
-    .member-stat {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--clr-border);
-    }
-    .member-stat-item { text-align: center; }
-    .member-stat-num { font-weight: 700; color: var(--clr-primary); font-size: 1.1rem; display: block; }
-    .member-stat-label { font-size: 0.68rem; color: var(--clr-text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
-
-    .core-team-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 3rem;
-    }
-
-    .join-cta {
-      text-align: center;
-      padding: 4rem 2rem;
-      background: var(--clr-glass-bg);
-      border: 1px solid var(--clr-glass-border);
-      border-radius: var(--radius-lg);
-      margin-top: 4rem;
-    }
-    .join-cta h2 { font-size: clamp(1.8rem,4vw,2.8rem); margin-bottom: 1rem; }
-    .join-cta p { color: var(--clr-text-muted); max-width: 48ch; margin: 0 auto 2rem; }
-
-    .rider-highlight {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin-top: 3rem;
-    }
-    @media (max-width: 768px) { .rider-highlight { grid-template-columns: 1fr; } }
-    .highlight-card {
-      padding: 1.5rem;
-      background: var(--clr-glass-bg);
-      border: 1px solid var(--clr-glass-border);
-      border-radius: var(--radius-md);
-    }
-    .highlight-quote {
-      font-size: 1rem;
-      line-height: 1.7;
-      color: var(--clr-text-muted);
-      font-style: italic;
-      margin-bottom: 1rem;
-    }
-    .highlight-rider { display: flex; align-items: center; gap: 0.75rem; }
-    .highlight-avatar {
-      width: 40px; height: 40px; border-radius: 50%;
-      background: var(--clr-surface-2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.25rem; flex-shrink: 0;
-      border: 1px solid var(--clr-border);
-    }
-    .highlight-rider-name { font-weight: 700; font-size: 0.9rem; }
-    .highlight-rider-sub { font-size: 0.75rem; color: var(--clr-text-muted); }
-  </style>
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://rpunebikers.github.io/members.html" />
+  <meta property="og:title" content="Members — PuneBikers" />
+  <meta property="og:description" content="PuneBikers members — meet our core team, riders, and community highlights." />
+  <meta property="og:image" content="https://rpunebikers.github.io/assets/images/logo-text.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Members — PuneBikers" />
+  <meta name="twitter:description" content="PuneBikers members — meet our core team, riders, and community highlights." />
+  <meta name="twitter:image" content="https://rpunebikers.github.io/assets/images/logo-text.png" />
+  <link rel="icon" type="image/jpeg" href="assets/images/logo-bike.jpg" />
+  <link rel="apple-touch-icon" href="assets/images/logo-bike.jpg" />
+  <script>if(localStorage.getItem("pb-theme")==="light")document.documentElement.dataset.theme="light";</script>
 </head>
 <body>
 
@@ -122,18 +29,19 @@
   <nav class="navbar" aria-label="Main navigation">
     <div class="container nav-inner">
       <a href="index.html" class="nav-logo" aria-label="PuneBikers home">
-        <span class="logo-main">r/PuneBikers</span>
-        <span class="logo-sub">Pune's Riding Brotherhood</span>
+        <img src="assets/images/logo-bike.jpg" class="nav-logo-bike" alt="" aria-hidden="true">
+        <img src="assets/images/logo-text.png" class="nav-logo-text" alt="r/PuneBikers">
       </a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour theme">🌙</button>
       <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-links" id="nav-links" role="list">
         <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
+        <li><a href="rides.html#about">About</a></li>
         <li><a href="rides.html">Rides</a></li>
         <li><a href="gallery.html">Gallery</a></li>
-        <li><a href="routes.html">Routes</a></li>
+        <li><a href="rides.html#routes">Routes</a></li>
         <li><a href="events.html">Events</a></li>
         <li><a href="members.html">Members</a></li>
         <li><a href="contact.html" class="btn btn-primary btn-sm nav-cta">Join Us</a></li>
@@ -156,224 +64,83 @@
       <div class="container">
         <p class="section-label">Leadership</p>
         <h2 class="section-title" id="core-team-title">Core Team</h2>
-        <p class="section-desc">The riders who keep the wheels turning — organising events, planning routes, and building the community.</p>
 
         <div class="core-team-grid">
+
           <article class="glass-card member-card-expanded fade-up">
             <div class="member-card-inner">
               <div class="member-avatar-icon" aria-hidden="true">🏍️</div>
-              <span class="member-role">Founder & Ride Lead</span>
-              <h3 class="member-name">Arjun Patil</h3>
-              <p class="member-bike">🏍️ Royal Enfield Himalayan</p>
-              <p style="font-size:0.82rem;color:var(--clr-text-muted);margin-top:0.75rem;line-height:1.6;">
-                Started r/PuneBikers with 4 friends in 2018. Has ridden to Ladakh 4 times and logged over 80,000 km across India.
-              </p>
-              <div class="member-stat">
-                <div class="member-stat-item">
-                  <span class="member-stat-num">4×</span>
-                  <span class="member-stat-label">Ladakh</span>
-                </div>
-                <div class="member-stat-item">
-                  <span class="member-stat-num">80k</span>
-                  <span class="member-stat-label">km Ridden</span>
-                </div>
-                <div class="member-stat-item">
-                  <span class="member-stat-num">7yr</span>
-                  <span class="member-stat-label">Member</span>
-                </div>
-              </div>
+              <span class="member-role">Founder · Mahamod</span>
+              <h3 class="member-name">Akash Sahastrabudhe</h3>
+              <p class="member-bike">🏍️ Suzuki Gixxer 250</p>
             </div>
           </article>
 
           <article class="glass-card member-card-expanded fade-up stagger-1">
             <div class="member-card-inner">
-              <div class="member-avatar-icon" aria-hidden="true">🌄</div>
-              <span class="member-role">Events Coordinator</span>
-              <h3 class="member-name">Priya Sharma</h3>
-              <p class="member-bike">🏍️ KTM 390 Adventure</p>
-              <p style="font-size:0.82rem;color:var(--clr-text-muted);margin-top:0.75rem;line-height:1.6;">
-                Priya organises every event, from monthly meetups to 10-day expeditions. First female ride lead in PuneBikers history.
-              </p>
-              <div class="member-stat">
-                <div class="member-stat-item">
-                  <span class="member-stat-num">45+</span>
-                  <span class="member-stat-label">Events Led</span>
-                </div>
-                <div class="member-stat-item">
-                  <span class="member-stat-num">55k</span>
-                  <span class="member-stat-label">km Ridden</span>
-                </div>
-                <div class="member-stat-item">
-                  <span class="member-stat-num">5yr</span>
-                  <span class="member-stat-label">Member</span>
-                </div>
-              </div>
+              <div class="member-avatar-icon" aria-hidden="true">🏍️</div>
+              <span class="member-role">Founder · Admin</span>
+              <h3 class="member-name">Pranav Pankhawala</h3>
+              <p class="member-bike">🏍️ KTM 390 Adventure 2024</p>
+              <p style="font-size:0.75rem;color:var(--clr-text-dim);margin-top:0.3rem;">Previously: Bajaj Avenger 220 Cruise</p>
             </div>
           </article>
 
           <article class="glass-card member-card-expanded fade-up stagger-2">
             <div class="member-card-inner">
-              <div class="member-avatar-icon" aria-hidden="true">🔧</div>
-              <span class="member-role">Technical Head</span>
-              <h3 class="member-name">Rohit Kulkarni</h3>
-              <p class="member-bike">🏍️ BMW F 850 GS</p>
-              <p style="font-size:0.82rem;color:var(--clr-text-muted);margin-top:0.75rem;line-height:1.6;">
-                Mechanic by trade, adventurer by soul. Rohit runs our workshop sessions and has never been stranded on a ride.
-              </p>
-              <div class="member-stat">
-                <div class="member-stat-item">
-                  <span class="member-stat-num">20+</span>
-                  <span class="member-stat-label">Workshops</span>
-                </div>
-                <div class="member-stat-item">
-                  <span class="member-stat-num">70k</span>
-                  <span class="member-stat-label">km Ridden</span>
-                </div>
-                <div class="member-stat-item">
-                  <span class="member-stat-num">6yr</span>
-                  <span class="member-stat-label">Member</span>
-                </div>
-              </div>
+              <div class="member-avatar-icon" aria-hidden="true">🏍️</div>
+              <span class="member-role">Admin</span>
+              <h3 class="member-name">Satyajeet Baji</h3>
+              <p class="member-bike">🏍️ Triumph Tiger 850 Sport</p>
+              <p class="member-bike">🏍️ Honda CBR 250R</p>
             </div>
           </article>
 
           <article class="glass-card member-card-expanded fade-up stagger-3">
             <div class="member-card-inner">
-              <div class="member-avatar-icon" aria-hidden="true">📸</div>
-              <span class="member-role">Media & Photography</span>
-              <h3 class="member-name">Siddharth Nair</h3>
-              <p class="member-bike">🏍️ Honda CB500X</p>
-              <p style="font-size:0.82rem;color:var(--clr-text-muted);margin-top:0.75rem;line-height:1.6;">
-                The man behind every stunning photo and video. Siddharth's shots have been featured in multiple motorcycle magazines.
-              </p>
-              <div class="member-stat">
-                <div class="member-stat-item">
-                  <span class="member-stat-num">5k+</span>
-                  <span class="member-stat-label">Photos</span>
-                </div>
-                <div class="member-stat-item">
-                  <span class="member-stat-num">40k</span>
-                  <span class="member-stat-label">km Ridden</span>
-                </div>
-                <div class="member-stat-item">
-                  <span class="member-stat-num">4yr</span>
-                  <span class="member-stat-label">Member</span>
-                </div>
-              </div>
+              <div class="member-avatar-icon" aria-hidden="true">🏍️</div>
+              <span class="member-role">Admin</span>
+              <h3 class="member-name">Mihir Tanksale-Rajwade</h3>
+              <p class="member-bike">🏍️ Jawa 42 2.1</p>
             </div>
           </article>
+
+          <article class="glass-card member-card-expanded fade-up">
+            <div class="member-card-inner">
+              <div class="member-avatar-icon" aria-hidden="true">🏍️</div>
+              <span class="member-role">Admin</span>
+              <h3 class="member-name">Kartik Pai</h3>
+              <p class="member-bike">🏍️ Royal Enfield Classic 350</p>
+            </div>
+          </article>
+
+          <article class="glass-card member-card-expanded fade-up stagger-1">
+            <div class="member-card-inner">
+              <div class="member-avatar-icon" aria-hidden="true">🔧</div>
+              <span class="member-role">Admin · Official Mechanic</span>
+              <h3 class="member-name">Soham Vaidya</h3>
+              <p class="member-bike">🏍️ KTM 390 Duke</p>
+              <p style="font-size:0.75rem;color:var(--clr-text-dim);margin-top:0.3rem;">Previously: Suzuki Gixxer 250 SF</p>
+            </div>
+          </article>
+
+          <article class="glass-card member-card-expanded fade-up stagger-2">
+            <div class="member-card-inner">
+              <div class="member-avatar-icon" aria-hidden="true">🏍️</div>
+              <span class="member-role">Admin</span>
+              <h3 class="member-name">Shoaib Akhtar</h3>
+              <p class="member-bike">🏍️ KTM 390 Duke</p>
+              <p style="font-size:0.75rem;color:var(--clr-text-dim);margin-top:0.3rem;">Previously: Honda CB 350</p>
+            </div>
+          </article>
+
         </div>
       </div>
     </section>
 
-    <!-- MEMBER HIGHLIGHTS (TESTIMONIALS) -->
-    <section style="background:var(--clr-surface);" aria-labelledby="highlights-title">
+    <!-- JOIN CTA -->
+    <section aria-labelledby="join-title">
       <div class="container">
-        <p class="section-label">Rider Voices</p>
-        <h2 class="section-title" id="highlights-title">Why We Ride Together</h2>
-
-        <div class="rider-highlight">
-          <div class="highlight-card fade-up">
-            <p class="highlight-quote">"I came for the rides but stayed for the people. r/PuneBikers changed how I see travel, and gave me hundreds of new friends along the way."</p>
-            <div class="highlight-rider">
-              <div class="highlight-avatar" aria-hidden="true">🌿</div>
-              <div>
-                <p class="highlight-rider-name">Meera Joshi</p>
-                <p class="highlight-rider-sub">Member since 2020 · Triumph Tiger 660</p>
-              </div>
-            </div>
-          </div>
-          <div class="highlight-card fade-up stagger-1">
-            <p class="highlight-quote">"The safety culture here is unlike any other group I've ridden with. Full gear, proper briefings, tail rider — they take it seriously."</p>
-            <div class="highlight-rider">
-              <div class="highlight-avatar" aria-hidden="true">🏔️</div>
-              <div>
-                <p class="highlight-rider-name">Vivek Deshmukh</p>
-                <p class="highlight-rider-sub">Member since 2021 · RE Himalayan</p>
-              </div>
-            </div>
-          </div>
-          <div class="highlight-card fade-up stagger-2">
-            <p class="highlight-quote">"I was a complete beginner. The mentorship programme paired me with an experienced rider who helped me build confidence on the road."</p>
-            <div class="highlight-rider">
-              <div class="highlight-avatar" aria-hidden="true">🌊</div>
-              <div>
-                <p class="highlight-rider-name">Ananya Iyer</p>
-                <p class="highlight-rider-sub">Member since 2023 · KTM 250 Duke</p>
-              </div>
-            </div>
-          </div>
-          <div class="highlight-card fade-up stagger-3">
-            <p class="highlight-quote">"Ladakh 2024 was the best experience of my life. The planning was flawless and the brotherhood you feel at high altitude is indescribable."</p>
-            <div class="highlight-rider">
-              <div class="highlight-avatar" aria-hidden="true">❄️</div>
-              <div>
-                <p class="highlight-rider-name">Kiran Sawant</p>
-                <p class="highlight-rider-sub">Member since 2022 · BMW R1250GS</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- RIDER CARDS GRID -->
-    <section aria-labelledby="riders-title">
-      <div class="container">
-        <p class="section-label">The Tribe</p>
-        <h2 class="section-title" id="riders-title">Member Roster</h2>
-
-        <div class="members-grid">
-          <div class="member-card fade-up">
-            <div class="member-avatar" aria-hidden="true">🏕️</div>
-            <p class="member-name">Suresh Bhosale</p>
-            <p class="member-role">Ride Captain</p>
-            <p class="member-bike">Triumph Scrambler 1200</p>
-          </div>
-          <div class="member-card fade-up stagger-1">
-            <div class="member-avatar" aria-hidden="true">🏜️</div>
-            <p class="member-name">Deepak More</p>
-            <p class="member-role">Tail Rider</p>
-            <p class="member-bike">Royal Enfield Classic 350</p>
-          </div>
-          <div class="member-card fade-up stagger-2">
-            <div class="member-avatar" aria-hidden="true">🌸</div>
-            <p class="member-name">Sneha Wagh</p>
-            <p class="member-role">New Rider Mentor</p>
-            <p class="member-bike">Honda CB300R</p>
-          </div>
-          <div class="member-card fade-up stagger-3">
-            <div class="member-avatar" aria-hidden="true">🔥</div>
-            <p class="member-name">Rahul Gaikwad</p>
-            <p class="member-role">Route Planner</p>
-            <p class="member-bike">Kawasaki Versys 650</p>
-          </div>
-          <div class="member-card fade-up">
-            <div class="member-avatar" aria-hidden="true">⛺</div>
-            <p class="member-name">Aditya Deshpande</p>
-            <p class="member-role">Camping Expert</p>
-            <p class="member-bike">RE Himalayan 450</p>
-          </div>
-          <div class="member-card fade-up stagger-1">
-            <div class="member-avatar" aria-hidden="true">🌍</div>
-            <p class="member-name">Nandini Kadam</p>
-            <p class="member-role">Social Media</p>
-            <p class="member-bike">Hero Xtreme 160R</p>
-          </div>
-          <div class="member-card fade-up stagger-2">
-            <div class="member-avatar" aria-hidden="true">🛡️</div>
-            <p class="member-name">Prakash Shinde</p>
-            <p class="member-role">Safety Officer</p>
-            <p class="member-bike">Bajaj Dominar 400</p>
-          </div>
-          <div class="member-card fade-up stagger-3">
-            <div class="member-avatar" aria-hidden="true">🗺️</div>
-            <p class="member-name">Varun Joshi</p>
-            <p class="member-role">Expedition Rider</p>
-            <p class="member-bike">KTM 390 Adventure</p>
-          </div>
-        </div>
-
         <!-- JOIN CTA -->
         <div class="join-cta fade-up">
           <span aria-hidden="true" style="font-size:3rem;display:block;margin-bottom:1rem;">🏍️</span>
@@ -384,15 +151,18 @@
       </div>
     </section>
 
+
   </main>
 
   <footer class="footer" role="contentinfo">
     <div class="container">
       <div class="footer-inner">
         <div class="footer-brand">
-          <span class="logo-main">r/PuneBikers</span>
-          <span class="logo-sub">Pune's Riding Brotherhood</span>
-          <p>10k+ Reddit community. 314 active WhatsApp riders. Riding together since 2018 across India's most epic roads.</p>
+          <div class="footer-brand-logo">
+            <img src="assets/images/logo-bike.jpg" class="footer-logo-bike" alt="" aria-hidden="true">
+            <img src="assets/images/logo-text.png" class="footer-logo-text" alt="r/PuneBikers">
+          </div>
+          <p>10k+ Reddit community. 314 active WhatsApp riders. Born from a Reddit comment in Jan 2023 — riding together ever since.</p>
           <div class="footer-socials" aria-label="Social media links">
             <a href="https://www.instagram.com/r.pune.bikers/" class="social-btn" aria-label="Instagram" rel="noopener">📸</a>
             <a href="#" class="social-btn" aria-label="WhatsApp" rel="noopener">💬</a>
@@ -401,13 +171,13 @@
         <nav class="footer-col" aria-label="Quick links">
           <h4>Quick Links</h4>
           <a href="index.html">Home</a>
-          <a href="about.html">About</a>
+          <a href="rides.html#about">About</a>
           <a href="rides.html">Rides</a>
           <a href="gallery.html">Gallery</a>
         </nav>
         <nav class="footer-col" aria-label="Community links">
           <h4>Community</h4>
-          <a href="routes.html">Routes</a>
+          <a href="rides.html#routes">Routes</a>
           <a href="events.html">Events</a>
           <a href="members.html">Members</a>
           <a href="contact.html">Contact</a>
@@ -416,7 +186,7 @@
           <h4>Contact</h4>
           <a href="mailto:hello@punebikers.in">hello@punebikers.in</a>
           <a href="#">WhatsApp Group</a>
-          <a href="#">Instagram @r.pune.bikers</a>
+          <a href="https://www.instagram.com/r.pune.bikers/" rel="noopener">Instagram @r.pune.bikers</a>
           <a href="#">YouTube Channel</a>
         </div>
       </div>
@@ -428,5 +198,11 @@
   </footer>
 
   <script src="assets/js/app.js"></script>
+
+  <!-- MOBILE STICKY JOIN CTA -->
+  <div class="mobile-join-cta" aria-hidden="true">
+    <a href="contact.html" class="btn btn-primary">Join the Ride &rarr;</a>
+  </div>
+
 </body>
 </html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Page not found — PuneBikers" />
+  <title>404 — PuneBikers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" type="image/jpeg" href="assets/images/logo-bike.jpg" />
+  <link rel="apple-touch-icon" href="assets/images/logo-bike.jpg" />
+  <script>if(localStorage.getItem("pb-theme")==="light")document.documentElement.dataset.theme="light";</script>
+</head>
+<body>
+
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <nav class="navbar" aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="PuneBikers home">
+        <img src="assets/images/logo-bike.jpg" class="nav-logo-bike" alt="" aria-hidden="true">
+        <img src="assets/images/logo-text.png" class="nav-logo-text" alt="r/PuneBikers">
+      </a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour theme">🌙</button>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="nav-links" role="list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="rides.html#about">About</a></li>
+        <li><a href="rides.html">Rides</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="rides.html#routes">Routes</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="members.html">Members</a></li>
+        <li><a href="contact.html" class="btn btn-primary btn-sm nav-cta">Join Us</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <section class="error-section" aria-labelledby="error-title">
+      <div>
+        <span class="error-code" aria-hidden="true">404</span>
+        <h1 class="error-title" id="error-title">Road Not Found</h1>
+        <p class="error-desc">Looks like you've taken a wrong turn. This page doesn't exist — but plenty of great roads do.</p>
+        <p style="font-size:0.85rem;color:var(--clr-text-dim);margin-bottom:1.5rem;">Heading back home in <span id="countdown">10</span>s…</p>
+        <div class="error-actions">
+          <a href="index.html" class="btn btn-primary">Back to Home</a>
+          <a href="rides.html" class="btn btn-outline">Explore Rides</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="footer-brand-logo">
+            <img src="assets/images/logo-bike.jpg" class="footer-logo-bike" alt="" aria-hidden="true">
+            <img src="assets/images/logo-text.png" class="footer-logo-text" alt="r/PuneBikers">
+          </div>
+          <p>10k+ Reddit community. 314 active WhatsApp riders. Born from a Reddit comment in Jan 2023 — riding together ever since.</p>
+          <div class="footer-socials" aria-label="Social media links">
+            <a href="https://www.instagram.com/r.pune.bikers/" class="social-btn" aria-label="Instagram" rel="noopener">📸</a>
+            <a href="#" class="social-btn" aria-label="WhatsApp" rel="noopener">💬</a>
+          </div>
+        </div>
+        <nav class="footer-col" aria-label="Quick links">
+          <h4>Quick Links</h4>
+          <a href="index.html">Home</a>
+          <a href="rides.html#about">About</a>
+          <a href="rides.html">Rides</a>
+          <a href="gallery.html">Gallery</a>
+        </nav>
+        <nav class="footer-col" aria-label="Community links">
+          <h4>Community</h4>
+          <a href="rides.html#routes">Routes</a>
+          <a href="events.html">Events</a>
+          <a href="members.html">Members</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a href="mailto:hello@punebikers.in">hello@punebikers.in</a>
+          <a href="#">WhatsApp Group</a>
+          <a href="https://www.instagram.com/r.pune.bikers/" rel="noopener">Instagram @r.pune.bikers</a>
+          <a href="#">YouTube Channel</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 PuneBikers. All rights reserved.</p>
+        <p>Ride safe. Gear up. Respect the road.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    (function() {
+      var n = 10;
+      var el = document.getElementById('countdown');
+      var t = setInterval(function() {
+        el.textContent = --n;
+        if (n <= 0) { clearInterval(t); location.href = 'index.html'; }
+      }, 1000);
+    })();
+  </script>
+</body>
+</html>
