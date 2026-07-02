@@ -74,15 +74,6 @@
 
   // ── Digital odometer ──
   const buildOdometer = el => {
-    const target = parseInt(el.dataset.count, 10);
-    const suffix = el.dataset.suffix || '';
-    if (isNaN(target)) return;
-
-    const digits = String(target).split('');
-    const wrap = document.createElement('span');
-    wrap.className = 'odo-wrap';
-
-    const reels = digits.map((d, i) => {
     const raw = String(el.dataset.count);
     const target = parseFloat(raw);
     const suffix = el.dataset.suffix || '';
@@ -111,7 +102,6 @@
       }
       slot.appendChild(reel);
       wrap.appendChild(slot);
-      return { reel, d: parseInt(d, 10), delay: i * 0.07 };
       reels.push({ reel, d: parseInt(ch, 10), delay: reels.length * 0.07 });
     });
 
@@ -432,91 +422,6 @@
           required.forEach(f => f.style.borderColor = '');
         }, 3000);
       }
-    });
-  }
-
-  // ── Back to top ──
-  const btt = document.createElement('button');
-  btt.className = 'back-to-top';
-  btt.setAttribute('aria-label', 'Back to top');
-  btt.innerHTML = `<svg class="btt-ring" viewBox="0 0 54 54" aria-hidden="true">
-    <circle class="btt-ring-track" cx="27" cy="27" r="24"/>
-    <circle class="btt-ring-fill"  cx="27" cy="27" r="24"/>
-  </svg><span class="btt-arrow">↑</span>`;
-  document.body.appendChild(btt);
-
-  const ringFill = btt.querySelector('.btt-ring-fill');
-  const circumference = 2 * Math.PI * 24; // ≈ 150.80
-  ringFill.style.strokeDasharray  = circumference;
-  ringFill.style.strokeDashoffset = circumference;
-
-  const updateBtt = () => {
-    const scrolled = window.scrollY;
-    const total = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = total > 0 ? scrolled / total : 0;
-    ringFill.style.strokeDashoffset = circumference * (1 - progress);
-    btt.classList.toggle('visible', scrolled > 400);
-  };
-  window.addEventListener('scroll', updateBtt, { passive: true });
-  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-  // ── Reddit live subscriber count (cached 1 hr) ──
-  const redditCountEl = document.querySelector('.hero-stat-num[data-reddit-live]');
-  if (redditCountEl) {
-    const CACHE_KEY = 'pb-reddit';
-    const CACHE_TTL = 60 * 60 * 1000;
-    const applyCount = (count, suffix) => {
-      redditCountEl.dataset.count = count;
-      redditCountEl.dataset.suffix = suffix;
-      buildOdometer(redditCountEl);
-      const liveEl = redditCountEl.closest('.hero-stat')?.querySelector('.reddit-live');
-      if (liveEl) liveEl.style.display = 'inline-flex';
-    };
-    try {
-      const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
-      if (cached && Date.now() - cached.ts < CACHE_TTL) {
-        applyCount(cached.count, cached.suffix);
-      } else {
-        fetch('https://www.reddit.com/r/PuneBikers/about.json')
-          .then(r => r.json())
-          .then(d => {
-            const subs = d.data.subscribers;
-            if (!subs) return;
-            const count = subs >= 1000 ? Math.floor(subs / 1000) : subs;
-            const suffix = subs >= 1000 ? 'k+' : '+';
-            localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), count, suffix }));
-            applyCount(count, suffix);
-          })
-          .catch(() => {});
-      }
-    } catch (_) {}
-  }
-
-  // ── Rides page dot TOC ──
-  const ridesToc = document.querySelector('.rides-toc');
-  if (ridesToc) {
-    const dots = Array.from(ridesToc.querySelectorAll('.rides-toc-dot'));
-    const targets = dots.map(d => document.getElementById(d.dataset.target)).filter(Boolean);
-
-    const setActive = () => {
-      let idx = 0;
-      targets.forEach((el, i) => {
-        if (window.scrollY + 180 >= el.offsetTop) idx = i;
-      });
-      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-    };
-
-    window.addEventListener('scroll', setActive, { passive: true });
-    setActive();
-
-    dots.forEach((dot, i) => {
-      dot.addEventListener('click', () => {
-        const el = targets[i];
-        if (el) window.scrollTo({ top: el.offsetTop - 100, behavior: 'smooth' });
-      });
-    });
-  }
-
     });
   }
 
