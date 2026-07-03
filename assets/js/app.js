@@ -546,15 +546,30 @@
       );
       const registerUrl = 'contact.html?subject=ride&ride=' + encodeURIComponent(ride.title) + (ride._fbKey ? '&rideId=' + encodeURIComponent(ride._fbKey) : '');
 
+      const halts = Array.isArray(ride.halts) ? ride.halts.filter(Boolean) : [];
       const hasSplitRoute = ride.startPoint && ride.endPoint && ride.startPoint !== ride.endPoint;
-      const routeHtml = hasSplitRoute
-        ? '<div class="ride-meta-route ride-meta-route--split">' +
-            '<span class="ride-meta-point ride-meta-start" title="Start: ' + ride.startPoint + '">' + ride.startPoint + '</span>' +
-            '<span class="ride-meta-point ride-meta-end" title="Destination: ' + ride.endPoint + '">' + ride.endPoint + '</span>' +
-          '</div>'
-        : '<div class="ride-meta-route">' +
+      let routeHtml;
+      if (hasSplitRoute) {
+        // Meeting point → intermediate halts → end destination
+        let points = '<span class="ride-meta-point ride-meta-start" title="Meeting point: ' + ride.startPoint + '">' + ride.startPoint + '</span>';
+        halts.forEach(h => {
+          points += '<span class="ride-meta-point ride-meta-halt" title="Halt: ' + h + '">' + h + '</span>';
+        });
+        points += '<span class="ride-meta-point ride-meta-end" title="Destination: ' + ride.endPoint + '">' + ride.endPoint + '</span>';
+        routeHtml = '<div class="ride-meta-route ride-meta-route--split">' + points + '</div>';
+      } else {
+        routeHtml = '<div class="ride-meta-route">' +
             '<span class="ride-meta-point ride-meta-end" title="' + ride.location + '">📍 ' + ride.location + '</span>' +
           '</div>';
+      }
+
+      // Assembly date & time (time to gather at the meeting point) — shown above the start point
+      const assemblyHtml = ride.date
+        ? '<div class="ride-meta-assembly">' +
+            '<span class="ride-meta-assembly-label">🕘 Assembly</span>' +
+            '<span class="ride-meta-assembly-time">' + ride.date + '</span>' +
+          '</div>'
+        : '';
 
       const article = document.createElement('article');
       article.className = 'ride-card ' + (STAGGER[idx % STAGGER.length] || 'fade-up');
@@ -566,14 +581,12 @@
           (ride.spots ? '<span class="ride-spots-badge">' + ride.spots + ' spots</span>' : '') +
         '</div>' +
         '<div class="ride-card-body">' +
-          '<div class="ride-card-meta">' +
-            routeHtml +
-            '<div class="ride-meta-pills">' +
-              (km ? '<span>📏 ' + km + ' km</span>' : '') +
-              '<span>📅 ' + ride.date + '</span>' +
-            '</div>' +
-          '</div>' +
           '<h3 class="ride-card-title">' + ride.title + '</h3>' +
+          '<div class="ride-card-meta">' +
+            assemblyHtml +
+            routeHtml +
+            (km ? '<div class="ride-meta-pills"><span>📏 ' + km + ' km</span></div>' : '') +
+          '</div>' +
           (ride.notes ? '<p class="ride-card-desc" style="font-size:0.78rem;">' + ride.notes + '</p>' : '') +
           '<div class="ride-card-actions">' +
             (isOpen
@@ -634,6 +647,9 @@
                 : (r.destination || ''),
               startPoint: r.meetingPoint || '',
               endPoint:   r.destination  || '',
+              halts:      Array.isArray(r.haltPoints)
+                ? r.haltPoints.filter(h => typeof h === 'string' && h.trim())
+                : [],
               distance,
               date:      r.rideDate   || '',
               emoji:     r.emoji      || '🏍️',
