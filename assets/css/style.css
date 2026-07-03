@@ -650,6 +650,37 @@ section {
   flex-wrap: wrap;
   align-items: center;
 }
+/* Assembly (date & time to gather at the meeting point) */
+.ride-meta-assembly {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.15rem;
+}
+.ride-meta-assembly-label {
+  font-weight: 700;
+  color: var(--clr-text);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.68rem;
+}
+.ride-meta-assembly-time {
+  font-weight: 600;
+  color: var(--clr-accent);
+}
+/* Intermediate halt points between meeting point and destination */
+.ride-meta-route--split .ride-meta-halt {
+  color: var(--clr-text-muted);
+}
+.ride-meta-route--split .ride-meta-halt::before {
+  width: 5px;
+  height: 5px;
+  margin-top: -2.5px;
+  left: 1px;
+  border-width: 1.5px;
+  border-color: var(--clr-text-muted);
+}
 .ride-card-title {
   font-size: 1.15rem;
   font-weight: 700;
