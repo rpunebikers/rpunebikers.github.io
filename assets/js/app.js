@@ -761,15 +761,36 @@
     front.className = 'ride-card-front';
     while (card.firstChild) front.appendChild(card.firstChild);
 
-    // Prefer explicit end-point/📍 meta span, fall back to stripping "Pune - X - Pune"
+    // Derive the route's stops so we can show a map pin AND offer turn-by-turn
+    // directions. Prefer an explicit end-point/📍 meta span; otherwise split the
+    // title on hyphens ("Pune - X - Y - Pune"): drop the "Pune" bookends (that's
+    // home — the rider's live location replaces it), the last remaining segment
+    // is the destination and any earlier segments are intermediate waypoints.
     const locationSpan = front.querySelector('.ride-meta-end') ||
       Array.from(front.querySelectorAll('.ride-card-meta span'))
         .find(s => s.textContent.trim().startsWith('📍'));
     const rawTitle = front.querySelector('.ride-card-title')?.textContent.trim() || '';
-    const dest = locationSpan
-      ? locationSpan.textContent.replace('📍', '').trim()
-      : rawTitle.replace(/^Pune\s*[-–]\s*/i, '').replace(/\s*[-–]\s*Pune\s*$/i, '').trim() || rawTitle;
-    const q = encodeURIComponent(dest + ', Maharashtra, India');
+    let stops;
+    if (locationSpan) {
+      stops = [locationSpan.textContent.replace('📍', '').trim()];
+    } else {
+      stops = rawTitle.split(/\s*[-–]\s*/)
+        .map(s => s.trim())
+        .filter(s => s && !/^pune$/i.test(s));
+    }
+    if (!stops.length) stops = [rawTitle];
+    const dest = stops[stops.length - 1];
+    const waypoints = stops.slice(0, -1);
+    const place = s => encodeURIComponent(s + ', Maharashtra, India');
+    const q = place(dest);
+
+    // Google Maps Universal URL: origin omitted → the rider's current location.
+    // travelmode=two-wheeler = motorcycle routing (supported in India).
+    let dirUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + q +
+      '&travelmode=two-wheeler';
+    if (waypoints.length) {
+      dirUrl += '&waypoints=' + waypoints.map(place).join('|');
+    }
 
     const back = document.createElement('div');
     back.className = 'ride-card-back';
@@ -779,11 +800,19 @@
     iframe.loading = 'lazy';
     iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
 
+    const dirBtn = document.createElement('a');
+    dirBtn.className = 'ride-card-dir-btn';
+    dirBtn.href = dirUrl;
+    dirBtn.target = '_blank';
+    dirBtn.rel = 'noopener';
+    dirBtn.textContent = '🛵 Directions from my location';
+
     const label = document.createElement('div');
     label.className = 'ride-card-map-label';
     label.textContent = '📍 ' + dest + ' · tap again to close';
 
     back.appendChild(iframe);
+    back.appendChild(dirBtn);
     back.appendChild(label);
     inner.appendChild(front);
     inner.appendChild(back);
