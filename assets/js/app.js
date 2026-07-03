@@ -546,6 +546,16 @@
       );
       const registerUrl = 'contact.html?subject=ride&ride=' + encodeURIComponent(ride.title) + (ride._fbKey ? '&rideId=' + encodeURIComponent(ride._fbKey) : '');
 
+      const hasSplitRoute = ride.startPoint && ride.endPoint && ride.startPoint !== ride.endPoint;
+      const routeHtml = hasSplitRoute
+        ? '<div class="ride-meta-route ride-meta-route--split">' +
+            '<span class="ride-meta-point ride-meta-start" title="Start: ' + ride.startPoint + '">' + ride.startPoint + '</span>' +
+            '<span class="ride-meta-point ride-meta-end" title="Destination: ' + ride.endPoint + '">' + ride.endPoint + '</span>' +
+          '</div>'
+        : '<div class="ride-meta-route">' +
+            '<span class="ride-meta-point ride-meta-end" title="' + ride.location + '">📍 ' + ride.location + '</span>' +
+          '</div>';
+
       const article = document.createElement('article');
       article.className = 'ride-card ' + (STAGGER[idx % STAGGER.length] || 'fade-up');
       article.dataset.type = ride.type || 'general';
@@ -557,7 +567,7 @@
         '</div>' +
         '<div class="ride-card-body">' +
           '<div class="ride-card-meta">' +
-            '<span class="ride-meta-route">📍 ' + ride.location + '</span>' +
+            routeHtml +
             '<div class="ride-meta-pills">' +
               (km ? '<span>📏 ' + km + ' km</span>' : '') +
               '<span>📅 ' + ride.date + '</span>' +
@@ -622,6 +632,8 @@
                     ? r.meetingPoint + ' → ' + r.destination
                     : r.meetingPoint)
                 : (r.destination || ''),
+              startPoint: r.meetingPoint || '',
+              endPoint:   r.destination  || '',
               distance,
               date:      r.rideDate   || '',
               emoji:     r.emoji      || '🏍️',
@@ -733,9 +745,10 @@
     front.className = 'ride-card-front';
     while (card.firstChild) front.appendChild(card.firstChild);
 
-    // Prefer explicit 📍 meta span, fall back to stripping "Pune - X - Pune"
-    const locationSpan = Array.from(front.querySelectorAll('.ride-card-meta span'))
-      .find(s => s.textContent.trim().startsWith('📍'));
+    // Prefer explicit end-point/📍 meta span, fall back to stripping "Pune - X - Pune"
+    const locationSpan = front.querySelector('.ride-meta-end') ||
+      Array.from(front.querySelectorAll('.ride-card-meta span'))
+        .find(s => s.textContent.trim().startsWith('📍'));
     const rawTitle = front.querySelector('.ride-card-title')?.textContent.trim() || '';
     const dest = locationSpan
       ? locationSpan.textContent.replace('📍', '').trim()
