@@ -605,12 +605,44 @@ section {
 }
 .ride-card-meta span { display: flex; align-items: center; gap: 0.3rem; }
 .ride-meta-route {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  position: relative;
+}
+.ride-meta-route .ride-meta-point {
+  display: block;
+  white-space: nowrap;
   overflow: hidden;
-  line-height: 1.45;
-  word-break: break-word;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  position: relative;
+}
+.ride-meta-route--split .ride-meta-point {
+  padding-left: 0.95rem;
+}
+.ride-meta-route--split .ride-meta-point::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+  border: 2px solid var(--clr-primary);
+  background: var(--clr-surface);
+}
+.ride-meta-route--split .ride-meta-end::before {
+  border-radius: 2px;
+}
+.ride-meta-route--split::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 8px;
+  bottom: 8px;
+  border-left: 1px dashed var(--clr-border);
 }
 .ride-meta-pills {
   display: flex;
