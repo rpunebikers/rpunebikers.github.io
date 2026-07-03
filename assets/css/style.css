@@ -795,6 +795,27 @@ section {
   text-overflow: ellipsis;
   flex-shrink: 0;
 }
+.ride-card-dir-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--clr-primary);
+  text-decoration: none;
+  background: var(--clr-surface);
+  border-top: 1px solid var(--clr-border);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.ride-card-dir-btn:hover,
+.ride-card-dir-btn:focus-visible {
+  background: var(--clr-primary);
+  color: #fff;
+}
 
 /* Riders back panel */
 .ride-card-back--riders {
