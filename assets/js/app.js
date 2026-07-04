@@ -425,6 +425,331 @@
     });
   }
 
+  // ══════════════════════════════════════════════════════════
+  //  PRANAV-INSPIRED UX LAYER
+  //  Injected chrome + interactions. Skipped on admin / 404
+  //  (body[data-chrome="off"]). All styling lives in style.css.
+  // ══════════════════════════════════════════════════════════
+  const chromeEnabled = document.body && document.body.dataset.chrome !== 'off';
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Shared toast helper (also reused by copy buttons)
+  const showToast = (msg) => {
+    let toast = document.querySelector('.toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.setAttribute('role', 'status');
+      toast.setAttribute('aria-live', 'polite');
+      toast.innerHTML = '<span class="toast-ico">✓</span><span class="toast-text"></span>';
+      document.body.appendChild(toast);
+    }
+    toast.querySelector('.toast-text').textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toast.classList.remove('show'), 1900);
+  };
+
+  // Copy-to-clipboard for any [data-copy] element
+  document.querySelectorAll('[data-copy]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      const text = el.dataset.copy || el.textContent.trim();
+      const done = () => showToast('Copied: ' + text);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(() => {});
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (_) {}
+        ta.remove();
+      }
+    });
+  });
+
+  if (chromeEnabled) {
+    // ── Announcement banner (dismissal persists) ──
+    if (localStorage.getItem('pb-banner-dismissed') !== '1') {
+      const banner = document.createElement('div');
+      banner.className = 'pb-banner';
+      banner.setAttribute('role', 'region');
+      banner.setAttribute('aria-label', 'Announcement');
+      banner.innerHTML =
+        '<span class="pb-banner-dot" aria-hidden="true"></span>' +
+        '<span>New rides drop regularly — see what’s rolling out next.</span>' +
+        '<a href="rides.html#section-upcoming">View rides ↗</a>' +
+        '<button class="pb-banner-close" aria-label="Dismiss announcement">×</button>';
+      document.body.prepend(banner);
+      document.body.classList.add('has-banner');
+      banner.querySelector('.pb-banner-close').addEventListener('click', () => {
+        localStorage.setItem('pb-banner-dismissed', '1');
+        document.body.classList.remove('has-banner');
+        banner.remove();
+      });
+    }
+
+    // ── Scroll-progress bar ──
+    const progress = document.createElement('div');
+    progress.id = 'scroll-progress';
+    document.body.appendChild(progress);
+    const updateProgress = () => {
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      const p = total > 0 ? Math.min(window.scrollY / total, 1) : 0;
+      progress.style.transform = 'scaleX(' + p + ')';
+    };
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress, { passive: true });
+    updateProgress();
+
+    // ── Cursor glow (pointer only, no reduced-motion) ──
+    if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
+      const glow = document.createElement('div');
+      glow.id = 'cursor-glow';
+      document.body.appendChild(glow);
+      window.addEventListener('pointermove', (e) => {
+        glow.style.transform = 'translate(' + e.clientX + 'px,' + e.clientY + 'px)';
+        glow.style.opacity = '1';
+      }, { passive: true });
+      window.addEventListener('pointerleave', () => { glow.style.opacity = '0'; });
+    }
+
+    // ── Discover in-page sections (shared by dots + palette) ──
+    const scrollToEl = (el) => {
+      if (!el) return;
+      const bannerH = document.body.classList.contains('has-banner') ? 42 : 0;
+      const y = el.getBoundingClientRect().top + window.scrollY - 90 - bannerH;
+      window.scrollTo({ top: Math.max(y, 0), behavior: reduceMotion ? 'auto' : 'smooth' });
+    };
+    const getSections = () => {
+      const out = [];
+      document.querySelectorAll('main section').forEach((sec, i) => {
+        if (sec.offsetParent === null && !sec.classList.contains('page-tab-section')) return; // hidden
+        let labelId = sec.getAttribute('aria-labelledby');
+        let heading = labelId ? document.getElementById(labelId) : sec.querySelector('h2, h1');
+        if (!heading) return;
+        let label = heading.textContent.replace(/\s+/g, ' ').trim();
+        if (!label) return;
+        if (label.length > 22) label = label.slice(0, 21).trim() + '…';
+        if (!sec.id) sec.id = 'sec-' + i;
+        out.push({ id: sec.id, label, el: sec });
+      });
+      // De-dupe by label, cap for a tidy rail
+      const seen = new Set();
+      return out.filter(s => !seen.has(s.label) && seen.add(s.label)).slice(0, 9);
+    };
+
+    // ── Section-dot navigator (skip if the rides page already has its TOC) ──
+    if (!document.querySelector('.rides-toc')) {
+      const sections = getSections();
+      if (sections.length > 2) {
+        const rail = document.createElement('nav');
+        rail.className = 'section-dots';
+        rail.setAttribute('aria-label', 'Page sections');
+        sections.forEach(s => {
+          const dot = document.createElement('a');
+          dot.className = 'section-dot';
+          dot.href = '#' + s.id;
+          dot.dataset.label = s.label;
+          dot.setAttribute('aria-label', s.label);
+          dot.addEventListener('click', (e) => { e.preventDefault(); scrollToEl(s.el); });
+          rail.appendChild(dot);
+        });
+        document.body.appendChild(rail);
+        const dots = Array.from(rail.querySelectorAll('.section-dot'));
+        const spy = () => {
+          let idx = 0;
+          sections.forEach((s, i) => {
+            if (window.scrollY + 160 >= s.el.getBoundingClientRect().top + window.scrollY) idx = i;
+          });
+          dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        };
+        window.addEventListener('scroll', spy, { passive: true });
+        spy();
+      }
+    }
+
+    // ── Command palette ──
+    const PAGES = [
+      { icon: '🏠', label: 'Home', href: 'index.html' },
+      { icon: '🏍️', label: 'Rides', href: 'rides.html' },
+      { icon: '📷', label: 'Gallery', href: 'gallery.html' },
+      { icon: '📅', label: 'Events', href: 'events.html' },
+      { icon: '👥', label: 'Members', href: 'members.html' },
+      { icon: '✉️', label: 'Contact', href: 'contact.html' },
+    ];
+    const cmdk = document.createElement('div');
+    cmdk.className = 'cmdk-backdrop';
+    cmdk.innerHTML =
+      '<div class="cmdk" role="dialog" aria-modal="true" aria-label="Command palette">' +
+        '<div class="cmdk-input">' +
+          '<span class="cmdk-ico" aria-hidden="true">🔍</span>' +
+          '<input type="text" id="cmdkInput" placeholder="Jump to a page or section…" autocomplete="off" aria-label="Search">' +
+          '<kbd>esc</kbd>' +
+        '</div>' +
+        '<div class="cmdk-list" id="cmdkList"></div>' +
+      '</div>';
+    document.body.appendChild(cmdk);
+    const cmdkInput = cmdk.querySelector('#cmdkInput');
+    const cmdkList = cmdk.querySelector('#cmdkList');
+
+    const buildCommands = () => {
+      const cmds = [];
+      PAGES.forEach(p => cmds.push({ ...p, group: 'Pages', action: () => { location.href = p.href; } }));
+      getSections().forEach(s => cmds.push({
+        icon: '→', label: s.label, group: 'On this page',
+        action: () => scrollToEl(s.el),
+      }));
+      cmds.push({ icon: '🌙', label: 'Toggle light / dark theme', group: 'Actions',
+        action: () => document.getElementById('theme-toggle')?.click() });
+      return cmds;
+    };
+    let cmdItems = [], cmdActiveIdx = 0;
+
+    const renderCmdk = (q) => {
+      const query = (q || '').toLowerCase().trim();
+      const all = buildCommands();
+      const filtered = query
+        ? all.filter(c => c.label.toLowerCase().includes(query))
+        : all;
+      cmdItems = filtered;
+      cmdActiveIdx = 0;
+      if (!filtered.length) {
+        cmdkList.innerHTML = '<div class="cmdk-empty">No matches.</div>';
+        return;
+      }
+      let html = '', lastGroup = null;
+      filtered.forEach((c, i) => {
+        if (c.group !== lastGroup) { html += '<div class="cmdk-group-title">' + c.group + '</div>'; lastGroup = c.group; }
+        html += '<div class="cmdk-item" role="option" data-idx="' + i + '"' +
+          (i === 0 ? ' aria-selected="true"' : '') + '>' +
+          '<span class="cmdk-item-ico" aria-hidden="true">' + c.icon + '</span>' +
+          '<span>' + c.label + '</span></div>';
+      });
+      cmdkList.innerHTML = html;
+      cmdkList.querySelectorAll('.cmdk-item').forEach(item => {
+        item.addEventListener('click', () => runCmd(parseInt(item.dataset.idx, 10)));
+        item.addEventListener('mousemove', () => setCmdActive(parseInt(item.dataset.idx, 10)));
+      });
+    };
+    const setCmdActive = (idx) => {
+      cmdActiveIdx = idx;
+      cmdkList.querySelectorAll('.cmdk-item').forEach(el => {
+        const on = parseInt(el.dataset.idx, 10) === idx;
+        el.setAttribute('aria-selected', on ? 'true' : 'false');
+        if (on) el.scrollIntoView({ block: 'nearest' });
+      });
+    };
+    const runCmd = (idx) => { const c = cmdItems[idx]; if (c) { closeCmdk(); c.action(); } };
+    const openCmdk = () => {
+      cmdk.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      cmdkInput.value = '';
+      renderCmdk('');
+      setTimeout(() => cmdkInput.focus(), 20);
+    };
+    const closeCmdk = () => { cmdk.classList.remove('open'); document.body.style.overflow = ''; };
+    cmdkInput.addEventListener('input', () => renderCmdk(cmdkInput.value));
+    cmdkInput.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') { e.preventDefault(); setCmdActive(Math.min(cmdActiveIdx + 1, cmdItems.length - 1)); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); setCmdActive(Math.max(cmdActiveIdx - 1, 0)); }
+      else if (e.key === 'Enter') { e.preventDefault(); runCmd(cmdActiveIdx); }
+    });
+    cmdk.addEventListener('click', (e) => { if (e.target === cmdk) closeCmdk(); });
+
+    // Nav trigger button (if the page rendered one)
+    document.querySelectorAll('.cmdk-trigger').forEach(b => b.addEventListener('click', openCmdk));
+
+    // ── Keyboard-shortcuts modal ──
+    const help = document.createElement('div');
+    help.className = 'help-backdrop';
+    help.innerHTML =
+      '<div class="help-modal" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts">' +
+        '<div class="help-header"><span class="help-title">Keyboard Shortcuts</span><kbd class="pb-key">esc</kbd></div>' +
+        '<div class="help-list">' +
+          '<div class="help-section">Global</div>' +
+          '<div class="help-item"><span>Command palette</span><kbd class="pb-key">⌘ K / S</kbd></div>' +
+          '<div class="help-item"><span>This help</span><kbd class="pb-key">?</kbd></div>' +
+          '<div class="help-item"><span>Open terminal</span><kbd class="pb-key">`</kbd></div>' +
+          '<div class="help-item"><span>Close / dismiss</span><kbd class="pb-key">esc</kbd></div>' +
+          '<div class="help-section">In palette</div>' +
+          '<div class="help-item"><span>Navigate</span><kbd class="pb-key">↑ ↓</kbd></div>' +
+          '<div class="help-item"><span>Open</span><kbd class="pb-key">↵</kbd></div>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(help);
+    const openHelp = () => { help.classList.add('open'); document.body.style.overflow = 'hidden'; };
+    const closeHelp = () => { help.classList.remove('open'); document.body.style.overflow = ''; };
+    help.addEventListener('click', (e) => { if (e.target === help) closeHelp(); });
+
+    // ── Terminal easter egg ──
+    const term = document.createElement('div');
+    term.className = 'terminal-backdrop';
+    term.innerHTML =
+      '<div class="terminal-win" role="dialog" aria-modal="true" aria-label="Terminal">' +
+        '<div class="terminal-bar">' +
+          '<span class="terminal-dots"><span></span><span></span><span></span></span>' +
+          '<span class="terminal-title">rider@punebikers ~</span>' +
+          '<button class="terminal-close" aria-label="Close terminal">×</button>' +
+        '</div>' +
+        '<div class="terminal-body" id="terminalBody"></div>' +
+        '<div class="terminal-prompt-row">' +
+          '<span class="terminal-ps">rider@punebikers ~ %</span>' +
+          '<input class="terminal-input" id="terminalInput" type="text" autocomplete="off" ' +
+            'autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="type a command…">' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(term);
+    const termBody = term.querySelector('#terminalBody');
+    const termInput = term.querySelector('#terminalInput');
+    const termPrint = (html) => { const p = document.createElement('div'); p.innerHTML = html; termBody.appendChild(p); termBody.scrollTop = termBody.scrollHeight; };
+    const TERM_CMDS = {
+      help: () => termPrint('<span class="t-muted">Commands:</span> <span class="t-accent">help rides join gallery members contact theme clear</span>'),
+      rides: () => { termPrint('Loading rides…'); setTimeout(() => location.href = 'rides.html', 350); },
+      gallery: () => { termPrint('Opening gallery…'); setTimeout(() => location.href = 'gallery.html', 350); },
+      members: () => { termPrint('Opening members…'); setTimeout(() => location.href = 'members.html', 350); },
+      contact: () => { termPrint('Opening contact…'); setTimeout(() => location.href = 'contact.html', 350); },
+      join: () => { termPrint('🏍️ Two wheels. One tribe. Redirecting…'); setTimeout(() => location.href = 'contact.html', 400); },
+      theme: () => { document.getElementById('theme-toggle')?.click(); termPrint('<span class="t-primary">Theme toggled.</span>'); },
+      clear: () => { termBody.innerHTML = ''; },
+      whoami: () => termPrint('<span class="t-accent">a rider of r/PuneBikers</span>'),
+    };
+    const runTermCmd = (raw) => {
+      const cmd = raw.trim().toLowerCase();
+      if (!cmd) return;
+      termPrint('<span class="t-primary">rider@punebikers ~ %</span> ' + raw.replace(/</g, '&lt;'));
+      if (TERM_CMDS[cmd]) TERM_CMDS[cmd]();
+      else termPrint('<span class="t-muted">command not found: ' + cmd.replace(/</g, '&lt;') + ' — try </span><span class="t-accent">help</span>');
+    };
+    const openTerm = () => {
+      term.classList.add('open'); document.body.style.overflow = 'hidden';
+      if (!termBody.childElementCount) {
+        termPrint('<span class="t-primary">r/PuneBikers</span> — Two Wheels. One Tribe.');
+        termPrint('<span class="t-muted">Type </span><span class="t-accent">help</span><span class="t-muted"> to get started.</span>');
+      }
+      setTimeout(() => termInput.focus(), 20);
+    };
+    const closeTerm = () => { term.classList.remove('open'); document.body.style.overflow = ''; };
+    term.querySelector('.terminal-close').addEventListener('click', closeTerm);
+    term.addEventListener('click', (e) => { if (e.target === term) closeTerm(); });
+    termInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { runTermCmd(termInput.value); termInput.value = ''; }
+    });
+
+    // ── Global keyboard shortcuts ──
+    const anyOpen = () => cmdk.classList.contains('open') || help.classList.contains('open') || term.classList.contains('open');
+    const closeAll = () => { closeCmdk(); closeHelp(); closeTerm(); };
+    document.addEventListener('keydown', (e) => {
+      const t = e.target;
+      const typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable);
+      if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); anyOpen() ? closeAll() : openCmdk(); return; }
+      if (e.key === 'Escape') { if (anyOpen()) { e.preventDefault(); closeAll(); } return; }
+      if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === 's' || e.key === 'S') { e.preventDefault(); openCmdk(); }
+      else if (e.key === '?') { e.preventDefault(); anyOpen() ? closeAll() : openHelp(); }
+      else if (e.key === '`') { e.preventDefault(); anyOpen() ? closeAll() : openTerm(); }
+    });
+  } // end chromeEnabled
+
   // ── Back to top ──
   const btt = document.createElement('button');
   btt.className = 'back-to-top';
