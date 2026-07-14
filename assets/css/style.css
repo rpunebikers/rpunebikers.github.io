@@ -54,6 +54,12 @@
 [data-theme="light"] .nav-logo-text {
   filter: invert(1);
 }
+/* Gold accent is unreadable on the light background — use the primary
+   orange for accent text that sits on light surfaces. */
+[data-theme="light"] .section-num,
+[data-theme="light"] .ride-meta-assembly-time {
+  color: var(--clr-primary);
+}
 
 /* ===== RESET & BASE ===== */
 *, *::before, *::after {
@@ -331,6 +337,14 @@ section {
 .nav-links a.active { color: var(--clr-primary); }
 
 .nav-cta { margin-left: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; }
+/* Keep the CTA looking like a filled button — .nav-links a (and its
+   :hover/.active states) otherwise win over .btn-primary on specificity and
+   strip the orange fill / white label, which reads as white-on-white in
+   light mode when Join Us is the active page. */
+.nav-links a.nav-cta,
+.nav-links a.nav-cta:hover,
+.nav-links a.nav-cta.active { color: #fff; background: var(--clr-primary); }
+.nav-links a.nav-cta:hover { background: var(--clr-primary-dark); }
 
 .theme-toggle {
   width: 36px;
