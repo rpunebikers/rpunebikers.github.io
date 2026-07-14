@@ -32,6 +32,11 @@
         <img src="assets/images/logo-bike.jpg" class="nav-logo-bike" alt="" aria-hidden="true">
         <img src="assets/images/logo-text.png" class="nav-logo-text" alt="r/PuneBikers">
       </a>
+      <div class="nav-brand-meta" aria-hidden="true">
+        <span class="nav-brand-meta-row"><span class="nav-brand-dot"></span>Pune's Riding Brotherhood</span>
+        <span class="nav-brand-meta-row"><span class="nav-brand-meta-key">Since</span>Jan 2023 &middot; 314+ riders</span>
+      </div>
+      <button class="cmdk-trigger" aria-label="Open command palette" title="Search (Ctrl/⌘ K)">🔍<kbd>⌘K</kbd></button>
       <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour theme">🌙</button>
       <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
         <span></span><span></span><span></span>
@@ -54,7 +59,7 @@
     <header class="page-hero">
       <div class="container">
         <p class="page-hero-label">PuneBikers</p>
-        <h1>Ride. Explore. Belong.</h1>
+        <h1>Ride. Explore. <em>Belong.</em></h1>
       </div>
     </header>
 
@@ -72,16 +77,16 @@
 
       <section>
         <div class="container">
-          <p class="section-label">Mission</p>
-          <h2 class="section-title">Why We Ride</h2>
+          <p class="section-label"><span class="section-num">01</span>Mission</p>
+          <h2 class="section-title">Why We <em>Ride</em></h2>
           <p class="section-desc">Born from a Reddit comment in January 2023 — riding together ever since.</p>
         </div>
       </section>
 
       <section style="background:var(--clr-surface);" aria-labelledby="philosophy-title">
         <div class="container">
-          <p class="section-label">Philosophy</p>
-          <h2 class="section-title" id="philosophy-title">How We Ride</h2>
+          <p class="section-label"><span class="section-num">02</span>Philosophy</p>
+          <h2 class="section-title" id="philosophy-title">How We <em>Ride</em></h2>
           <div class="philosophy-grid">
             <div class="philosophy-card fade-up">
               <div class="philosophy-card-icon" aria-hidden="true">🛡️</div>
@@ -109,8 +114,8 @@
 
       <section aria-labelledby="safety-title">
         <div class="container">
-          <p class="section-label">Safety Culture</p>
-          <h2 class="section-title" id="safety-title">Gear Up. Every Time.</h2>
+          <p class="section-label"><span class="section-num">03</span>Safety Culture</p>
+          <h2 class="section-title" id="safety-title">Gear Up. Every <em>Time.</em></h2>
           <p class="section-desc">Our safety checklist isn't a formality — it's how we make sure everyone comes home.</p>
           <div class="philosophy-grid" style="margin-top:2.5rem;">
             <div class="philosophy-card fade-up">
@@ -151,8 +156,8 @@
 
       <section aria-labelledby="ghats-title">
         <div class="container">
-          <p class="section-label">Western Ghats</p>
-          <h2 class="section-title" id="ghats-title">The Home Range</h2>
+          <p class="section-label"><span class="section-num">04</span>Western Ghats</p>
+          <h2 class="section-title" id="ghats-title">The Home <em>Range</em></h2>
           <div class="routes-grid">
             <article class="route-card fade-up">
               <div class="route-card-header">
@@ -214,22 +219,22 @@
 
       <section style="background:var(--clr-surface);" aria-labelledby="coastal-title">
         <div class="container">
-          <p class="section-label">Coastal Roads</p>
-          <h2 class="section-title" id="coastal-title">Salt & Speed</h2>
+          <p class="section-label"><span class="section-num">05</span>Coastal Roads</p>
+          <h2 class="section-title" id="coastal-title">Salt & <em>Speed</em></h2>
         </div>
       </section>
 
       <section aria-labelledby="mountain-title">
         <div class="container">
-          <p class="section-label">Mountain Rides</p>
-          <h2 class="section-title" id="mountain-title">Into the Himalayas</h2>
+          <p class="section-label"><span class="section-num">06</span>Mountain Rides</p>
+          <h2 class="section-title" id="mountain-title">Into the <em>Himalayas</em></h2>
         </div>
       </section>
 
       <section style="background:var(--clr-surface);" aria-labelledby="weekend-title">
         <div class="container">
-          <p class="section-label">Weekend Escapes</p>
-          <h2 class="section-title" id="weekend-title">Short. Sharp. Satisfying.</h2>
+          <p class="section-label"><span class="section-num">07</span>Weekend Escapes</p>
+          <h2 class="section-title" id="weekend-title">Short. Sharp. <em>Satisfying.</em></h2>
         </div>
       </section>
 
@@ -241,8 +246,8 @@
     <!-- UPCOMING RIDES -->
     <section id="section-upcoming" aria-labelledby="upcoming-title">
       <div class="container">
-        <p class="section-label">Upcoming</p>
-        <h2 class="section-title" id="upcoming-title">Next on the Calendar</h2>
+        <p class="section-label"><span class="section-num">08</span>Upcoming</p>
+        <h2 class="section-title" id="upcoming-title">Next on the <em>Calendar</em></h2>
         <div id="upcoming-rides-container" class="rides-grid" aria-live="polite">
           <!-- Loaded from assets/data/rides.json -->
           <p class="upcoming-loading">Loading rides…</p>
@@ -253,8 +258,8 @@
     <!-- PAST RIDES -->
     <section style="background:var(--clr-surface);" aria-labelledby="past-rides-title">
       <div class="container">
-        <p class="section-label">Archive</p>
-        <h2 class="section-title" id="past-rides-title">Roads We've Ridden</h2>
+        <p class="section-label"><span class="section-num">09</span>Archive</p>
+        <h2 class="section-title" id="past-rides-title">Roads We've <em>Ridden</em></h2>
 
         <div class="rides-filter" role="group" aria-label="Filter rides by year">
           <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
