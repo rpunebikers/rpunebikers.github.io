@@ -2617,3 +2617,24 @@ kbd.pb-key {
 .copy-btn:hover { color: var(--clr-primary); border-color: var(--clr-primary); }
 .contact-copy-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
 .contact-copy-row .copy-btn { margin-left: 0; padding: 0.5rem 0.9rem; font-size: 0.78rem; }
+
+/* ===== EMBEDDED TOOL (E0 finder) ===== */
+.embed-note { color: var(--clr-text-muted); font-size: 0.9rem; margin: 0.75rem 0 1.25rem; }
+.embed-note a { color: var(--clr-primary); }
+.embed-frame {
+  position: relative;
+  width: 100%;
+  min-height: min(80vh, 900px);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--clr-surface);
+  box-shadow: var(--shadow-card);
+}
+.embed-frame iframe {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  border: 0;
+  display: block;
+}
