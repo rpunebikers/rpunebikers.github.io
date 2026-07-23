@@ -574,6 +574,7 @@
       { icon: '🏍️', label: 'Rides', href: 'rides.html' },
       { icon: '📷', label: 'Gallery', href: 'gallery.html' },
       { icon: '📅', label: 'Events', href: 'events.html' },
+      { icon: '⛽', label: 'E0 Fuel Finder', href: 'e0-finder.html' },
       { icon: '👥', label: 'Members', href: 'members.html' },
       { icon: '✉️', label: 'Contact', href: 'contact.html' },
     ];
