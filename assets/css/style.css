@@ -51,8 +51,9 @@
 [data-theme="light"] .footer {
   background: #e0e0e0;
 }
-[data-theme="light"] .nav-logo-text {
-  filter: invert(1);
+[data-theme="light"] .nav-logo-text,
+[data-theme="light"] .footer-logo-text {
+  filter: brightness(0.2);
 }
 /* Gold accent is unreadable on the light background — use the primary
    orange for accent text that sits on light surfaces. */
