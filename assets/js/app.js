@@ -3,6 +3,40 @@
 (() => {
   'use strict';
 
+  // ── HTML-escaping for any dynamic text going into innerHTML ──
+  const escapeHtml = (str) => String(str).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[c]));
+
+  // ── Shared ride-card flip scaffolding. Moves the card's existing children
+  // into a ".ride-card-front" pane and hands the caller an empty back pane
+  // to fill in (map preview, rider list, ...); wires up the flip-on-click. ──
+  const initFlipCard = (card, { backClass, pinHeight, buildBack, onFlip }) => {
+    const naturalHeight = pinHeight ? card.offsetHeight : 0;
+    card.classList.add('flip-enabled');
+    const inner = document.createElement('div');
+    inner.className = 'ride-card-inner';
+    const front = document.createElement('div');
+    front.className = 'ride-card-front';
+    while (card.firstChild) front.appendChild(card.firstChild);
+
+    const back = document.createElement('div');
+    back.className = backClass;
+    buildBack(back, front);
+
+    inner.appendChild(front);
+    inner.appendChild(back);
+    card.appendChild(inner);
+    if (pinHeight && naturalHeight > 0) card.style.height = naturalHeight + 'px';
+
+    card.addEventListener('click', e => {
+      if (e.target.closest('a')) return;
+      const flipping = !card.classList.contains('flipped');
+      if (onFlip) onFlip(flipping, front, back);
+      card.classList.toggle('flipped');
+    });
+  };
+
   // ── Navbar scroll effect ──
   const navbar = document.querySelector('.navbar');
   if (navbar) {
@@ -147,6 +181,7 @@
     let activeDist = 'all';
 
     const parseKm = card => {
+      if (card.dataset.km) return parseInt(card.dataset.km, 10) || 0;
       const txt = card.querySelector('.ride-card-meta')?.textContent || '';
       const m = txt.match(/([\d,]+)\s*km/i);
       return m ? parseInt(m[1].replace(/,/g, ''), 10) : 0;
@@ -286,7 +321,7 @@
       const banner = document.getElementById('ride-banner');
       if (banner) {
         banner.style.display = 'flex';
-        banner.innerHTML = '<span>🏍️</span><span>Registering for: <strong>' + rideParam + '</strong></span>';
+        banner.innerHTML = '<span>🏍️</span><span>Registering for: <strong>' + escapeHtml(rideParam) + '</strong></span>';
       }
       const msgField = form.querySelector('#message');
       if (msgField && !msgField.value) {
@@ -367,6 +402,12 @@
       btn.disabled = true;
       btn.style.background = '#22c55e';
 
+      const resetBtn = (label) => {
+        btn.textContent = label;
+        btn.disabled = false;
+        btn.style.background = '';
+      };
+
       if (rideIdParam) {
         // Ride registration — save directly to Firebase, no Reddit
         const _fbConf = window.PB_FIREBASE;
@@ -378,16 +419,25 @@
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, phone, bike, instagram, notes: message, registeredAt: Date.now() }),
-          }).catch(() => {});
+          })
+            .then(res => {
+              if (!res.ok) throw new Error('HTTP ' + res.status);
+              btn.textContent = 'Registered!';
+              setTimeout(() => {
+                resetBtn('Register for Ride');
+                form.reset();
+                required.forEach(f => f.style.borderColor = '');
+              }, 3000);
+            })
+            .catch(err => {
+              console.error('Ride registration failed:', err);
+              resetBtn('Register for Ride');
+              showToast('Could not save your registration — please try again.');
+            });
+        } else {
+          resetBtn('Register for Ride');
+          showToast('Registration is temporarily unavailable — please try again later.');
         }
-        btn.textContent = 'Registered!';
-        setTimeout(() => {
-          btn.textContent = 'Register for Ride';
-          btn.disabled = false;
-          btn.style.background = '';
-          form.reset();
-          required.forEach(f => f.style.borderColor = '');
-        }, 3000);
       } else {
         // Group joining / general enquiry — open Reddit modmail
         const subject = `[${subjectTxt}] — ${name}`;
@@ -410,14 +460,12 @@
               notes: message,
               registeredAt: Date.now(),
             }),
-          }).catch(() => {});
+          }).catch(err => console.error('Failed to log enquiry to Firebase:', err));
         }
 
         btn.textContent = 'Opening Reddit…';
         setTimeout(() => {
-          btn.textContent = 'Send via Reddit';
-          btn.disabled = false;
-          btn.style.background = '';
+          resetBtn('Send via Reddit');
           form.reset();
           required.forEach(f => f.style.borderColor = '');
         }, 3000);
@@ -877,15 +925,15 @@
       let routeHtml;
       if (hasSplitRoute) {
         // Meeting point → intermediate halts → end destination
-        let points = '<span class="ride-meta-point ride-meta-start" title="Meeting point: ' + ride.startPoint + '">' + ride.startPoint + '</span>';
+        let points = '<span class="ride-meta-point ride-meta-start" title="Meeting point: ' + escapeHtml(ride.startPoint) + '">' + escapeHtml(ride.startPoint) + '</span>';
         halts.forEach(h => {
-          points += '<span class="ride-meta-point ride-meta-halt" title="Halt: ' + h + '">' + h + '</span>';
+          points += '<span class="ride-meta-point ride-meta-halt" title="Halt: ' + escapeHtml(h) + '">' + escapeHtml(h) + '</span>';
         });
-        points += '<span class="ride-meta-point ride-meta-end" title="Destination: ' + ride.endPoint + '">' + ride.endPoint + '</span>';
+        points += '<span class="ride-meta-point ride-meta-end" title="Destination: ' + escapeHtml(ride.endPoint) + '">' + escapeHtml(ride.endPoint) + '</span>';
         routeHtml = '<div class="ride-meta-route ride-meta-route--split">' + points + '</div>';
       } else {
         routeHtml = '<div class="ride-meta-route">' +
-            '<span class="ride-meta-point ride-meta-end" title="' + ride.location + '">📍 ' + ride.location + '</span>' +
+            '<span class="ride-meta-point ride-meta-end" title="' + escapeHtml(ride.location) + '">📍 ' + escapeHtml(ride.location) + '</span>' +
           '</div>';
       }
 
@@ -893,27 +941,28 @@
       const assemblyHtml = ride.date
         ? '<div class="ride-meta-assembly">' +
             '<span class="ride-meta-assembly-label">🕘 Assembly</span>' +
-            '<span class="ride-meta-assembly-time">' + ride.date + '</span>' +
+            '<span class="ride-meta-assembly-time">' + escapeHtml(ride.date) + '</span>' +
           '</div>'
         : '';
 
       const article = document.createElement('article');
       article.className = 'ride-card ' + (STAGGER[idx % STAGGER.length] || 'fade-up');
       article.dataset.type = ride.type || 'general';
+      article.dataset.km = String(ride.distance || 0);
       article.innerHTML =
         '<div class="ride-card-thumb">' +
-          '<div class="ride-card-placeholder" aria-hidden="true">' + (ride.emoji || '🏍️') + '</div>' +
+          '<div class="ride-card-placeholder" aria-hidden="true">' + escapeHtml(ride.emoji || '🏍️') + '</div>' +
           '<span class="ride-card-badge" style="background:' + color + ';color:#000;">' + label + '</span>' +
-          (ride.spots ? '<span class="ride-spots-badge">' + ride.spots + ' spots</span>' : '') +
+          (ride.spots ? '<span class="ride-spots-badge">' + escapeHtml(String(ride.spots)) + ' spots</span>' : '') +
         '</div>' +
         '<div class="ride-card-body">' +
-          '<h3 class="ride-card-title">' + ride.title + '</h3>' +
+          '<h3 class="ride-card-title">' + escapeHtml(ride.title) + '</h3>' +
           '<div class="ride-card-meta">' +
             assemblyHtml +
             routeHtml +
-            (km ? '<div class="ride-meta-pills"><span>📏 ' + km + ' km</span></div>' : '') +
+            (km ? '<div class="ride-meta-pills"><span>📏 ' + escapeHtml(String(km)) + ' km</span></div>' : '') +
           '</div>' +
-          (ride.notes ? '<p class="ride-card-desc" style="font-size:0.78rem;">' + ride.notes + '</p>' : '') +
+          (ride.notes ? '<p class="ride-card-desc" style="font-size:0.78rem;">' + escapeHtml(ride.notes) + '</p>' : '') +
           '<div class="ride-card-actions">' +
             (isOpen
               ? '<a href="' + registerUrl + '" class="btn btn-primary btn-sm">Register</a>'
@@ -996,51 +1045,36 @@
     };
 
     const setupRiderFlip = (card, regs) => {
-      // Measure natural height before flip-enabled's 240px rule kicks in
-      const naturalHeight = card.offsetHeight;
-      card.classList.add('flip-enabled', 'flip-riders');
-      const inner = document.createElement('div');
-      inner.className = 'ride-card-inner';
-      const front = document.createElement('div');
-      front.className = 'ride-card-front';
-      while (card.firstChild) front.appendChild(card.firstChild);
+      card.classList.add('flip-riders');
+      initFlipCard(card, {
+        backClass: 'ride-card-back ride-card-back--riders',
+        pinHeight: true, // pin to natural height so the flip back panel matches
+        buildBack: (back) => {
+          const hdr = document.createElement('p');
+          hdr.className = 'ride-reg-header';
+          hdr.textContent = regs.length
+            ? '🏍️ ' + regs.length + (regs.length === 1 ? ' rider' : ' riders') + ' registered'
+            : '🏍️ No registrations yet';
+          back.appendChild(hdr);
 
-      const back = document.createElement('div');
-      back.className = 'ride-card-back ride-card-back--riders';
+          if (regs.length) {
+            const ul = document.createElement('ul');
+            ul.className = 'ride-reg-list';
+            regs.forEach(reg => {
+              const li = document.createElement('li');
+              li.className = 'ride-reg-item';
+              li.innerHTML = '<span class="ride-reg-name">' + escapeHtml(reg.name) + '</span>' +
+                (reg.bike ? '<span class="ride-reg-bike">' + escapeHtml(reg.bike) + '</span>' : '');
+              ul.appendChild(li);
+            });
+            back.appendChild(ul);
+          }
 
-      const hdr = document.createElement('p');
-      hdr.className = 'ride-reg-header';
-      hdr.textContent = regs.length
-        ? '🏍️ ' + regs.length + (regs.length === 1 ? ' rider' : ' riders') + ' registered'
-        : '🏍️ No registrations yet';
-      back.appendChild(hdr);
-
-      if (regs.length) {
-        const ul = document.createElement('ul');
-        ul.className = 'ride-reg-list';
-        regs.forEach(reg => {
-          const li = document.createElement('li');
-          li.className = 'ride-reg-item';
-          li.innerHTML = '<span class="ride-reg-name">' + reg.name + '</span>' +
-            (reg.bike ? '<span class="ride-reg-bike">' + reg.bike + '</span>' : '');
-          ul.appendChild(li);
-        });
-        back.appendChild(ul);
-      }
-
-      const hint = document.createElement('div');
-      hint.className = 'ride-card-map-label';
-      hint.textContent = 'tap again to close';
-      back.appendChild(hint);
-
-      inner.appendChild(front);
-      inner.appendChild(back);
-      card.appendChild(inner);
-      // Pin the card to its natural height so flip back panel matches
-      if (naturalHeight > 0) card.style.height = naturalHeight + 'px';
-      card.addEventListener('click', e => {
-        if (e.target.closest('a')) return;
-        card.classList.toggle('flipped');
+          const hint = document.createElement('div');
+          hint.className = 'ride-card-map-label';
+          hint.textContent = 'tap again to close';
+          back.appendChild(hint);
+        },
       });
     };
 
@@ -1077,81 +1111,71 @@
   }
 
   // ── Card flip → map preview (skipped for prefers-reduced-motion) ──
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  document.querySelectorAll('.ride-card').forEach(card => {
-    card.classList.add('flip-enabled');
+  if (!reduceMotion) {
+    document.querySelectorAll('.ride-card').forEach(card => {
+      let q = '';
+      initFlipCard(card, {
+        backClass: 'ride-card-back',
+        buildBack: (back, front) => {
+          // Derive the route's stops so we can show a map pin AND offer turn-by-turn
+          // directions. Prefer an explicit end-point/📍 meta span; otherwise split the
+          // title on hyphens ("Pune - X - Y - Pune"): drop the "Pune" bookends (that's
+          // home — the rider's live location replaces it), the last remaining segment
+          // is the destination and any earlier segments are intermediate waypoints.
+          const locationSpan = front.querySelector('.ride-meta-end') ||
+            Array.from(front.querySelectorAll('.ride-card-meta span'))
+              .find(s => s.textContent.trim().startsWith('📍'));
+          const rawTitle = front.querySelector('.ride-card-title')?.textContent.trim() || '';
+          let stops;
+          if (locationSpan) {
+            stops = [locationSpan.textContent.replace('📍', '').trim()];
+          } else {
+            stops = rawTitle.split(/\s*[-–]\s*/)
+              .map(s => s.trim())
+              .filter(s => s && !/^pune$/i.test(s));
+          }
+          if (!stops.length) stops = [rawTitle];
+          const dest = stops[stops.length - 1];
+          const waypoints = stops.slice(0, -1);
+          const place = s => encodeURIComponent(s + ', Maharashtra, India');
+          q = place(dest);
 
-    const inner = document.createElement('div');
-    inner.className = 'ride-card-inner';
-    const front = document.createElement('div');
-    front.className = 'ride-card-front';
-    while (card.firstChild) front.appendChild(card.firstChild);
+          // Google Maps Universal URL: origin omitted → the rider's current location.
+          // travelmode=two-wheeler = motorcycle routing (supported in India).
+          let dirUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + q +
+            '&travelmode=two-wheeler';
+          if (waypoints.length) {
+            dirUrl += '&waypoints=' + waypoints.map(place).join('|');
+          }
 
-    // Derive the route's stops so we can show a map pin AND offer turn-by-turn
-    // directions. Prefer an explicit end-point/📍 meta span; otherwise split the
-    // title on hyphens ("Pune - X - Y - Pune"): drop the "Pune" bookends (that's
-    // home — the rider's live location replaces it), the last remaining segment
-    // is the destination and any earlier segments are intermediate waypoints.
-    const locationSpan = front.querySelector('.ride-meta-end') ||
-      Array.from(front.querySelectorAll('.ride-card-meta span'))
-        .find(s => s.textContent.trim().startsWith('📍'));
-    const rawTitle = front.querySelector('.ride-card-title')?.textContent.trim() || '';
-    let stops;
-    if (locationSpan) {
-      stops = [locationSpan.textContent.replace('📍', '').trim()];
-    } else {
-      stops = rawTitle.split(/\s*[-–]\s*/)
-        .map(s => s.trim())
-        .filter(s => s && !/^pune$/i.test(s));
-    }
-    if (!stops.length) stops = [rawTitle];
-    const dest = stops[stops.length - 1];
-    const waypoints = stops.slice(0, -1);
-    const place = s => encodeURIComponent(s + ', Maharashtra, India');
-    const q = place(dest);
+          const iframe = document.createElement('iframe');
+          iframe.title = 'Map: ' + dest;
+          iframe.loading = 'lazy';
+          iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
 
-    // Google Maps Universal URL: origin omitted → the rider's current location.
-    // travelmode=two-wheeler = motorcycle routing (supported in India).
-    let dirUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + q +
-      '&travelmode=two-wheeler';
-    if (waypoints.length) {
-      dirUrl += '&waypoints=' + waypoints.map(place).join('|');
-    }
+          const dirBtn = document.createElement('a');
+          dirBtn.className = 'ride-card-dir-btn';
+          dirBtn.href = dirUrl;
+          dirBtn.target = '_blank';
+          dirBtn.rel = 'noopener';
+          dirBtn.textContent = '🛵 Directions from my location';
 
-    const back = document.createElement('div');
-    back.className = 'ride-card-back';
+          const label = document.createElement('div');
+          label.className = 'ride-card-map-label';
+          label.textContent = '📍 ' + dest + ' · tap again to close';
 
-    const iframe = document.createElement('iframe');
-    iframe.title = 'Map: ' + dest;
-    iframe.loading = 'lazy';
-    iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
-
-    const dirBtn = document.createElement('a');
-    dirBtn.className = 'ride-card-dir-btn';
-    dirBtn.href = dirUrl;
-    dirBtn.target = '_blank';
-    dirBtn.rel = 'noopener';
-    dirBtn.textContent = '🛵 Directions from my location';
-
-    const label = document.createElement('div');
-    label.className = 'ride-card-map-label';
-    label.textContent = '📍 ' + dest + ' · tap again to close';
-
-    back.appendChild(iframe);
-    back.appendChild(dirBtn);
-    back.appendChild(label);
-    inner.appendChild(front);
-    inner.appendChild(back);
-    card.appendChild(inner);
-
-    card.addEventListener('click', e => {
-      if (e.target.closest('a')) return;
-      const flipping = !card.classList.contains('flipped');
-      if (flipping && !iframe.src) {
-        iframe.src = 'https://maps.google.com/maps?q=' + q + '&output=embed&z=11';
-      }
-      card.classList.toggle('flipped');
+          back.appendChild(iframe);
+          back.appendChild(dirBtn);
+          back.appendChild(label);
+        },
+        onFlip: (flipping, front, back) => {
+          const iframe = back.querySelector('iframe');
+          if (flipping && iframe && !iframe.src) {
+            iframe.src = 'https://maps.google.com/maps?q=' + q + '&output=embed&z=11';
+          }
+        },
+      });
     });
-  });
+  }
 
 })();

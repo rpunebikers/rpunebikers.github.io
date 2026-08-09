@@ -247,6 +247,10 @@
 
   <script>
   (() => {
+    const escapeHtml = (str) => String(str).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    }[c]));
+
     const cfg = window.PB_FIREBASE;
     const isConfigured = cfg && cfg.databaseURL && !cfg.databaseURL.includes('YOUR-PROJECT');
 
@@ -338,22 +342,33 @@
         (a[1].sortOrder || 0) - (b[1].sortOrder || 0) ||
         (a[1].rideDate || '').localeCompare(b[1].rideDate || ''));
       el.innerHTML = sorted.map(([key, r]) =>
-        '<div class="ride-row">' +
-          '<span class="ride-row-emoji">' + (r.emoji || '🏍️') + '</span>' +
+        '<div class="ride-row" data-key="' + escapeHtml(key) + '">' +
+          '<span class="ride-row-emoji">' + escapeHtml(r.emoji || '🏍️') + '</span>' +
           '<div class="ride-row-info">' +
-            '<strong>' + (r.rideName || '') + '</strong>' +
-            '<span>📍 ' + (r.meetingPoint || '') +
-            (r.destination && r.destination !== r.meetingPoint ? ' → ' + r.destination : '') +
-            ' · 📅 ' + (r.rideDate || '') +
-            (r.maxRiders ? ' · ' + r.maxRiders + ' max' : '') + '</span>' +
+            '<strong>' + escapeHtml(r.rideName || '') + '</strong>' +
+            '<span>📍 ' + escapeHtml(r.meetingPoint || '') +
+            (r.destination && r.destination !== r.meetingPoint ? ' → ' + escapeHtml(r.destination) : '') +
+            ' · 📅 ' + escapeHtml(r.rideDate || '') +
+            (r.maxRiders ? ' · ' + escapeHtml(String(r.maxRiders)) + ' max' : '') + '</span>' +
           '</div>' +
-          '<span class="status-pill sp-' + (r.status || 'scheduled') + '">' + (r.status || 'scheduled') + '</span>' +
+          '<span class="status-pill sp-' + escapeHtml(r.status || 'scheduled') + '">' + escapeHtml(r.status || 'scheduled') + '</span>' +
           '<div class="ride-row-actions">' +
-            '<button class="icon-btn" onclick="editRide(\'' + key + '\')" aria-label="Edit">✏️</button>' +
-            '<button class="icon-btn del" onclick="deleteRide(\'' + key + '\',\'' + (r.rideName || '').replace(/'/g, '') + '\')" aria-label="Delete">🗑️</button>' +
+            '<button class="icon-btn edit-ride-btn" aria-label="Edit">✏️</button>' +
+            '<button class="icon-btn del delete-ride-btn" aria-label="Delete">🗑️</button>' +
           '</div>' +
         '</div>'
       ).join('');
+      // Data-attribute driven listeners — avoids building inline onclick="" strings
+      // out of ride data (rideName etc. would otherwise need attribute-escaping too).
+      el.querySelectorAll('.edit-ride-btn').forEach(btn => {
+        btn.addEventListener('click', () => window.editRide(btn.closest('.ride-row').dataset.key));
+      });
+      el.querySelectorAll('.delete-ride-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const rowKey = btn.closest('.ride-row').dataset.key;
+          window.deleteRide(rowKey, (ridesCache[rowKey] || {}).rideName || '');
+        });
+      });
     }
 
     window.saveRide = () => {
@@ -461,7 +476,7 @@
       const current = sel.value;
       const rides = [...new Set(allRegs.map(r => r.ride).filter(Boolean))];
       sel.innerHTML = '<option value="">All rides</option>' +
-        rides.map(r => '<option value="' + r + '"' + (r === current ? ' selected' : '') + '>' + r + '</option>').join('');
+        rides.map(r => '<option value="' + escapeHtml(r) + '"' + (r === current ? ' selected' : '') + '>' + escapeHtml(r) + '</option>').join('');
     }
 
     window.filterRegs = () => {
@@ -485,11 +500,11 @@
       tbody.innerHTML = filtered.map(r => {
         const d = r.timestamp ? new Date(r.timestamp).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : '—';
         return '<tr>' +
-          '<td><strong>' + (r.name || '—') + '</strong></td>' +
-          '<td>' + (r.ride || '—') + '</td>' +
-          '<td>' + (r.phone || '—') + '</td>' +
-          '<td>' + (r.bike || '—') + '</td>' +
-          '<td>' + (r.instagram || '—') + '</td>' +
+          '<td><strong>' + escapeHtml(r.name || '—') + '</strong></td>' +
+          '<td>' + escapeHtml(r.ride || '—') + '</td>' +
+          '<td>' + escapeHtml(r.phone || '—') + '</td>' +
+          '<td>' + escapeHtml(r.bike || '—') + '</td>' +
+          '<td>' + escapeHtml(r.instagram || '—') + '</td>' +
           '<td style="white-space:nowrap;">' + d + '</td>' +
         '</tr>';
       }).join('');
