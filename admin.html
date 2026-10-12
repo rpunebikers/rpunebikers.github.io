@@ -55,12 +55,15 @@
       padding: 0.85rem 1rem; border-radius: var(--radius-md);
       background: var(--clr-surface); border: 1px solid var(--clr-border);
     }
-    .ride-row-emoji { font-size: 1.5rem; flex-shrink: 0; }
+    .ride-row-emoji { flex-shrink: 0; color: var(--clr-primary); display: flex; }
+    .ride-row-emoji .icon { width: 1.5rem; height: 1.5rem; }
     .ride-row-info { flex: 1; min-width: 0; }
     .ride-row-info strong { display: block; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .ride-row-info span { font-size: 0.75rem; color: var(--clr-text-muted); }
+    .ride-row-info span .icon { width: 0.95rem; height: 0.95rem; }
     .ride-row-actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
-    .icon-btn { width: 32px; height: 32px; border-radius: var(--radius-sm); border: 1px solid var(--clr-glass-border); background: var(--clr-glass-bg); color: var(--clr-text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; transition: var(--transition); }
+    .icon-btn { width: 32px; height: 32px; border-radius: var(--radius-sm); border: 1px solid var(--clr-glass-border); background: var(--clr-glass-bg); color: var(--clr-text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+    .icon-btn .icon { width: 1rem; height: 1rem; }
     .icon-btn:hover { border-color: var(--clr-primary); color: var(--clr-primary); }
     .icon-btn.del:hover { border-color: #e55; color: #e55; }
     .status-pill { display: inline-block; padding: 0.15rem 0.55rem; border-radius: 99px; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
@@ -100,7 +103,7 @@
         <img src="assets/images/logo-bike.jpg" class="nav-logo-bike" alt="" aria-hidden="true">
         <img src="assets/images/logo-text.png" class="nav-logo-text" alt="r/PuneBikers">
       </a>
-      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour theme">🌙</button>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour theme"><svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#tabler-moon"></use></svg></button>
     </div>
   </nav>
 
@@ -343,18 +346,18 @@
         (a[1].rideDate || '').localeCompare(b[1].rideDate || ''));
       el.innerHTML = sorted.map(([key, r]) =>
         '<div class="ride-row" data-key="' + escapeHtml(key) + '">' +
-          '<span class="ride-row-emoji">' + escapeHtml(r.emoji || '🏍️') + '</span>' +
+          '<span class="ride-row-emoji">' + window.PB_RIDE_ICON(r.emoji) + '</span>' +
           '<div class="ride-row-info">' +
             '<strong>' + escapeHtml(r.rideName || '') + '</strong>' +
-            '<span>📍 ' + escapeHtml(r.meetingPoint || '') +
+            '<span>' + window.PB_ICON('pin') + ' ' + escapeHtml(r.meetingPoint || '') +
             (r.destination && r.destination !== r.meetingPoint ? ' → ' + escapeHtml(r.destination) : '') +
-            ' · 📅 ' + escapeHtml(r.rideDate || '') +
+            ' · ' + window.PB_ICON('calendar') + ' ' + escapeHtml(r.rideDate || '') +
             (r.maxRiders ? ' · ' + escapeHtml(String(r.maxRiders)) + ' max' : '') + '</span>' +
           '</div>' +
           '<span class="status-pill sp-' + escapeHtml(r.status || 'scheduled') + '">' + escapeHtml(r.status || 'scheduled') + '</span>' +
           '<div class="ride-row-actions">' +
-            '<button class="icon-btn edit-ride-btn" aria-label="Edit">✏️</button>' +
-            '<button class="icon-btn del delete-ride-btn" aria-label="Delete">🗑️</button>' +
+            '<button class="icon-btn edit-ride-btn" aria-label="Edit">' + window.PB_ICON('pencil') + '</button>' +
+            '<button class="icon-btn del delete-ride-btn" aria-label="Delete">' + window.PB_ICON('trash') + '</button>' +
           '</div>' +
         '</div>'
       ).join('');
