@@ -8,6 +8,20 @@
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
   }[c]));
 
+  // ── Tabler Icons sprite (assets/images/icons.svg) ──
+  const icon = (name) =>
+    '<svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#tabler-' + name + '"></use></svg>';
+
+  // ride.emoji (assets/data/rides.json) → sprite icon key, so the data file
+  // doesn't need to change when the icon set changes.
+  const RIDE_EMOJI_ICON = {
+    '🏍️': 'motorbike', '🌿': 'leaf', '🌄': 'mountain', '🏞️': 'mountain',
+    '🌊': 'beach', '🏔️': 'mountain', '🏕️': 'tent', '🏰': 'fortress',
+    '🕌': 'monument', '🌴': 'beach', '🏜️': 'cactus', '💧': 'droplet',
+    '🦅': 'feather', '💨': 'wind', '🌙': 'moon',
+  };
+  const rideIcon = (emoji) => icon(RIDE_EMOJI_ICON[emoji] || 'motorbike');
+
   // ── Shared ride-card flip scaffolding. Moves the card's existing children
   // into a ".ride-card-front" pane and hands the caller an empty back pane
   // to fill in (map preview, rider list, ...); wires up the flip-on-click. ──
@@ -229,7 +243,7 @@
     } else {
       delete document.documentElement.dataset.theme;
     }
-    if (themeToggle) themeToggle.textContent = theme === 'light' ? '☀️' : '🌙';
+    if (themeToggle) themeToggle.innerHTML = theme === 'light' ? icon('sun') : icon('moon');
   };
   applyTheme(localStorage.getItem('pb-theme') || 'dark');
   if (themeToggle) {
@@ -272,7 +286,7 @@
         overlay.appendChild(msg);
       }
       const closeBtn = document.createElement('button');
-      closeBtn.textContent = '✕';
+      closeBtn.innerHTML = icon('x');
       closeBtn.setAttribute('aria-label', 'Close');
       closeBtn.style.cssText = `
         position:absolute;top:1.5rem;right:1.5rem;
@@ -321,7 +335,7 @@
       const banner = document.getElementById('ride-banner');
       if (banner) {
         banner.style.display = 'flex';
-        banner.innerHTML = '<span>🏍️</span><span>Registering for: <strong>' + escapeHtml(rideParam) + '</strong></span>';
+        banner.innerHTML = '<span>' + icon('motorbike') + '</span><span>Registering for: <strong>' + escapeHtml(rideParam) + '</strong></span>';
       }
       const msgField = form.querySelector('#message');
       if (msgField && !msgField.value) {
@@ -489,7 +503,7 @@
       toast.className = 'toast';
       toast.setAttribute('role', 'status');
       toast.setAttribute('aria-live', 'polite');
-      toast.innerHTML = '<span class="toast-ico">✓</span><span class="toast-text"></span>';
+      toast.innerHTML = '<span class="toast-ico">' + icon('check') + '</span><span class="toast-text"></span>';
       document.body.appendChild(toast);
     }
     toast.querySelector('.toast-text').textContent = msg;
@@ -618,20 +632,20 @@
 
     // ── Command palette ──
     const PAGES = [
-      { icon: '🏠', label: 'Home', href: 'index.html' },
-      { icon: '🏍️', label: 'Rides', href: 'rides.html' },
-      { icon: '📷', label: 'Gallery', href: 'gallery.html' },
-      { icon: '📅', label: 'Events', href: 'events.html' },
-      { icon: '⛽', label: 'E0 Fuel Finder', href: 'e0-finder.html' },
-      { icon: '👥', label: 'Members', href: 'members.html' },
-      { icon: '✉️', label: 'Contact', href: 'contact.html' },
+      { icon: icon('home'), label: 'Home', href: 'index.html' },
+      { icon: icon('motorbike'), label: 'Rides', href: 'rides.html' },
+      { icon: icon('camera'), label: 'Gallery', href: 'gallery.html' },
+      { icon: icon('calendar'), label: 'Events', href: 'events.html' },
+      { icon: icon('fuel'), label: 'E0 Fuel Finder', href: 'e0-finder.html' },
+      { icon: icon('users'), label: 'Members', href: 'members.html' },
+      { icon: icon('mail'), label: 'Contact', href: 'contact.html' },
     ];
     const cmdk = document.createElement('div');
     cmdk.className = 'cmdk-backdrop';
     cmdk.innerHTML =
       '<div class="cmdk" role="dialog" aria-modal="true" aria-label="Command palette">' +
         '<div class="cmdk-input">' +
-          '<span class="cmdk-ico" aria-hidden="true">🔍</span>' +
+          '<span class="cmdk-ico" aria-hidden="true">' + icon('search') + '</span>' +
           '<input type="text" id="cmdkInput" placeholder="Jump to a page or section…" autocomplete="off" aria-label="Search">' +
           '<kbd>esc</kbd>' +
         '</div>' +
@@ -648,7 +662,7 @@
         icon: '→', label: s.label, group: 'On this page',
         action: () => scrollToEl(s.el),
       }));
-      cmds.push({ icon: '🌙', label: 'Toggle light / dark theme', group: 'Actions',
+      cmds.push({ icon: icon('moon'), label: 'Toggle light / dark theme', group: 'Actions',
         action: () => document.getElementById('theme-toggle')?.click() });
       return cmds;
     };
@@ -806,7 +820,7 @@
   btt.innerHTML = `<svg class="btt-ring" viewBox="0 0 54 54" aria-hidden="true">
     <circle class="btt-ring-track" cx="27" cy="27" r="24"/>
     <circle class="btt-ring-fill"  cx="27" cy="27" r="24"/>
-  </svg><span class="btt-arrow">↑</span>`;
+  </svg><span class="btt-arrow">${icon('arrow-up')}</span>`;
   document.body.appendChild(btt);
 
   const ringFill = btt.querySelector('.btt-ring-fill');
@@ -933,14 +947,14 @@
         routeHtml = '<div class="ride-meta-route ride-meta-route--split">' + points + '</div>';
       } else {
         routeHtml = '<div class="ride-meta-route">' +
-            '<span class="ride-meta-point ride-meta-end" title="' + escapeHtml(ride.location) + '">📍 ' + escapeHtml(ride.location) + '</span>' +
+            '<span class="ride-meta-point ride-meta-end" title="' + escapeHtml(ride.location) + '">' + icon('pin') + ' ' + escapeHtml(ride.location) + '</span>' +
           '</div>';
       }
 
       // Assembly date & time (time to gather at the meeting point) — shown above the start point
       const assemblyHtml = ride.date
         ? '<div class="ride-meta-assembly">' +
-            '<span class="ride-meta-assembly-label">🕘 Assembly</span>' +
+            '<span class="ride-meta-assembly-label">' + icon('clock') + ' Assembly</span>' +
             '<span class="ride-meta-assembly-time">' + escapeHtml(ride.date) + '</span>' +
           '</div>'
         : '';
@@ -951,7 +965,7 @@
       article.dataset.km = String(ride.distance || 0);
       article.innerHTML =
         '<div class="ride-card-thumb">' +
-          '<div class="ride-card-placeholder" aria-hidden="true">' + escapeHtml(ride.emoji || '🏍️') + '</div>' +
+          '<div class="ride-card-placeholder" aria-hidden="true">' + rideIcon(ride.emoji) + '</div>' +
           '<span class="ride-card-badge" style="background:' + color + ';color:#000;">' + label + '</span>' +
           (ride.spots ? '<span class="ride-spots-badge">' + escapeHtml(String(ride.spots)) + ' spots</span>' : '') +
         '</div>' +
@@ -960,14 +974,14 @@
           '<div class="ride-card-meta">' +
             assemblyHtml +
             routeHtml +
-            (km ? '<div class="ride-meta-pills"><span>📏 ' + escapeHtml(String(km)) + ' km</span></div>' : '') +
+            (km ? '<div class="ride-meta-pills"><span>' + icon('ruler') + ' ' + escapeHtml(String(km)) + ' km</span></div>' : '') +
           '</div>' +
           (ride.notes ? '<p class="ride-card-desc" style="font-size:0.78rem;">' + escapeHtml(ride.notes) + '</p>' : '') +
           '<div class="ride-card-actions">' +
             (isOpen
               ? '<a href="' + registerUrl + '" class="btn btn-primary btn-sm">Register</a>'
               : '<span class="btn btn-sm ride-btn-disabled">' + label + '</span>') +
-            '<a href="https://wa.me/?text=' + waText + '" class="wa-share-btn" target="_blank" rel="noopener" aria-label="Share on WhatsApp">💬 Share</a>' +
+            '<a href="https://wa.me/?text=' + waText + '" class="wa-share-btn" target="_blank" rel="noopener" aria-label="Share on WhatsApp">' + icon('whatsapp') + ' Share</a>' +
           '</div>' +
         '</div>';
       return article;
@@ -1052,9 +1066,9 @@
         buildBack: (back) => {
           const hdr = document.createElement('p');
           hdr.className = 'ride-reg-header';
-          hdr.textContent = regs.length
-            ? '🏍️ ' + regs.length + (regs.length === 1 ? ' rider' : ' riders') + ' registered'
-            : '🏍️ No registrations yet';
+          hdr.innerHTML = regs.length
+            ? icon('motorbike') + ' ' + regs.length + (regs.length === 1 ? ' rider' : ' riders') + ' registered'
+            : icon('motorbike') + ' No registrations yet';
           back.appendChild(hdr);
 
           if (regs.length) {
@@ -1158,11 +1172,11 @@
           dirBtn.href = dirUrl;
           dirBtn.target = '_blank';
           dirBtn.rel = 'noopener';
-          dirBtn.textContent = '🛵 Directions from my location';
+          dirBtn.innerHTML = icon('motorbike') + ' Directions from my location';
 
           const label = document.createElement('div');
           label.className = 'ride-card-map-label';
-          label.textContent = '📍 ' + dest + ' · tap again to close';
+          label.innerHTML = icon('pin') + ' ' + escapeHtml(dest) + ' · tap again to close';
 
           back.appendChild(iframe);
           back.appendChild(dirBtn);
@@ -1178,4 +1192,7 @@
     });
   }
 
+  // Shared icon helpers, reused by admin.html's own inline script.
+  window.PB_ICON = icon;
+  window.PB_RIDE_ICON = rideIcon;
 })();

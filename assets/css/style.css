@@ -1,4 +1,15 @@
 /* ===== CSS CUSTOM PROPERTIES ===== */
+/* Self-hosted Tabler Icons sprite (assets/images/icons.svg) — recolors via currentColor */
+.icon {
+  width: 1.1em;
+  height: 1.1em;
+  display: inline-block;
+  vertical-align: -0.15em;
+  stroke: currentColor;
+  fill: none;
+  flex-shrink: 0;
+}
+
 :root {
   --clr-bg: #0a0a0a;
   --clr-surface: #111111;
@@ -625,9 +636,10 @@ section {
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, var(--clr-surface-2), var(--clr-surface));
-  font-size: 3rem;
+  color: var(--clr-primary);
   opacity: 0.3;
 }
+.ride-card-placeholder .icon { width: 3rem; height: 3rem; }
 
 .ride-card-badge {
   position: absolute;
@@ -952,9 +964,10 @@ section {
   border-radius: var(--radius-md);
 }
 .about-value-icon {
-  font-size: 1.5rem;
   flex-shrink: 0;
+  color: var(--clr-primary);
 }
+.about-value-icon .icon { width: 1.5rem; height: 1.5rem; }
 .about-value-text h4 {
   font-size: 0.9rem;
   font-family: var(--font-body);
@@ -1216,13 +1229,15 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  color: var(--clr-text);
   transition: var(--transition);
   cursor: pointer;
 }
+.social-btn .icon { width: 1.1rem; height: 1.1rem; }
 .social-btn:hover {
   background: var(--clr-primary);
   border-color: var(--clr-primary);
+  color: #fff;
   transform: translateY(-2px);
 }
 
@@ -1378,7 +1393,8 @@ section {
   align-items: center;
   gap: 1rem;
 }
-.route-icon { font-size: 2.5rem; }
+.route-icon { color: var(--clr-primary); }
+.route-icon .icon { width: 2.5rem; height: 2.5rem; }
 .route-difficulty {
   font-size: 0.65rem;
   font-weight: 700;
@@ -1456,9 +1472,10 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  color: var(--clr-primary);
   flex-shrink: 0;
 }
+.contact-channel-icon .icon { width: 1.5rem; height: 1.5rem; }
 .contact-channel-info h3 {
   font-size: 0.95rem;
   font-family: var(--font-body);
@@ -1686,7 +1703,8 @@ section {
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: var(--radius-lg);
 }
-.ig-cta-icon { font-size: 2.5rem; display: block; margin-bottom: 1rem; }
+.ig-cta-icon { display: block; margin-bottom: 1rem; color: var(--clr-primary); }
+.ig-cta-icon .icon { width: 2.5rem; height: 2.5rem; }
 .ig-cta h3 { font-size: 1.4rem; margin-bottom: 0.5rem; }
 .ig-cta p { color: var(--clr-text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; max-width: 44ch; margin-left: auto; margin-right: auto; }
 .ig-btn {
@@ -2026,7 +2044,8 @@ section {
   transition: var(--transition);
 }
 .workshop-item:hover { border-color: rgba(232,82,10,0.3); }
-.workshop-icon { font-size: 1.75rem; flex-shrink: 0; }
+.workshop-icon { flex-shrink: 0; color: var(--clr-primary); }
+.workshop-icon .icon { width: 1.75rem; height: 1.75rem; }
 .workshop-info h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
 .workshop-info p { font-size: 0.83rem; color: var(--clr-text-muted); }
 
@@ -2064,8 +2083,9 @@ section {
   width: 100%; height: 180px;
   background: linear-gradient(135deg, var(--clr-surface-2), var(--clr-surface));
   display: flex; align-items: center; justify-content: center;
-  font-size: 3.5rem; opacity: 0.4;
+  color: var(--clr-primary); opacity: 0.4;
 }
+.member-card-expanded .member-avatar-icon .icon { width: 3.5rem; height: 3.5rem; }
 .member-social { display: flex; gap: 0.5rem; margin-top: 1rem; }
 .member-social-btn {
   width: 32px; height: 32px; border-radius: 50%;
@@ -2120,7 +2140,8 @@ section {
   border-radius: var(--radius-lg); transition: var(--transition);
 }
 .philosophy-card:hover { border-color: rgba(232,82,10,0.3); transform: translateY(-3px); }
-.philosophy-card-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+.philosophy-card-icon { margin-bottom: 1rem; color: var(--clr-primary); }
+.philosophy-card-icon .icon { width: 2.5rem; height: 2.5rem; }
 .philosophy-card h3 { font-size: 1.15rem; margin-bottom: 0.6rem; }
 .philosophy-card p { font-size: 0.875rem; color: var(--clr-text-muted); line-height: 1.7; }
 
@@ -2195,8 +2216,8 @@ section {
   .contact-channel-icon {
     width: 40px;
     height: 40px;
-    font-size: 1.2rem;
   }
+  .contact-channel-icon .icon { width: 1.2rem; height: 1.2rem; }
 
   /* members join CTA: less vertical padding */
   .join-cta {
@@ -2518,7 +2539,8 @@ body.has-banner #scroll-progress { top: var(--banner-height); }
   color: var(--clr-text-muted);
   font-size: 0.9rem;
 }
-.cmdk-item .cmdk-item-ico { font-size: 1rem; width: 1.2rem; text-align: center; flex-shrink: 0; }
+.cmdk-item .cmdk-item-ico { display: inline-flex; width: 1.2rem; justify-content: center; flex-shrink: 0; color: var(--clr-text-muted); }
+.cmdk-item .cmdk-item-ico .icon { width: 1rem; height: 1rem; }
 .cmdk-item[aria-selected="true"], .cmdk-item:hover {
   background: var(--clr-glass-bg);
   color: var(--clr-text);
