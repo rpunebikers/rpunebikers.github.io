@@ -328,6 +328,17 @@
         if (match) sel.value = match.value;
       }
     }
+    // Gear brand/model inputs: enabled only when a gear option (other than "None") is picked
+    const syncGearModels = () => {
+      form.querySelectorAll('.gear-item select').forEach(gearSel => {
+        const modelInput = form.querySelector(`#${gearSel.id}-model`);
+        if (modelInput) modelInput.disabled = !gearSel.value || gearSel.value === 'none';
+      });
+    };
+    form.querySelectorAll('.gear-item select').forEach(gearSel => gearSel.addEventListener('change', syncGearModels));
+    form.addEventListener('reset', () => setTimeout(syncGearModels));
+    syncGearModels();
+
     // Pre-fill ride name when coming from a ride registration button
     const rideParam   = urlParams.get('ride');
     const rideIdParam0 = urlParams.get('rideId');
@@ -389,12 +400,17 @@
       const gloves     = sel('gloves');
       const message    = val('message');
 
+      const gear = (label, choice, id) => {
+        if (!choice) return null;
+        const model = form.querySelector(`#${id}-model`)?.disabled ? '' : val(`${id}-model`);
+        return model ? `${label}: ${choice} (${model})` : `${label}: ${choice}`;
+      };
       const gearLines = [
-        helmet  ? `Helmet: ${helmet}`         : null,
-        jacket  ? `Jacket: ${jacket}`         : null,
-        pants   ? `Pants: ${pants}`           : null,
-        boots   ? `Boots: ${boots}`           : null,
-        gloves  ? `Gloves: ${gloves}`         : null,
+        gear('Helmet', helmet, 'helmet'),
+        gear('Jacket', jacket, 'jacket'),
+        gear('Pants',  pants,  'pants'),
+        gear('Boots',  boots,  'boots'),
+        gear('Gloves', gloves, 'gloves'),
       ].filter(Boolean);
 
       const body = [

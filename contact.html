@@ -189,57 +189,63 @@
               <p class="section-label" style="margin-top:1.25rem;margin-bottom:0.75rem;">Safety Gear</p>
 
               <div class="gear-grid">
-                <div class="form-group">
+                <div class="form-group gear-item">
                   <label for="helmet">Helmet</label>
-                  <select id="helmet" name="helmet">
+                  <select id="helmet" name="helmet" aria-controls="helmet-model">
                     <option value="" disabled selected>Select…</option>
                     <option value="full-face">Full Face</option>
                     <option value="modular">Modular</option>
                     <option value="open-face">Open Face</option>
                     <option value="none">None</option>
                   </select>
+                  <label for="helmet-model" class="sr-only">Helmet brand and model</label>
+                  <input type="text" id="helmet-model" name="helmet-model" class="gear-model" placeholder="Brand &amp; model, e.g. Shoei GT-Air 3" maxlength="80" autocomplete="off" disabled />
                 </div>
 
-                <div class="form-group">
+                <div class="form-group gear-item">
                   <label for="jacket">Riding Jacket</label>
-                  <select id="jacket" name="jacket">
+                  <select id="jacket" name="jacket" aria-controls="jacket-model">
                     <option value="" disabled selected>Select…</option>
                     <option value="armoured">Armoured Jacket</option>
-                    <option value="mesh">Mesh Jacket</option>
-                    <option value="leather">Leather Jacket</option>
                     <option value="none">None</option>
                   </select>
+                  <label for="jacket-model" class="sr-only">Jacket brand and model</label>
+                  <input type="text" id="jacket-model" name="jacket-model" class="gear-model" placeholder="Brand &amp; model, e.g. Rynox Storm Evo 3" maxlength="80" autocomplete="off" disabled />
                 </div>
 
-                <div class="form-group">
+                <div class="form-group gear-item">
                   <label for="pants">Riding Pants</label>
-                  <select id="pants" name="pants">
+                  <select id="pants" name="pants" aria-controls="pants-model">
                     <option value="" disabled selected>Select…</option>
-                    <option value="armoured">Armoured Pants</option>
-                    <option value="regular">Regular Pants</option>
+                    <option value="riding">Riding Pants</option>
+                    <option value="knee-guards">Knee Guards</option>
                     <option value="none">None</option>
                   </select>
+                  <label for="pants-model" class="sr-only">Pants brand and model</label>
+                  <input type="text" id="pants-model" name="pants-model" class="gear-model" placeholder="Brand &amp; model, e.g. Rynox Advento" maxlength="80" autocomplete="off" disabled />
                 </div>
 
-                <div class="form-group">
+                <div class="form-group gear-item">
                   <label for="boots">Boots</label>
-                  <select id="boots" name="boots">
+                  <select id="boots" name="boots" aria-controls="boots-model">
                     <option value="" disabled selected>Select…</option>
                     <option value="riding">Riding Boots</option>
-                    <option value="ankle">Ankle Protection</option>
                     <option value="regular">Regular Footwear</option>
-                    <option value="none">None</option>
                   </select>
+                  <label for="boots-model" class="sr-only">Boots brand and model</label>
+                  <input type="text" id="boots-model" name="boots-model" class="gear-model" placeholder="Brand &amp; model, e.g. TCX Clima 2 GTX" maxlength="80" autocomplete="off" disabled />
                 </div>
 
-                <div class="form-group">
+                <div class="form-group gear-item">
                   <label for="gloves">Gloves</label>
-                  <select id="gloves" name="gloves">
+                  <select id="gloves" name="gloves" aria-controls="gloves-model">
                     <option value="" disabled selected>Select…</option>
                     <option value="riding">Riding Gloves</option>
                     <option value="regular">Regular Gloves</option>
                     <option value="none">None</option>
                   </select>
+                  <label for="gloves-model" class="sr-only">Gloves brand and model</label>
+                  <input type="text" id="gloves-model" name="gloves-model" class="gear-model" placeholder="Brand &amp; model, e.g. Alpinestars SMX-1 Air" maxlength="80" autocomplete="off" disabled />
                 </div>
               </div>
 
