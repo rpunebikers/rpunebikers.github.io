@@ -70,19 +70,26 @@
         <p class="section-label"><span class="section-num">01</span>Ethanol-Free Stations</p>
         <h2 class="section-title" id="e0-finder-title">The <em>E0 Finder</em></h2>
 
-        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;margin-bottom:0.5rem;">
-          <a href="https://gtxtreme.pages.dev/e0-finder/find/" class="btn btn-primary" target="_blank" rel="noopener">Open the E0 Finder &#8599;</a>
-        </div>
-        <p class="embed-note">Live tool by <a href="https://gtxtreme.pages.dev/e0-finder/find/" target="_blank" rel="noopener">gtxtreme</a> — third-party content loads in the frame below. If it doesn't appear, use the button above to open it in a new tab.</p>
+        <article class="tool-card" aria-labelledby="tool-card-title">
+          <div class="tool-card-head">
+            <span class="tool-card-icon" aria-hidden="true"><svg class="icon"><use href="assets/images/icons.svg#tabler-fuel"></use></svg></span>
+            <div>
+              <h3 class="tool-card-title" id="tool-card-title">E0 Fuel Station Finder</h3>
+              <p class="tool-card-sub">Live map of ethanol-free petrol pumps, hosted at e0fuel.in</p>
+            </div>
+          </div>
 
-        <div class="embed-frame">
-          <iframe
-            src="https://gtxtreme.pages.dev/e0-finder/find/"
-            title="E0 petrol station finder"
-            loading="lazy"
-            allow="geolocation"
-            referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div>
+          <ol class="tool-card-steps">
+            <li><svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#tabler-pin"></use></svg>Allow location access when the finder asks, or search your area.</li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#tabler-map"></use></svg>Pick the nearest E0 station along your route.</li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#tabler-check"></use></svg>Confirm with the pump attendant before you fill up.</li>
+          </ol>
+
+          <a href="https://e0fuel.in/" class="btn btn-primary tool-card-cta" target="_blank" rel="noopener">
+            Find E0 stations near me <span aria-hidden="true">&#8599;</span><span class="sr-only">(opens in a new tab)</span>
+          </a>
+          <p class="tool-card-note">A third-party tool, not run by PuneBikers. It opens in a new tab because the site doesn't allow embedding.</p>
+        </article>
       </div>
     </section>
 
