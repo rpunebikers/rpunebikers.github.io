@@ -854,8 +854,8 @@
   window.addEventListener('scroll', updateBtt, { passive: true });
   btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-  // ── Reddit stats — read from pre-fetched JSON (refreshed by GitHub Actions);
-  //    if that snapshot is stale, try Reddit directly from the browser ──
+  // ── Reddit stats — read from pre-fetched JSON (refreshed by GitHub Actions).
+  //    Reddit sends no CORS headers, so the browser can't query it directly. ──
   const redditCountEl = document.querySelector('.hero-stat-num[data-reddit-live]');
   if (redditCountEl) {
     const applyCount = (count, suffix) => {
@@ -880,19 +880,10 @@
       if (online) applyOnline(online);
       return true;
     };
-    const STALE_MS = 6 * 60 * 60 * 1000;
-    const fetchLive = () =>
-      fetch('https://www.reddit.com/r/PuneBikers/about.json?raw_json=1')
-        .then(r => (r.ok ? r.json() : Promise.reject(r.status)))
-        .then(j => applyStats(j?.data?.subscribers, j?.data?.active_user_count ?? j?.data?.accounts_active));
     fetch('assets/data/reddit-stats.json?_=' + Math.floor(Date.now() / 300000))
       .then(r => r.json())
-      .then(d => {
-        const fresh = d?.updated && Date.now() - d.updated * 1000 < STALE_MS;
-        if (fresh) return applyStats(d.subscribers, d.active_user_count);
-        return fetchLive().catch(() => applyStats(d?.subscribers, d?.active_user_count));
-      })
-      .catch(() => fetchLive().catch(() => {}));
+      .then(d => applyStats(d?.subscribers, d?.active_user_count))
+      .catch(() => {});
   }
 
   // ── Rides page dot TOC ──
