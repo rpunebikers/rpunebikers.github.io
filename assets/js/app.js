@@ -586,6 +586,7 @@
       const out = [];
       document.querySelectorAll('main section').forEach((sec, i) => {
         if (sec.offsetParent === null && !sec.classList.contains('page-tab-section')) return; // hidden
+        if (sec.closest('.legal-doc')) return; // legal pages have their own table of contents
         let labelId = sec.getAttribute('aria-labelledby');
         let heading = labelId ? document.getElementById(labelId) : sec.querySelector('h2, h1');
         if (!heading) return;
@@ -639,6 +640,8 @@
       { icon: icon('fuel'), label: 'E0 Fuel Finder', href: 'e0-finder.html' },
       { icon: icon('users'), label: 'Members', href: 'members.html' },
       { icon: icon('mail'), label: 'Contact', href: 'contact.html' },
+      { icon: icon('shield'), label: 'Privacy Policy', href: 'privacy.html' },
+      { icon: icon('book'), label: 'Terms of Service', href: 'terms.html' },
     ];
     const cmdk = document.createElement('div');
     cmdk.className = 'cmdk-backdrop';

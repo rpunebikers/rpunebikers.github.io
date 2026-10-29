@@ -248,11 +248,14 @@
                 <textarea id="message" name="message" placeholder="Tell us about yourself, your riding experience, or your question…" required></textarea>
               </div>
 
-              <button type="submit" id="contact-submit-btn" class="btn btn-primary" style="width:100%;justify-content:center;">
+              <button type="submit" id="contact-submit-btn" aria-describedby="contact-consent" class="btn btn-primary" style="width:100%;justify-content:center;">
                 Send via Reddit
               </button>
               <p id="contact-submit-note" style="font-size:0.75rem;color:var(--clr-text-dim);margin-top:0.75rem;text-align:center;">
                 Submitting opens Reddit's message compose with your details pre-filled — log in and hit Send to reach our modmail.
+              </p>
+              <p class="form-consent" id="contact-consent">
+                By submitting, you agree to our <a href="terms.html">Terms of Service</a> and confirm you've read our <a href="privacy.html">Privacy Policy</a>. Ride registrations show your name and bike on the public rider list.
               </p>
             </form>
           </div>
@@ -344,6 +347,10 @@
       </div>
       <div class="footer-bottom">
         <p>© 2025 PuneBikers. All rights reserved.</p>
+        <nav class="footer-legal" aria-label="Legal">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+        </nav>
         <p>Ride safe. Gear up. Respect the road.</p>
       </div>
     </div>

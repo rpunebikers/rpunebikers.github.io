@@ -2690,3 +2690,156 @@ kbd.pb-key {
   border: 0;
   display: block;
 }
+
+/* ===== LEGAL PAGES (privacy.html, terms.html) ===== */
+.legal-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-top: 1.25rem;
+  list-style: none;
+  padding: 0;
+  font-size: 0.85rem;
+  color: var(--clr-text-muted);
+}
+.legal-layout {
+  display: grid;
+  gap: 1.5rem;
+  padding-block: 3rem 5rem;
+}
+.legal-toc { padding: 1.25rem 1.5rem; }
+.legal-toc h2 {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--clr-primary);
+  margin-bottom: 0.75rem;
+}
+.legal-toc ol { margin: 0; padding-left: 1.25rem; display: grid; gap: 0.15rem; }
+.legal-toc a {
+  display: inline-block;
+  padding-block: 0.3rem;
+  color: var(--clr-text-muted);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color var(--transition);
+}
+.legal-toc a:hover { color: var(--clr-text); }
+
+.legal-doc {
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+  min-width: 0;
+  line-height: 1.7;
+  color: var(--clr-text);
+}
+.legal-doc section { padding-block: 0; scroll-margin-top: calc(var(--nav-height) + 1rem); }
+.legal-doc section + section { margin-top: 2.25rem; }
+.legal-doc h2 {
+  font-family: var(--font-body);
+  font-size: clamp(1.2rem, 2.5vw, 1.45rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.75rem;
+}
+.legal-doc h3 {
+  font-family: var(--font-body);
+  letter-spacing: normal;
+  text-transform: none;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.5rem;
+}
+.legal-doc p, .legal-doc ul, .legal-doc ol { margin-bottom: 0.9rem; }
+.legal-doc ul, .legal-doc ol { padding-left: 1.25rem; }
+.legal-doc ul { list-style: disc; }
+.legal-doc ol { list-style: decimal; }
+.legal-doc li::marker { color: var(--clr-text-muted); }
+.legal-doc li + li { margin-top: 0.35rem; }
+.legal-doc a {
+  color: var(--clr-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.legal-doc code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  padding: 0.1em 0.35em;
+  border-radius: var(--radius-sm);
+  background: var(--clr-glass-bg);
+  border: 1px solid var(--clr-glass-border);
+}
+.legal-num { color: var(--clr-primary); margin-right: 0.25rem; }
+
+.legal-doc .table-wrap {
+  overflow-x: auto;
+  margin: 0.75rem 0 1.25rem;
+  border: 1px solid var(--clr-glass-border);
+  border-radius: var(--radius-md);
+}
+.legal-doc table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.legal-doc caption {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--clr-text-muted);
+}
+.legal-doc th, .legal-doc td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--clr-border);
+}
+.legal-doc th { font-weight: 600; background: var(--clr-glass-bg); }
+
+.legal-callout {
+  margin-bottom: 1rem;
+  padding: 1rem 1.25rem;
+  border-left: 4px solid var(--clr-primary);
+  border-radius: var(--radius-md);
+  background: var(--clr-primary-glow);
+}
+.legal-callout p { margin: 0; }
+.legal-contact { font-style: normal; line-height: 1.8; }
+
+@media (min-width: 900px) {
+  .legal-layout { grid-template-columns: 250px minmax(0, 1fr); align-items: start; }
+  .legal-toc { position: sticky; top: calc(var(--nav-height) + 1.5rem); }
+}
+
+/* Legal links in every page footer. --clr-text-muted keeps 4.5:1 in both themes;
+   the surrounding --clr-text-dim copy is decorative. */
+.footer-legal { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
+.footer-legal a {
+  display: inline-block;
+  padding-block: 0.6rem;
+  color: var(--clr-text-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--transition);
+}
+.footer-legal a:hover, .footer-legal a[aria-current="page"] { color: var(--clr-text); }
+
+/* Consent notice under the contact / registration form */
+.form-consent {
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--clr-text-muted);
+}
+.form-consent a { color: var(--clr-primary); text-decoration: underline; text-underline-offset: 2px; }
+
+/* Brand orange is 3:1 on the light surfaces; darken accent text to keep 4.5:1 */
+[data-theme="light"] .legal-doc a,
+[data-theme="light"] .legal-num,
+[data-theme="light"] .legal-toc h2,
+[data-theme="light"] .form-consent a {
+  color: #b33a08;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .legal-toc a, .footer-legal a { transition: none; }
+}

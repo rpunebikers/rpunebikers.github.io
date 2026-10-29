@@ -11,6 +11,8 @@
   <link rel="icon" type="image/jpeg" href="assets/images/logo-bike.jpg" />
   <script>if(localStorage.getItem("pb-theme")==="light")document.documentElement.dataset.theme="light";</script>
   <style>
+    .admin-footer { padding-block: 1rem 2rem; }
+    .admin-footer .footer-legal { justify-content: center; font-size: 0.8rem; }
     .admin-page { max-width: 920px; margin: 0 auto; padding: calc(var(--nav-height) + 2.5rem) 1.5rem 5rem; }
 
     /* ─── Login screen ─── */
@@ -239,6 +241,13 @@
     </div><!-- /admin-ui -->
   </div>
   </main>
+
+  <footer class="container admin-footer" role="contentinfo">
+    <nav class="footer-legal" aria-label="Legal">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+    </nav>
+  </footer>
 
   <!-- Firebase SDK (compat) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>

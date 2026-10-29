@@ -12,6 +12,8 @@ Premium motorcycle touring community website for PuneBikers, Pune's riding broth
 - `events.html` — Event listings, registration cards, workshops
 - `members.html` — Core team, rider testimonials, member roster
 - `contact.html` — Social channels, contact form, membership steps
+- `privacy.html` — Privacy Policy (covers this website and the Android app)
+- `terms.html` — Terms of Service (covers this website and the Android app)
 
 ## Tech Stack
 
@@ -22,3 +24,18 @@ Premium motorcycle touring community website for PuneBikers, Pune's riding broth
 ## Design
 
 Dark theme · Glassmorphism UI · WCAG 2.2 AA accessible · Mobile-first · Reduced-motion support
+
+## Firebase
+
+The site shares the `rpbmodapp-478617` Realtime Database with the [rpbmodapp](https://github.com/pranavpankhawala/rpbmodapp) Android app:
+
+- `rides.html` reads `scheduledRides/` (public read)
+- `contact.html?rideId=…` writes `scheduledRides/{rideId}/registrations/{name}` (create-only)
+- `contact.html` enquiries append to `registrations/` (create-only; admins read)
+- `admin.html` signs in with Firebase Auth (email/password); the account's UID must be set to `true` under `adminUids/` in the Firebase console
+
+The database security rules live **only** in `rpbmodapp/database.rules.json` and are deployed from that repo (`firebase deploy --only database`). Don't keep a copy here — the last deploy wins, so two copies overwrite each other.
+
+## Legal
+
+`privacy.html` and `terms.html` are the canonical policy URLs for both the website and the app (Play Console, OAuth consent screen and the app's login screen all link here). When you change either document, update its "Last updated" date and bump `LegalLinks.VERSION` in the app so signed-in riders are asked to accept the new version.
