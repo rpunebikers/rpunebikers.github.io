@@ -107,13 +107,14 @@
               <tbody>
                 <tr><td>Ride registration (<em>Register</em> on a ride)</td><td>Name, email, phone / WhatsApp, motorcycle, Instagram handle (optional), notes</td><td>Your <strong>name and motorcycle</strong> are saved with the ride and shown on its public rider list. Your contact details and notes are stored separately, and only organisers can see them.</td></tr>
                 <tr><td>Join / contact form</td><td>Name, email, phone / WhatsApp, motorcycle, riding experience, safety gear, message</td><td>Opens Reddit's message composer pre-filled with your details. Nothing is sent to Reddit until you press Send there. A copy is also saved in our Firebase database so organisers can follow up.</td></tr>
-                <tr><td>Organiser sign-in (<code>admin.html</code>)</td><td>Organiser email and password</td><td>Checked by Firebase Authentication. Used only by organisers.</td></tr>
+                <tr><td>Optional rider sign-in (<em>Sign in</em> in the menu bar)</td><td>Your Google name, email address and a Firebase user ID</td><td>Prefills the registration form and links your ride registrations to your account. Handled by Firebase Authentication.</td></tr>
+                <tr><td>Organiser sign-in (<code>admin.html</code>)</td><td>The organiser's Google name, email address and a Firebase user ID</td><td>Checked against the organiser list. Used only by organisers.</td></tr>
               </tbody>
             </table>
           </div>
 
-          <h3>2.2 From your Google account (App sign-in)</h3>
-          <p>When you sign in to the App with Google, we receive only your <strong>name</strong>, <strong>email address</strong>, <strong>profile photo URL</strong> and a Google <strong>ID token</strong>. The token is exchanged with Firebase Authentication to create your account. We request only the standard <code>openid</code>, <code>email</code> and <code>profile</code> scopes. The App does <strong>not</strong> access your Gmail, Drive, Contacts, Calendar or any other Google data.</p>
+          <h3>2.2 From your Google account (App and Website sign-in)</h3>
+          <p>When you sign in to the App or the Website with Google, we receive only your <strong>name</strong>, <strong>email address</strong>, <strong>profile photo URL</strong> and a Google <strong>ID token</strong>. The token is exchanged with Firebase Authentication to create your account. We request only the standard <code>openid</code>, <code>email</code> and <code>profile</code> scopes. The App does <strong>not</strong> access your Gmail, Drive, Contacts, Calendar or any other Google data.</p>
 
           <h3>2.3 Information you provide in the App</h3>
           <div class="table-wrap" role="region" aria-labelledby="provide-caption" tabindex="0">
@@ -145,7 +146,7 @@
 
           <h3>2.5 Collected automatically</h3>
           <ul>
-            <li><strong>Website:</strong> GitHub Pages, which hosts the Website, and Google Fonts receive your IP address and browser details when pages load, as for any website. The Website uses <strong>no cookies, analytics or advertising trackers</strong>.</li>
+            <li><strong>Website:</strong> GitHub Pages, which hosts the Website, and Google Fonts receive your IP address and browser details when pages load, as for any website. The Website uses <strong>no analytics or advertising trackers</strong>. The optional Google sign-in runs through Google and Firebase sign-in pages, which are covered by Google's privacy policy.</li>
             <li><strong>App:</strong> a Firebase Cloud Messaging <strong>push token</strong> for ride updates and announcements. Google Analytics for Firebase collects <strong>usage and diagnostics data</strong> (app opens, screens viewed, device model, OS version, approximate region and an app-instance identifier) so we can check that the App works. It is not used for advertising.</li>
           </ul>
 
@@ -251,7 +252,7 @@
         <section id="device" aria-labelledby="device-h">
           <h2 id="device-h"><span class="legal-num">9.</span> Data stored on your device</h2>
           <ul>
-            <li><strong>Website:</strong> your theme choice (light or dark) and whether you closed the announcement banner are saved in your browser's local storage. Nothing else is stored, and no cookies are set.</li>
+            <li><strong>Website:</strong> your theme choice (light or dark) and whether you closed the announcement banner are saved in your browser's local storage. If you sign in with Google, Firebase Authentication also keeps your sign-in session in browser storage until you sign out. The Website sets no advertising or analytics cookies.</li>
             <li><strong>App:</strong> your session (name, email, role, bike, phone number, profile photo URL) and the policy version you accepted are stored so you stay signed in. Android may include them in your Google device backup. Signing out or deleting your account clears them. A cached Gear Finder catalog may also be stored; it contains no personal data.</li>
           </ul>
         </section>
@@ -333,6 +334,8 @@
   </footer>
 
   <script src="assets/js/app.js"></script>
+  <script src="assets/js/firebase-config.js"></script>
+  <script src="assets/js/user-auth.js"></script>
 
   <!-- MOBILE STICKY JOIN CTA -->
   <div class="mobile-join-cta" aria-hidden="true">

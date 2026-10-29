@@ -351,6 +351,28 @@
       if (submitNote) submitNote.textContent = 'Your details are saved directly — no Reddit account needed.';
     }
 
+    // Optional Google sign-in (assets/js/user-auth.js): prefill, and say whether the
+    // registration will be linked to the rider's account.
+    const accountHint = document.getElementById('account-hint');
+    document.addEventListener('pb:user', ev => {
+      const user = ev.detail;
+      if (user) {
+        const nameField = form.querySelector('#name');
+        const mailField = form.querySelector('#email');
+        if (nameField && !nameField.value && user.displayName) nameField.value = user.displayName;
+        if (mailField && !mailField.value && user.email) mailField.value = user.email;
+      }
+      if (!accountHint || !rideIdParam0) return;
+      accountHint.hidden = false;
+      if (user) {
+        accountHint.textContent = 'Signed in as ' + (user.email || user.displayName) +
+          ' — this registration will be linked to your account.';
+      } else {
+        accountHint.innerHTML = 'Optional: <button type="button">sign in with Google</button> to link this registration to your account.';
+        accountHint.querySelector('button').addEventListener('click', () => window.PBUser && window.PBUser.signIn());
+      }
+    });
+
     form.addEventListener('submit', e => {
       e.preventDefault();
 
@@ -437,14 +459,21 @@
           if (phone) contact.phone = phone;
           if (instagram) contact.instagram = instagram;
           if (message) contact.notes = message;
-          fetch(_fbConf.databaseURL + '/.json', {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              ['scheduledRides/' + rideIdParam + '/registrations/' + nameKey]: { name, bike, registeredAt: now },
-              ['rideContacts/' + rideIdParam + '/' + nameKey]: contact,
-            }),
-          })
+          // Signed in with Google (user-auth.js)? Send the ID token and link the record to the account.
+          // Signing in is optional, so a slow or blocked SDK never holds up the registration.
+          const noSession = new Promise(resolve => setTimeout(() => resolve(null), 4000));
+          Promise.race([window.PBUser ? window.PBUser.session().catch(() => null) : null, noSession])
+            .then(sess => {
+              if (sess) contact.uid = sess.uid;
+              return fetch(_fbConf.databaseURL + '/.json' + (sess ? '?auth=' + encodeURIComponent(sess.token) : ''), {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  ['scheduledRides/' + rideIdParam + '/registrations/' + nameKey]: { name, bike, registeredAt: now },
+                  ['rideContacts/' + rideIdParam + '/' + nameKey]: contact,
+                }),
+              });
+            })
             .then(res => {
               if (!res.ok) throw new Error('HTTP ' + res.status);
               btn.textContent = 'Registered!';

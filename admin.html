@@ -18,7 +18,15 @@
     /* ─── Login screen ─── */
     #login-screen { max-width: 400px; margin: 0 auto; }
     #login-screen h1 { font-family: var(--font-display); font-size: 2.2rem; margin-bottom: 0.25rem; }
-    .login-err { color: #e55; font-size: 0.83rem; margin-top: 0.5rem; min-height: 1.2em; }
+    .login-err { color: #ff6b6b; font-size: 0.83rem; margin-top: 0.75rem; min-height: 1.2em; }
+    [data-theme="light"] .login-err { color: #b42318; }
+    .login-help { color: var(--clr-text-muted); font-size: 0.875rem; line-height: 1.6; margin-bottom: 1rem; }
+    /* Google sign-in button, per Google's branding guidelines (light variant) */
+    .google-btn { display: flex; align-items: center; justify-content: center; gap: 0.75rem; width: 100%; min-height: 44px; padding: 0 1rem;
+      background: #fff; color: #1f1f1f; border: 1px solid #747775; border-radius: 100px; font: 500 0.95rem var(--font-body); cursor: pointer; }
+    .google-btn:hover { background: #f2f2f2; }
+    .google-btn[disabled] { opacity: 0.6; cursor: progress; }
+    .google-g { width: 18px; height: 18px; flex-shrink: 0; }
 
     /* ─── Admin UI ─── */
     #admin-ui { display: none; }
@@ -120,16 +128,12 @@
         Firebase not configured yet. Fill in <code>assets/js/firebase-config.js</code> with your project values, then reload.
       </div>
       <div class="admin-card" id="login-form-wrap">
-        <div class="fgroup" style="margin-bottom:1rem;">
-          <label for="l-email">Email</label>
-          <input id="l-email" type="email" autocomplete="email" placeholder="admin@example.com" />
-        </div>
-        <div class="fgroup" style="margin-bottom:1rem;">
-          <label for="l-pass">Password</label>
-          <input id="l-pass" type="password" autocomplete="current-password" placeholder="••••••••" />
-        </div>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="doLogin()">Sign In</button>
-        <p class="login-err" id="login-err"></p>
+        <p class="login-help">Organisers only. Sign in with the Google account listed as an organiser in the app.</p>
+        <button type="button" class="google-btn" id="google-signin-btn" onclick="doLogin()">
+          <svg class="google-g" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+          <span>Sign in with Google</span>
+        </button>
+        <p class="login-err" id="login-err" role="alert"></p>
       </div>
     </div>
 
@@ -280,31 +284,73 @@
       db   = firebase.database();
       auth = firebase.auth();
 
+      // Test hook: only a page script can set this; production never does.
+      if (window.PB_EMULATORS) {
+        if (window.PB_EMULATORS.auth) auth.useEmulator(window.PB_EMULATORS.auth);
+        if (window.PB_EMULATORS.database) db.useEmulator(...window.PB_EMULATORS.database);
+      }
+
+      auth.getRedirectResult().catch(showLoginError);
       auth.onAuthStateChanged(user => {
-        if (user) showAdminUI(user);
+        if (user) verifyOrganiser(user);
         else showLoginScreen();
       });
     }
 
-    // ── Auth ──
+    // ── Auth (Google; organisers are the emails listed under admins/, same list as the app) ──
+    const loginErr = msg => { document.getElementById('login-err').textContent = msg; };
+    const emailKey = email => email.toLowerCase().replace(/\./g, ',');
+
+    function showLoginError(e) {
+      console.error('Sign-in failed:', e);
+      loginErr(e && e.code === 'auth/unauthorized-domain'
+        ? 'This site is not yet an authorised sign-in domain in Firebase.'
+        : 'Sign-in failed — please try again.');
+    }
+
     window.doLogin = () => {
       if (!isConfigured) return;
-      const email = document.getElementById('l-email').value.trim();
-      const pass  = document.getElementById('l-pass').value;
-      document.getElementById('login-err').textContent = '';
-      auth.signInWithEmailAndPassword(email, pass)
-        .catch(e => {
-          document.getElementById('login-err').textContent =
-            e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password'
-              ? 'Wrong email or password.'
-              : e.message;
-        });
+      loginErr('');
+      const provider = new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      auth.signInWithPopup(provider).catch(e => {
+        if (e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-this-environment') {
+          return auth.signInWithRedirect(provider);
+        }
+        if (e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request') return;
+        showLoginError(e);
+      });
     };
     window.doLogout = () => auth.signOut();
 
-    document.getElementById('l-pass').addEventListener('keydown', e => {
-      if (e.key === 'Enter') window.doLogin();
-    });
+    // The rules let a verified Google account claim adminUids/{uid} only when its email is
+    // listed under admins/, and every admin write checks adminUids — this is just the UI gate.
+    async function verifyOrganiser(user) {
+      const btn = document.getElementById('google-signin-btn');
+      btn.disabled = true;
+      loginErr('');
+      try {
+        const claimed = await db.ref('adminUids/' + user.uid).get();
+        if (claimed.val() !== true) {
+          const listed = user.email && user.emailVerified
+            ? (await db.ref('admins/' + emailKey(user.email)).get()).val() === true
+            : false;
+          if (!listed) {
+            await auth.signOut();
+            loginErr((user.email || 'This account') + ' is not an organiser account.');
+            return;
+          }
+          await db.ref('adminUids/' + user.uid).set(true);
+        }
+        showAdminUI(user);
+      } catch (e) {
+        console.error('Organiser check failed:', e);
+        await auth.signOut();
+        loginErr('Could not verify organiser access — please try again.');
+      } finally {
+        btn.disabled = false;
+      }
+    }
 
     function showLoginScreen() {
       document.getElementById('login-screen').style.display = '';
@@ -312,7 +358,7 @@
     }
     function showAdminUI(user) {
       document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('admin-ui').style.display = '';
+      document.getElementById('admin-ui').style.display = 'block'; // stylesheet hides it by default
       document.getElementById('admin-email').textContent = user.email;
       loadRides(); // loadRegistrations() is called inside loadRides after ridesCache updates
     }

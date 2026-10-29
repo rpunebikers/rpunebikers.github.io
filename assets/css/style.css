@@ -2843,3 +2843,83 @@ kbd.pb-key {
 @media (prefers-reduced-motion: reduce) {
   .legal-toc a, .footer-legal a { transition: none; }
 }
+
+/* ===== RIDER ACCOUNT (navbar, assets/js/user-auth.js) ===== */
+.nav-account { position: relative; flex-shrink: 0; margin-right: 0.5rem; }
+.nav-account-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0 0.75rem;
+  border-radius: 100px;
+  background: var(--clr-glass-bg);
+  border: 1px solid var(--clr-glass-border);
+  color: var(--clr-text);
+  font: 600 0.8rem/1 var(--font-body);
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+}
+.nav-account-btn:hover { border-color: var(--clr-primary); }
+.nav-account-btn.is-signed-in { padding: 0; justify-content: center; width: 36px; }
+.nav-account-initial {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--clr-primary);
+  color: #111; /* 5.6:1 on the brand orange; white is only 3.6:1 */
+  font-weight: 700;
+}
+.nav-account-panel {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  z-index: 1100;
+  width: max-content;
+  min-width: 220px;
+  max-width: min(320px, calc(100vw - 32px));
+  padding: 1rem;
+  background: var(--clr-surface);
+}
+.nav-account-panel[hidden] { display: none; }
+.nav-account-name { font-weight: 700; margin-bottom: 0.15rem; }
+.nav-account-email { font-size: 0.8rem; color: var(--clr-text-muted); word-break: break-all; margin-bottom: 0.85rem; }
+.nav-account-signout {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 0.85rem;
+  border-radius: var(--radius-md);
+  background: var(--clr-glass-bg);
+  border: 1px solid var(--clr-glass-border);
+  color: var(--clr-text);
+  font: 600 0.85rem var(--font-body);
+  cursor: pointer;
+}
+.nav-account-signout:hover { border-color: var(--clr-primary); }
+@media (max-width: 480px) {
+  .nav-account-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .nav-account-btn { padding: 0; width: 36px; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-account-btn { transition: none; }
+}
+
+/* Signed-in hint on the ride registration form */
+.account-hint { margin-top: 0.5rem; }
+.account-hint button {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--clr-primary);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+[data-theme="light"] .account-hint button { color: #b33a08; }
