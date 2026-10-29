@@ -425,14 +425,25 @@
       if (rideIdParam) {
         // Ride registration — save directly to Firebase, no Reddit
         const _fbConf = window.PB_FIREBASE;
-        if (_fbConf && _fbConf.databaseURL && !_fbConf.databaseURL.includes('YOUR-PROJECT')) {
+        if (_fbConf && _fbConf.databaseURL && !_fbConf.databaseURL.includes('YOUR-PROJECT') && /^[A-Za-z0-9_-]+$/.test(rideIdParam)) {
           // Key matches mod app's sanitizeKey(name): replace Firebase-illegal chars with _
           const nameKey = name.replace(/\./g, '_').replace(/#/g, '_').replace(/\$/g, '_')
             .replace(/\[/g, '_').replace(/\]/g, '_').replace(/\//g, '_').trim();
-          fetch(_fbConf.databaseURL + '/scheduledRides/' + rideIdParam + '/registrations/' + encodeURIComponent(nameKey) + '.json', {
-            method: 'PUT',
+          // scheduledRides is public (rides.html lists it), so only name + bike go there.
+          // Contact details go to rideContacts, which only organisers can read. One atomic PATCH.
+          const now = Date.now();
+          const contact = { updatedAt: now };
+          if (email) contact.email = email;
+          if (phone) contact.phone = phone;
+          if (instagram) contact.instagram = instagram;
+          if (message) contact.notes = message;
+          fetch(_fbConf.databaseURL + '/.json', {
+            method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, phone, bike, instagram, notes: message, registeredAt: Date.now() }),
+            body: JSON.stringify({
+              ['scheduledRides/' + rideIdParam + '/registrations/' + nameKey]: { name, bike, registeredAt: now },
+              ['rideContacts/' + rideIdParam + '/' + nameKey]: contact,
+            }),
           })
             .then(res => {
               if (!res.ok) throw new Error('HTTP ' + res.status);

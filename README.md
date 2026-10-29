@@ -30,7 +30,7 @@ Dark theme · Glassmorphism UI · WCAG 2.2 AA accessible · Mobile-first · Redu
 The site shares the `rpbmodapp-478617` Realtime Database with the [rpbmodapp](https://github.com/pranavpankhawala/rpbmodapp) Android app:
 
 - `rides.html` reads `scheduledRides/` (public read)
-- `contact.html?rideId=…` writes `scheduledRides/{rideId}/registrations/{name}` (create-only)
+- `contact.html?rideId=…` sends one atomic PATCH: `scheduledRides/{rideId}/registrations/{name}` gets only `name`, `bike`, `registeredAt` (public — `rides.html` lists it), and email / phone / Instagram / notes go to `rideContacts/{rideId}/{name}` (create-only, admins read). The rules reject any other field in the public entry.
 - `contact.html` enquiries append to `registrations/` (create-only; admins read)
 - `admin.html` signs in with Firebase Auth (email/password); the account's UID must be set to `true` under `adminUids/` in the Firebase console
 

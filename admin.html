@@ -329,6 +329,7 @@
 
     // ── Rides CRUD ──
     let ridesCache = {};
+    let contactsCache = {}; // rideContacts/{rideId}/{regKey}: phone / email / instagram (admin-only)
 
     function loadRides() {
       const spinner = document.getElementById('rides-spinner');
@@ -341,6 +342,11 @@
         loadRegistrations(); // derive registrations from same snapshot
         updateRegRideFilter();
       });
+      // Contact details are kept out of the public scheduledRides tree
+      db.ref('rideContacts').on('value', snap => {
+        contactsCache = snap.val() || {};
+        loadRegistrations();
+      }, e => console.error('Could not load rider contacts:', e));
     }
 
     function renderRideList() {
@@ -450,7 +456,8 @@
 
     window.deleteRide = (key, title) => {
       if (!confirm('Delete "' + title + '"? This cannot be undone.')) return;
-      db.ref('scheduledRides/' + key).remove().catch(e => alert('Delete failed: ' + e.message));
+      db.ref().update({ ['scheduledRides/' + key]: null, ['rideContacts/' + key]: null })
+        .catch(e => alert('Delete failed: ' + e.message));
     };
 
     window.cancelEdit = () => {
@@ -472,11 +479,12 @@
       allRegs = [];
       Object.entries(ridesCache).forEach(([rideId, ride]) => {
         const rideName = ride.rideName || rideId;
+        const contact = key => (contactsCache[rideId] || {})[key] || {};
         Object.entries(ride.registrations || {}).forEach(([key, r]) => {
-          allRegs.push({ ...r, _id: rideId + '/' + key, ride: rideName, timestamp: r.registeredAt || 0 });
+          allRegs.push({ ...r, ...contact(key), name: r.name, _id: rideId + '/' + key, ride: rideName, timestamp: r.registeredAt || 0 });
         });
         Object.entries(ride.waitlist || {}).forEach(([key, r]) => {
-          allRegs.push({ ...r, _id: rideId + '/waitlist/' + key, ride: rideName + ' (waitlist)', timestamp: r.joinedAt || 0 });
+          allRegs.push({ ...r, ...contact(key), name: r.name, _id: rideId + '/waitlist/' + key, ride: rideName + ' (waitlist)', timestamp: r.joinedAt || 0 });
         });
       });
       allRegs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
@@ -498,6 +506,7 @@
         const rideMatch = !rideFilter || (r.ride || '').toLowerCase() === rideFilter;
         const searchMatch = !search ||
           (r.name || '').toLowerCase().includes(search) ||
+          (r.email || '').toLowerCase().includes(search) ||
           (r.phone || '').toLowerCase().includes(search) ||
           (r.instagram || '').toLowerCase().includes(search);
         return rideMatch && searchMatch;
