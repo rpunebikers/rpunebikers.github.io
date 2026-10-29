@@ -854,7 +854,8 @@
   window.addEventListener('scroll', updateBtt, { passive: true });
   btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-  // ── Reddit stats — read from pre-fetched JSON (updated every 5 min by GitHub Actions) ──
+  // ── Reddit stats — read from pre-fetched JSON (refreshed by GitHub Actions);
+  //    if that snapshot is stale, try Reddit directly from the browser ──
   const redditCountEl = document.querySelector('.hero-stat-num[data-reddit-live]');
   if (redditCountEl) {
     const applyCount = (count, suffix) => {
@@ -871,17 +872,27 @@
       num.textContent = online;
       stat.style.display = '';
     };
+    const applyStats = (subs, online) => {
+      if (!subs) return false;
+      const count = subs >= 1000 ? (Math.floor(subs / 100) / 10).toFixed(1) : subs;
+      const suffix = subs >= 1000 ? 'k+' : '+';
+      applyCount(count, suffix);
+      if (online) applyOnline(online);
+      return true;
+    };
+    const STALE_MS = 6 * 60 * 60 * 1000;
+    const fetchLive = () =>
+      fetch('https://www.reddit.com/r/PuneBikers/about.json?raw_json=1')
+        .then(r => (r.ok ? r.json() : Promise.reject(r.status)))
+        .then(j => applyStats(j?.data?.subscribers, j?.data?.active_user_count ?? j?.data?.accounts_active));
     fetch('assets/data/reddit-stats.json?_=' + Math.floor(Date.now() / 300000))
       .then(r => r.json())
       .then(d => {
-        const subs = d?.subscribers;
-        if (!subs) return;
-        const count = subs >= 1000 ? (Math.floor(subs / 100) / 10).toFixed(1) : subs;
-        const suffix = subs >= 1000 ? 'k+' : '+';
-        applyCount(count, suffix);
-        if (d.active_user_count != null) applyOnline(d.active_user_count);
+        const fresh = d?.updated && Date.now() - d.updated * 1000 < STALE_MS;
+        if (fresh) return applyStats(d.subscribers, d.active_user_count);
+        return fetchLive().catch(() => applyStats(d?.subscribers, d?.active_user_count));
       })
-      .catch(() => {});
+      .catch(() => fetchLive().catch(() => {}));
   }
 
   // ── Rides page dot TOC ──

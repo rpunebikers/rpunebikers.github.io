@@ -2,11 +2,15 @@ name: Update Reddit Stats
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/30 * * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: update-reddit-stats
+  cancel-in-progress: false
 
 jobs:
   update:
@@ -16,19 +20,61 @@ jobs:
         with:
           ref: main
 
+      # Reddit blocks anonymous requests from GitHub's runners, so authenticate
+      # with an app-only OAuth token (script app from reddit.com/prefs/apps).
       - name: Fetch Reddit stats
+        env:
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          UA: "web:rpunebikers.github.io:v1.1 (by /r/PuneBikers)"
         run: |
-          DATA=$(curl -sf \
-            -A "Mozilla/5.0 (compatible; PuneBikers-site/1.0; +https://rpunebikers.github.io)" \
-            "https://www.reddit.com/r/PuneBikers/about.json?raw_json=1") || exit 0
+          set -euo pipefail
+
+          if [ -z "$REDDIT_CLIENT_ID" ] || [ -z "$REDDIT_CLIENT_SECRET" ]; then
+            echo "::error::REDDIT_CLIENT_ID / REDDIT_CLIENT_SECRET secrets are not set"
+            exit 1
+          fi
+
+          TOKEN=$(curl -sS --fail-with-body \
+            -A "$UA" \
+            -u "$REDDIT_CLIENT_ID:$REDDIT_CLIENT_SECRET" \
+            -d "grant_type=client_credentials" \
+            "https://www.reddit.com/api/v1/access_token" | jq -r '.access_token // empty')
+
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Could not obtain a Reddit access token"
+            exit 1
+          fi
+          echo "::add-mask::$TOKEN"
+
+          DATA=$(curl -sS --fail-with-body \
+            -A "$UA" \
+            -H "Authorization: Bearer $TOKEN" \
+            "https://oauth.reddit.com/r/PuneBikers/about?raw_json=1")
 
           SUBS=$(echo "$DATA" | jq '.data.subscribers // empty')
-          ONLINE=$(echo "$DATA" | jq '.data.active_user_count // empty')
+          ONLINE=$(echo "$DATA" | jq '.data.active_user_count // .data.accounts_active // 0')
 
-          [ -z "$SUBS" ] && exit 0
+          if [ -z "$SUBS" ]; then
+            echo "::error::Reddit response had no subscriber count"
+            exit 1
+          fi
 
-          echo "{\"subscribers\":$SUBS,\"active_user_count\":${ONLINE:-0},\"updated\":$(date +%s)}" \
-            > assets/data/reddit-stats.json
+          echo "Subscribers: $SUBS, online: $ONLINE"
+
+          # Avoid a commit every run: only rewrite when the member count changes
+          # or the stored snapshot is more than 3 hours old.
+          FILE=assets/data/reddit-stats.json
+          OLD_SUBS=$(jq '.subscribers // 0' "$FILE" 2>/dev/null || echo 0)
+          OLD_TS=$(jq '.updated // 0' "$FILE" 2>/dev/null || echo 0)
+          if [ "$SUBS" = "$OLD_SUBS" ] && [ $(( $(date +%s) - OLD_TS )) -lt 10800 ]; then
+            echo "No change worth committing"
+            exit 0
+          fi
+
+          jq -cn --argjson s "$SUBS" --argjson o "$ONLINE" --argjson t "$(date +%s)" \
+            '{subscribers:$s, active_user_count:$o, updated:$t}' \
+            > "$FILE"
 
       - name: Commit if changed
         run: |
@@ -37,4 +83,5 @@ jobs:
           git add assets/data/reddit-stats.json
           git diff --staged --quiet && exit 0
           git commit -m "chore: update Reddit stats [skip ci]"
+          git pull --rebase origin main
           git push
