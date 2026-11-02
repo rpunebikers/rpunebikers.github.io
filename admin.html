@@ -3,582 +3,273 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin — PuneBikers</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="color-scheme" content="dark light" />
+  <title>Ride Control — PuneBikers</title>
+  <script src="assets/admin/theme-init.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/admin/admin.css" />
   <link rel="icon" type="image/jpeg" href="assets/images/logo-bike.jpg" />
-  <script>if(localStorage.getItem("pb-theme")==="light")document.documentElement.dataset.theme="light";</script>
-  <style>
-    .admin-footer { padding-block: 1rem 2rem; }
-    .admin-footer .footer-legal { justify-content: center; font-size: 0.8rem; }
-    .admin-page { max-width: 920px; margin: 0 auto; padding: calc(var(--nav-height) + 2.5rem) 1.5rem 5rem; }
-
-    /* ─── Login screen ─── */
-    #login-screen { max-width: 400px; margin: 0 auto; }
-    #login-screen h1 { font-family: var(--font-display); font-size: 2.2rem; margin-bottom: 0.25rem; }
-    .login-err { color: #ff6b6b; font-size: 0.83rem; margin-top: 0.75rem; min-height: 1.2em; }
-    [data-theme="light"] .login-err { color: #b42318; }
-    .login-help { color: var(--clr-text-muted); font-size: 0.875rem; line-height: 1.6; margin-bottom: 1rem; }
-    /* Google sign-in button, per Google's branding guidelines (light variant) */
-    .google-btn { display: flex; align-items: center; justify-content: center; gap: 0.75rem; width: 100%; min-height: 44px; padding: 0 1rem;
-      background: #fff; color: #1f1f1f; border: 1px solid #747775; border-radius: 100px; font: 500 0.95rem var(--font-body); cursor: pointer; }
-    .google-btn:hover { background: #f2f2f2; }
-    .google-btn[disabled] { opacity: 0.6; cursor: progress; }
-    .google-g { width: 18px; height: 18px; flex-shrink: 0; }
-
-    /* ─── Admin UI ─── */
-    #admin-ui { display: none; }
-    .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-    .admin-header h1 { font-family: var(--font-display); font-size: 2.2rem; margin: 0; }
-
-    /* ─── Tabs ─── */
-    .admin-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--clr-border); margin-bottom: 2rem; }
-    .admin-tab { padding: 0.75rem 1.5rem; background: none; border: none; border-bottom: 2.5px solid transparent; color: var(--clr-text-muted); font-weight: 600; font-size: 0.875rem; cursor: pointer; letter-spacing: 0.04em; transition: color 0.2s, border-color 0.2s; }
-    .admin-tab.active { color: var(--clr-primary); border-bottom-color: var(--clr-primary); }
-    .admin-pane { display: none; }
-    .admin-pane.active { display: block; }
-
-    /* ─── Card ─── */
-    .admin-card { background: var(--clr-glass-bg); border: 1px solid var(--clr-glass-border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.5rem; }
-    .admin-card h2 { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--clr-primary); margin-bottom: 1.25rem; }
-
-    /* ─── Form ─── */
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-    .form-row.triple { grid-template-columns: 1fr 1fr 1fr; }
-    @media (max-width: 600px) { .form-row, .form-row.triple { grid-template-columns: 1fr; } }
-    .fgroup label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--clr-text-muted); margin-bottom: 0.35rem; }
-    .fgroup input, .fgroup select, .fgroup textarea {
-      width: 100%; padding: 0.65rem 0.85rem; box-sizing: border-box;
-      border-radius: var(--radius-sm); border: 1px solid var(--clr-glass-border);
-      background: var(--clr-surface); color: var(--clr-text);
-      font-family: var(--font-body); font-size: 0.875rem;
-    }
-    .fgroup input:focus, .fgroup select:focus { outline: none; border-color: var(--clr-primary); }
-    .btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.25rem; align-items: center; }
-
-    /* ─── Ride list ─── */
-    .ride-list { display: flex; flex-direction: column; gap: 0.65rem; }
-    .ride-row {
-      display: flex; align-items: center; gap: 0.85rem;
-      padding: 0.85rem 1rem; border-radius: var(--radius-md);
-      background: var(--clr-surface); border: 1px solid var(--clr-border);
-    }
-    .ride-row-emoji { flex-shrink: 0; color: var(--clr-primary); display: flex; }
-    .ride-row-emoji .icon { width: 1.5rem; height: 1.5rem; }
-    .ride-row-info { flex: 1; min-width: 0; }
-    .ride-row-info strong { display: block; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .ride-row-info span { font-size: 0.75rem; color: var(--clr-text-muted); }
-    .ride-row-info span .icon { width: 0.95rem; height: 0.95rem; }
-    .ride-row-actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
-    .icon-btn { width: 32px; height: 32px; border-radius: var(--radius-sm); border: 1px solid var(--clr-glass-border); background: var(--clr-glass-bg); color: var(--clr-text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
-    .icon-btn .icon { width: 1rem; height: 1rem; }
-    .icon-btn:hover { border-color: var(--clr-primary); color: var(--clr-primary); }
-    .icon-btn.del:hover { border-color: #e55; color: #e55; }
-    .status-pill { display: inline-block; padding: 0.15rem 0.55rem; border-radius: 99px; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
-    .sp-open      { background: rgba(240,165,0,0.15); color: var(--clr-accent); }
-    .sp-scheduled { background: rgba(240,165,0,0.15); color: var(--clr-accent); }
-    .sp-active    { background: rgba(34,197,94,0.15); color: #22c55e; }
-    .sp-cancelled { background: rgba(100,100,100,0.12); color: #666; }
-    .sp-completed { background: rgba(100,100,100,0.12); color: #888; }
-
-    /* ─── Registrations table ─── */
-    .reg-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-    .reg-table th { text-align: left; padding: 0.5rem 0.75rem; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--clr-text-muted); border-bottom: 1px solid var(--clr-border); }
-    .reg-table td { padding: 0.65rem 0.75rem; border-bottom: 1px solid var(--clr-border); vertical-align: top; }
-    .reg-table tr:last-child td { border-bottom: none; }
-    .reg-table tr:hover td { background: var(--clr-glass-bg); }
-    .reg-meta { font-size: 0.72rem; color: var(--clr-text-muted); margin-top: 0.2rem; }
-    .reg-empty { text-align: center; padding: 2.5rem; color: var(--clr-text-muted); }
-    .reg-filter { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; }
-    .reg-filter select, .reg-filter input { padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--clr-glass-border); background: var(--clr-surface); color: var(--clr-text); font-size: 0.82rem; font-family: var(--font-body); }
-    .reg-count { font-size: 0.8rem; color: var(--clr-text-muted); margin-left: auto; }
-
-    /* ─── Misc ─── */
-    .save-notice { font-size: 0.8rem; color: #4caf50; opacity: 0; transition: opacity 0.3s; }
-    .save-notice.show { opacity: 1; }
-    .admin-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(232,82,10,0.3); border-top-color: var(--clr-primary); border-radius: 50%; animation: spin 0.7s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .no-rides { color: var(--clr-text-muted); font-size: 0.875rem; padding: 0.5rem 0; }
-    .setup-banner { background: rgba(232,82,10,0.1); border: 1px solid rgba(232,82,10,0.3); border-radius: var(--radius-md); padding: 1rem 1.25rem; font-size: 0.85rem; line-height: 1.7; margin-bottom: 1.5rem; }
-    .setup-banner code { background: var(--clr-surface-2); padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 0.8rem; }
-  </style>
 </head>
-<body data-chrome="off">
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
 
-  <nav class="navbar" aria-label="Main navigation">
-    <div class="container nav-inner">
-      <a href="index.html" class="nav-logo" aria-label="PuneBikers home">
-        <img src="assets/images/logo-bike.jpg" class="nav-logo-bike" alt="" aria-hidden="true">
-        <img src="assets/images/logo-text.png" class="nav-logo-text" alt="r/PuneBikers">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html" aria-label="PuneBikers website">
+        <img src="assets/images/logo-bike.jpg" alt="" width="36" height="36" />
+        <span class="brand-text">Ride Control</span>
       </a>
-      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour theme"><svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#tabler-moon"></use></svg></button>
-    </div>
-  </nav>
-
-  <main id="main">
-  <div class="admin-page">
-
-    <!-- ══ LOGIN SCREEN ══ -->
-    <div id="login-screen">
-      <h1>Admin Login</h1>
-      <p style="color:var(--clr-text-muted);font-size:0.875rem;margin-bottom:1.5rem;">PuneBikers ride management</p>
-      <div id="config-warn" class="setup-banner" style="display:none;">
-        Firebase not configured yet. Fill in <code>assets/js/firebase-config.js</code> with your project values, then reload.
+      <div class="topbar-actions">
+        <button type="button" class="icon-btn" id="theme-btn" aria-label="Switch to light theme">
+          <svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#tabler-sun"></use></svg>
+        </button>
+        <div class="account" id="account" hidden>
+          <span class="avatar" id="account-initial" aria-hidden="true"></span>
+          <span class="account-email" id="account-email"></span>
+          <button type="button" class="btn btn-ghost btn-sm" id="signout-btn">
+            <svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#tabler-logout"></use></svg>
+            <span>Sign out</span>
+          </button>
+        </div>
       </div>
-      <div class="admin-card" id="login-form-wrap">
-        <p class="login-help">Organisers only. Sign in with the Google account listed as an organiser in the app.</p>
-        <button type="button" class="google-btn" id="google-signin-btn" onclick="doLogin()">
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+    <!-- ══ Sign-in ══ -->
+    <section class="login-view" id="login-view" aria-labelledby="login-title">
+      <div class="glass login-card">
+        <h1 id="login-title">Organiser sign-in</h1>
+        <p class="muted">Sign in with the Google account listed as an organiser in the r/punebikers app.</p>
+        <p class="notice" id="config-warn" hidden>Firebase isn't configured. Fill in <code>assets/js/firebase-config.js</code>, then reload.</p>
+        <button type="button" class="google-btn" id="signin-btn">
           <svg class="google-g" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
           <span>Sign in with Google</span>
         </button>
-        <p class="login-err" id="login-err" role="alert"></p>
+        <p class="status-line" id="login-status" role="status" aria-live="polite"></p>
+        <p class="error-line" id="login-error" role="alert"></p>
       </div>
+    </section>
+
+    <!-- ══ Dashboard ══ -->
+    <div class="dash" id="dash-view" hidden>
+      <h1 class="visually-hidden">Organiser dashboard</h1>
+
+      <section class="stats" aria-label="Summary">
+        <div class="stat glass">
+          <p class="stat-label">Open rides</p>
+          <p class="stat-value" id="stat-open">–</p>
+          <p class="stat-sub">Scheduled or live</p>
+        </div>
+        <div class="stat glass">
+          <p class="stat-label">Sign-ups this week</p>
+          <p class="stat-value" id="stat-week">–</p>
+          <p class="stat-sub">Registered or waitlisted, last 7 days</p>
+        </div>
+        <div class="stat glass">
+          <p class="stat-label">Waitlisted</p>
+          <p class="stat-value" id="stat-wait">–</p>
+          <p class="stat-sub">Across open rides</p>
+        </div>
+        <div class="stat glass">
+          <p class="stat-label">Open spots</p>
+          <p class="stat-value" id="stat-spots">–</p>
+          <p class="stat-sub" id="stat-spots-sub">On rides with a rider cap</p>
+        </div>
+      </section>
+
+      <nav class="tabs" role="tablist" aria-label="Dashboard sections">
+        <button type="button" role="tab" class="tab" id="tab-rides" aria-controls="panel-rides" aria-selected="true">
+          <svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#tabler-motorbike"></use></svg><span>Rides</span>
+        </button>
+        <button type="button" role="tab" class="tab" id="tab-riders" aria-controls="panel-riders" aria-selected="false" tabindex="-1">
+          <svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#tabler-users"></use></svg><span>Riders</span>
+        </button>
+        <button type="button" role="tab" class="tab" id="tab-enquiries" aria-controls="panel-enquiries" aria-selected="false" tabindex="-1">
+          <svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#tabler-mail"></use></svg><span>Enquiries</span>
+          <span class="badge" id="enquiry-badge" hidden></span>
+        </button>
+        <button type="button" role="tab" class="tab" id="tab-organisers" aria-controls="panel-organisers" aria-selected="false" tabindex="-1">
+          <svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#tabler-shield"></use></svg><span>Organisers</span>
+        </button>
+      </nav>
+
+      <!-- Rides -->
+      <section class="panel" role="tabpanel" id="panel-rides" aria-labelledby="tab-rides" tabindex="0">
+        <div class="toolbar">
+          <div class="segmented" role="radiogroup" aria-label="Which rides">
+            <label><input type="radio" name="ride-filter" value="open" checked /><span>Open</span></label>
+            <label><input type="radio" name="ride-filter" value="closed" /><span>Past &amp; cancelled</span></label>
+          </div>
+          <button type="button" class="btn btn-primary" id="new-ride-btn">
+            <svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#tabler-plus"></use></svg><span>New ride</span>
+          </button>
+        </div>
+        <div class="ride-grid" id="ride-grid" aria-busy="true">
+          <div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div>
+        </div>
+      </section>
+
+      <!-- Riders -->
+      <section class="panel" role="tabpanel" id="panel-riders" aria-labelledby="tab-riders" tabindex="0" hidden>
+        <div class="toolbar">
+          <label class="field-inline">
+            <span class="visually-hidden">Ride</span>
+            <select id="rider-ride-filter"><option value="">All rides</option></select>
+          </label>
+          <label class="field-inline grow">
+            <span class="visually-hidden">Search riders</span>
+            <input type="search" id="rider-search" placeholder="Search name, email, phone, bike…" autocomplete="off" />
+          </label>
+          <button type="button" class="btn btn-ghost" id="riders-csv-btn">
+            <svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#tabler-download"></use></svg><span>Export CSV</span>
+          </button>
+        </div>
+        <p class="count-line" id="rider-count" aria-live="polite"></p>
+        <div class="table-wrap glass">
+          <table class="data-table">
+            <caption class="visually-hidden">Registered and waitlisted riders</caption>
+            <thead>
+              <tr><th scope="col">Rider</th><th scope="col">Ride</th><th scope="col">Status</th><th scope="col">Phone</th><th scope="col">Email</th><th scope="col">Signed up</th></tr>
+            </thead>
+            <tbody id="rider-rows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Enquiries -->
+      <section class="panel" role="tabpanel" id="panel-enquiries" aria-labelledby="tab-enquiries" tabindex="0" hidden>
+        <div class="toolbar">
+          <div class="segmented" role="radiogroup" aria-label="Which enquiries">
+            <label><input type="radio" name="enquiry-filter" value="open" checked /><span>To do</span></label>
+            <label><input type="radio" name="enquiry-filter" value="handled" /><span>Handled</span></label>
+            <label><input type="radio" name="enquiry-filter" value="all" /><span>All</span></label>
+          </div>
+        </div>
+        <div class="enquiry-list" id="enquiry-list"></div>
+      </section>
+
+      <!-- Organisers -->
+      <section class="panel" role="tabpanel" id="panel-organisers" aria-labelledby="tab-organisers" tabindex="0" hidden>
+        <div class="glass info-card">
+          <h2>Organisers</h2>
+          <p class="muted">Google accounts on this list can sign in here and get organiser access in the app. To add or remove someone, edit <code>admins/</code> in the Firebase console — the website can't change it.</p>
+          <ul class="organiser-list" id="organiser-list"></ul>
+        </div>
+      </section>
     </div>
-
-    <!-- ══ ADMIN UI (shown after login) ══ -->
-    <div id="admin-ui">
-
-      <div class="admin-header">
-        <h1>Ride Admin</h1>
-        <div style="display:flex;align-items:center;gap:1rem;">
-          <span id="admin-email" style="font-size:0.8rem;color:var(--clr-text-muted);"></span>
-          <button class="btn btn-outline btn-sm" onclick="doLogout()">Sign Out</button>
-        </div>
-      </div>
-
-      <!-- Tabs -->
-      <div class="admin-tabs" role="tablist">
-        <button class="admin-tab active" data-pane="rides" role="tab">Upcoming Rides</button>
-        <button class="admin-tab" data-pane="registrations" role="tab">Registrations</button>
-      </div>
-
-      <!-- ── RIDES PANE ── -->
-      <div id="pane-rides" class="admin-pane active">
-
-        <!-- Ride list -->
-        <div class="admin-card">
-          <h2>Live Rides <span id="rides-spinner" class="admin-spinner" style="display:none;"></span></h2>
-          <div id="ride-list" class="ride-list"><p class="no-rides">Loading…</p></div>
-        </div>
-
-        <!-- Add / Edit form -->
-        <div class="admin-card">
-          <h2 id="form-heading">Add New Ride</h2>
-          <input type="hidden" id="edit-key" />
-
-          <div class="form-row">
-            <div class="fgroup"><label>Ride Name *</label><input id="f-title" placeholder="Monsoon Ghats Escape" /></div>
-            <div class="fgroup"><label>Meeting Point *</label><input id="f-location" placeholder="Shivajinagar, Pune" /></div>
-          </div>
-          <div class="form-row">
-            <div class="fgroup"><label>Destination *</label><input id="f-destination" placeholder="Tamhini Ghats" /></div>
-            <div class="fgroup"><label>Distance (km)</label><input id="f-distance" type="number" placeholder="180" /></div>
-          </div>
-          <div class="form-row triple">
-            <div class="fgroup"><label>Date &amp; Time *</label><input id="f-date" placeholder="Mon 12 Jul, 9:00 AM" /></div>
-            <div class="fgroup"><label>Max Riders</label><input id="f-spots" type="number" placeholder="20" /></div>
-            <div class="fgroup"><label>Emoji</label><input id="f-emoji" maxlength="4" placeholder="🌿" /></div>
-          </div>
-          <div class="form-row">
-            <div class="fgroup">
-              <label>Type</label>
-              <select id="f-type">
-                <option value="ghats">Ghats</option>
-                <option value="coastal">Coastal</option>
-                <option value="touring">Touring</option>
-                <option value="weekend">Weekend</option>
-                <option value="overnight">Overnight</option>
-                <option value="general">General</option>
-              </select>
-            </div>
-            <div class="fgroup">
-              <label>Status</label>
-              <select id="f-status">
-                <option value="scheduled">Scheduled</option>
-                <option value="cancelled">Cancelled</option>
-              </select>
-            </div>
-          </div>
-          <div class="fgroup"><label>Notes (optional)</label><input id="f-notes" placeholder="Helmets and rain gear mandatory" /></div>
-
-          <div class="btn-row">
-            <button class="btn btn-primary" id="save-btn" onclick="saveRide()">Add Ride</button>
-            <button class="btn btn-outline" id="cancel-btn" onclick="cancelEdit()" style="display:none;">Cancel</button>
-            <span class="save-notice" id="save-notice">Saved!</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── REGISTRATIONS PANE ── -->
-      <div id="pane-registrations" class="admin-pane">
-        <div class="admin-card">
-          <h2>Registrations <span id="reg-spinner" class="admin-spinner" style="display:none;"></span></h2>
-
-          <div class="reg-filter">
-            <select id="reg-filter-ride" onchange="filterRegs()">
-              <option value="">All rides</option>
-            </select>
-            <input id="reg-search" type="search" placeholder="Search name / email…" oninput="filterRegs()" style="min-width:180px;" />
-            <span class="reg-count" id="reg-count"></span>
-          </div>
-
-          <div style="overflow-x:auto;">
-            <table class="reg-table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Ride</th>
-                  <th>Phone</th>
-                  <th>Bike</th>
-                  <th>Instagram</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody id="reg-tbody"><tr><td colspan="6" class="reg-empty">Loading…</td></tr></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /admin-ui -->
-  </div>
   </main>
 
-  <footer class="container admin-footer" role="contentinfo">
-    <nav class="footer-legal" aria-label="Legal">
+  <footer class="footer">
+    <nav aria-label="Legal">
       <a href="privacy.html">Privacy Policy</a>
       <a href="terms.html">Terms of Service</a>
     </nav>
   </footer>
 
-  <!-- Firebase SDK (compat) -->
+  <!-- New / edit ride -->
+  <dialog class="modal" id="ride-dialog" aria-labelledby="ride-dialog-title">
+    <form id="ride-form" method="dialog" novalidate>
+      <header class="modal-head">
+        <h2 id="ride-dialog-title">New ride</h2>
+        <button type="button" class="icon-btn" data-close aria-label="Close">
+          <svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#tabler-x"></use></svg>
+        </button>
+      </header>
+      <div class="modal-body form-grid">
+        <label class="field span-2">Ride name <span aria-hidden="true">*</span>
+          <input name="rideName" required maxlength="80" placeholder="Monsoon Ghats Escape" />
+        </label>
+        <label class="field">Meeting point <span aria-hidden="true">*</span>
+          <input name="meetingPoint" required maxlength="120" placeholder="Shell, Baner" />
+        </label>
+        <label class="field">Destination <span aria-hidden="true">*</span>
+          <input name="destination" required maxlength="120" placeholder="Tamhini Ghat" />
+        </label>
+        <label class="field">Date &amp; time <span aria-hidden="true">*</span>
+          <input name="when" type="datetime-local" aria-describedby="when-hint" />
+          <span class="hint" id="when-hint">Saved in the app's format, e.g. "Sun 8 Nov, 5:30 AM".</span>
+        </label>
+        <label class="field">Max riders
+          <input name="maxRiders" type="number" min="0" max="500" inputmode="numeric" placeholder="No limit" />
+        </label>
+        <label class="field">Distance (km)
+          <input name="distance" type="number" min="0" max="5000" inputmode="numeric" placeholder="180" />
+        </label>
+        <label class="field">Type
+          <select name="type">
+            <option value="ghats">Ghats</option>
+            <option value="coastal">Coastal</option>
+            <option value="touring">Touring</option>
+            <option value="weekend">Weekend</option>
+            <option value="overnight">Overnight</option>
+            <option value="general">General</option>
+          </select>
+        </label>
+        <label class="field">Emoji
+          <input name="emoji" maxlength="4" placeholder="🏍️" />
+        </label>
+        <label class="field">Status
+          <select name="status">
+            <option value="scheduled">Scheduled</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="completed">Completed</option>
+          </select>
+        </label>
+        <label class="field span-2">Notes
+          <textarea name="notes" rows="3" maxlength="500" placeholder="Helmets and rain gear mandatory"></textarea>
+        </label>
+        <p class="error-line span-2" id="ride-form-error" role="alert"></p>
+      </div>
+      <footer class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+        <button type="submit" class="btn btn-primary" id="ride-save-btn">Create ride</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- Riders of one ride -->
+  <dialog class="modal sheet" id="riders-dialog" aria-labelledby="riders-title">
+    <header class="modal-head">
+      <div>
+        <h2 id="riders-title">Riders</h2>
+        <p class="muted small" id="riders-sub"></p>
+      </div>
+      <button type="button" class="icon-btn" data-close aria-label="Close">
+        <svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#tabler-x"></use></svg>
+      </button>
+    </header>
+    <div class="modal-body" id="riders-body"></div>
+    <footer class="modal-foot">
+      <button type="button" class="btn btn-ghost" id="ride-csv-btn">
+        <svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#tabler-download"></use></svg><span>Export CSV</span>
+      </button>
+      <button type="button" class="btn btn-primary" data-close>Done</button>
+    </footer>
+  </dialog>
+
+  <!-- Confirmations -->
+  <dialog class="modal small-modal" id="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+    <form method="dialog">
+      <header class="modal-head"><h2 id="confirm-title"></h2></header>
+      <div class="modal-body"><p id="confirm-text"></p></div>
+      <footer class="modal-foot">
+        <button type="submit" class="btn btn-ghost" value="cancel">Keep</button>
+        <button type="submit" class="btn btn-danger" value="ok" id="confirm-ok"></button>
+      </footer>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-
   <script src="assets/js/firebase-config.js"></script>
-  <script src="assets/js/app.js"></script>
-
-  <script>
-  (() => {
-    const escapeHtml = (str) => String(str).replace(/[&<>"']/g, c => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-    }[c]));
-
-    const cfg = window.PB_FIREBASE;
-    const isConfigured = cfg && cfg.databaseURL && !cfg.databaseURL.includes('YOUR-PROJECT');
-
-    // Show warning if not configured
-    if (!isConfigured) {
-      document.getElementById('config-warn').style.display = '';
-      document.getElementById('login-form-wrap').style.opacity = '0.4';
-      document.getElementById('login-form-wrap').style.pointerEvents = 'none';
-    }
-
-    // Init Firebase
-    let db, auth;
-    if (isConfigured) {
-      if (!firebase.apps.length) firebase.initializeApp(cfg);
-      db   = firebase.database();
-      auth = firebase.auth();
-
-      // Test hook: only a page script can set this; production never does.
-      if (window.PB_EMULATORS) {
-        if (window.PB_EMULATORS.auth) auth.useEmulator(window.PB_EMULATORS.auth);
-        if (window.PB_EMULATORS.database) db.useEmulator(...window.PB_EMULATORS.database);
-      }
-
-      auth.getRedirectResult().catch(showLoginError);
-      auth.onAuthStateChanged(user => {
-        if (user) verifyOrganiser(user);
-        else showLoginScreen();
-      });
-    }
-
-    // ── Auth (Google; organisers are the emails listed under admins/, same list as the app) ──
-    const loginErr = msg => { document.getElementById('login-err').textContent = msg; };
-    const emailKey = email => email.toLowerCase().replace(/\./g, ',');
-
-    function showLoginError(e) {
-      console.error('Sign-in failed:', e);
-      loginErr(e && e.code === 'auth/unauthorized-domain'
-        ? 'This site is not yet an authorised sign-in domain in Firebase.'
-        : 'Sign-in failed — please try again.');
-    }
-
-    window.doLogin = () => {
-      if (!isConfigured) return;
-      loginErr('');
-      const provider = new firebase.auth.GoogleAuthProvider();
-      provider.setCustomParameters({ prompt: 'select_account' });
-      auth.signInWithPopup(provider).catch(e => {
-        if (e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-this-environment') {
-          return auth.signInWithRedirect(provider);
-        }
-        if (e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request') return;
-        showLoginError(e);
-      });
-    };
-    window.doLogout = () => auth.signOut();
-
-    // The rules let a verified Google account claim adminUids/{uid} only when its email is
-    // listed under admins/, and every admin write checks adminUids — this is just the UI gate.
-    async function verifyOrganiser(user) {
-      const btn = document.getElementById('google-signin-btn');
-      btn.disabled = true;
-      loginErr('');
-      try {
-        const claimed = await db.ref('adminUids/' + user.uid).get();
-        if (claimed.val() !== true) {
-          const listed = user.email && user.emailVerified
-            ? (await db.ref('admins/' + emailKey(user.email)).get()).val() === true
-            : false;
-          if (!listed) {
-            await auth.signOut();
-            loginErr((user.email || 'This account') + ' is not an organiser account.');
-            return;
-          }
-          await db.ref('adminUids/' + user.uid).set(true);
-        }
-        showAdminUI(user);
-      } catch (e) {
-        console.error('Organiser check failed:', e);
-        await auth.signOut();
-        loginErr('Could not verify organiser access — please try again.');
-      } finally {
-        btn.disabled = false;
-      }
-    }
-
-    function showLoginScreen() {
-      document.getElementById('login-screen').style.display = '';
-      document.getElementById('admin-ui').style.display = 'none';
-    }
-    function showAdminUI(user) {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('admin-ui').style.display = 'block'; // stylesheet hides it by default
-      document.getElementById('admin-email').textContent = user.email;
-      loadRides(); // loadRegistrations() is called inside loadRides after ridesCache updates
-    }
-
-    // ── Tabs ──
-    document.querySelectorAll('.admin-tab').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.admin-pane').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('pane-' + btn.dataset.pane).classList.add('active');
-      });
-    });
-
-    // ── Rides CRUD ──
-    let ridesCache = {};
-    let contactsCache = {}; // rideContacts/{rideId}/{regKey}: phone / email / instagram (admin-only)
-
-    function loadRides() {
-      const spinner = document.getElementById('rides-spinner');
-      spinner.style.display = '';
-      // scheduledRides path mirrors the mod app schema
-      db.ref('scheduledRides').on('value', snap => {
-        spinner.style.display = 'none';
-        ridesCache = snap.val() || {};
-        renderRideList();
-        loadRegistrations(); // derive registrations from same snapshot
-        updateRegRideFilter();
-      });
-      // Contact details are kept out of the public scheduledRides tree
-      db.ref('rideContacts').on('value', snap => {
-        contactsCache = snap.val() || {};
-        loadRegistrations();
-      }, e => console.error('Could not load rider contacts:', e));
-    }
-
-    function renderRideList() {
-      const el = document.getElementById('ride-list');
-      const entries = Object.entries(ridesCache);
-      if (!entries.length) {
-        el.innerHTML = '<p class="no-rides">No upcoming rides. Add one below.</p>';
-        return;
-      }
-      const sorted = entries.sort((a, b) =>
-        (a[1].sortOrder || 0) - (b[1].sortOrder || 0) ||
-        (a[1].rideDate || '').localeCompare(b[1].rideDate || ''));
-      el.innerHTML = sorted.map(([key, r]) =>
-        '<div class="ride-row" data-key="' + escapeHtml(key) + '">' +
-          '<span class="ride-row-emoji">' + window.PB_RIDE_ICON(r.emoji) + '</span>' +
-          '<div class="ride-row-info">' +
-            '<strong>' + escapeHtml(r.rideName || '') + '</strong>' +
-            '<span>' + window.PB_ICON('pin') + ' ' + escapeHtml(r.meetingPoint || '') +
-            (r.destination && r.destination !== r.meetingPoint ? ' → ' + escapeHtml(r.destination) : '') +
-            ' · ' + window.PB_ICON('calendar') + ' ' + escapeHtml(r.rideDate || '') +
-            (r.maxRiders ? ' · ' + escapeHtml(String(r.maxRiders)) + ' max' : '') + '</span>' +
-          '</div>' +
-          '<span class="status-pill sp-' + escapeHtml(r.status || 'scheduled') + '">' + escapeHtml(r.status || 'scheduled') + '</span>' +
-          '<div class="ride-row-actions">' +
-            '<button class="icon-btn edit-ride-btn" aria-label="Edit">' + window.PB_ICON('pencil') + '</button>' +
-            '<button class="icon-btn del delete-ride-btn" aria-label="Delete">' + window.PB_ICON('trash') + '</button>' +
-          '</div>' +
-        '</div>'
-      ).join('');
-      // Data-attribute driven listeners — avoids building inline onclick="" strings
-      // out of ride data (rideName etc. would otherwise need attribute-escaping too).
-      el.querySelectorAll('.edit-ride-btn').forEach(btn => {
-        btn.addEventListener('click', () => window.editRide(btn.closest('.ride-row').dataset.key));
-      });
-      el.querySelectorAll('.delete-ride-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const rowKey = btn.closest('.ride-row').dataset.key;
-          window.deleteRide(rowKey, (ridesCache[rowKey] || {}).rideName || '');
-        });
-      });
-    }
-
-    window.saveRide = () => {
-      const rideName     = document.getElementById('f-title').value.trim();
-      const meetingPoint = document.getElementById('f-location').value.trim();
-      const destination  = document.getElementById('f-destination').value.trim();
-      const rideDate     = document.getElementById('f-date').value.trim();
-      if (!rideName || !meetingPoint || !destination || !rideDate) {
-        alert('Ride Name, Meeting Point, Destination and Date are required.');
-        return;
-      }
-      const key = document.getElementById('edit-key').value;
-      const ride = {
-        rideName, meetingPoint, destination, rideDate,
-        type:   document.getElementById('f-type').value,
-        emoji:  document.getElementById('f-emoji').value.trim() || '🏍️',
-        status: document.getElementById('f-status').value,
-      };
-      const maxRiders = parseInt(document.getElementById('f-spots').value, 10);
-      if (maxRiders) ride.maxRiders = maxRiders;
-      const distance = parseInt(document.getElementById('f-distance').value, 10);
-      if (distance) ride.distance = distance;
-      const notes = document.getElementById('f-notes').value.trim();
-      if (notes) ride.notes = notes;
-
-      const flash = () => {
-        const notice = document.getElementById('save-notice');
-        notice.classList.add('show');
-        setTimeout(() => notice.classList.remove('show'), 2500);
-        cancelEdit();
-      };
-
-      if (key) {
-        // Update existing ride — use update() to preserve sub-collections (registrations, etc.)
-        db.ref('scheduledRides/' + key).update(ride)
-          .then(flash)
-          .catch(e => alert('Save failed: ' + e.message));
-      } else {
-        // Create new ride — set rideId to the push key, matching mod app convention
-        const newRef = db.ref('scheduledRides').push();
-        ride.rideId = newRef.key;
-        newRef.set(ride)
-          .then(flash)
-          .catch(e => alert('Save failed: ' + e.message));
-      }
-    };
-
-    window.editRide = key => {
-      const r = ridesCache[key];
-      if (!r) return;
-      document.getElementById('edit-key').value         = key;
-      document.getElementById('f-title').value          = r.rideName      || '';
-      document.getElementById('f-location').value       = r.meetingPoint  || '';
-      document.getElementById('f-destination').value    = r.destination   || '';
-      document.getElementById('f-distance').value       = r.distance      || '';
-      document.getElementById('f-date').value           = r.rideDate      || '';
-      document.getElementById('f-spots').value          = r.maxRiders     || '';
-      document.getElementById('f-emoji').value          = r.emoji         || '';
-      document.getElementById('f-type').value           = r.type          || 'general';
-      document.getElementById('f-status').value         = r.status        || 'scheduled';
-      document.getElementById('f-notes').value          = r.notes         || '';
-      document.getElementById('form-heading').textContent = 'Edit Ride';
-      document.getElementById('save-btn').textContent  = 'Save Changes';
-      document.getElementById('cancel-btn').style.display = '';
-      document.getElementById('form-heading').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    };
-
-    window.deleteRide = (key, title) => {
-      if (!confirm('Delete "' + title + '"? This cannot be undone.')) return;
-      db.ref().update({ ['scheduledRides/' + key]: null, ['rideContacts/' + key]: null })
-        .catch(e => alert('Delete failed: ' + e.message));
-    };
-
-    window.cancelEdit = () => {
-      document.getElementById('edit-key').value = '';
-      ['f-title','f-location','f-destination','f-distance','f-date','f-spots','f-emoji','f-notes'].forEach(id => {
-        document.getElementById(id).value = '';
-      });
-      document.getElementById('f-type').value   = 'ghats';
-      document.getElementById('f-status').value = 'scheduled';
-      document.getElementById('form-heading').textContent = 'Add New Ride';
-      document.getElementById('save-btn').textContent = 'Add Ride';
-      document.getElementById('cancel-btn').style.display = 'none';
-    };
-
-    // ── Registrations ──
-    let allRegs = [];
-
-    function loadRegistrations() {
-      allRegs = [];
-      Object.entries(ridesCache).forEach(([rideId, ride]) => {
-        const rideName = ride.rideName || rideId;
-        const contact = key => (contactsCache[rideId] || {})[key] || {};
-        Object.entries(ride.registrations || {}).forEach(([key, r]) => {
-          allRegs.push({ ...r, ...contact(key), name: r.name, _id: rideId + '/' + key, ride: rideName, timestamp: r.registeredAt || 0 });
-        });
-        Object.entries(ride.waitlist || {}).forEach(([key, r]) => {
-          allRegs.push({ ...r, ...contact(key), name: r.name, _id: rideId + '/waitlist/' + key, ride: rideName + ' (waitlist)', timestamp: r.joinedAt || 0 });
-        });
-      });
-      allRegs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-      filterRegs();
-    }
-
-    function updateRegRideFilter() {
-      const sel = document.getElementById('reg-filter-ride');
-      const current = sel.value;
-      const rides = [...new Set(allRegs.map(r => r.ride).filter(Boolean))];
-      sel.innerHTML = '<option value="">All rides</option>' +
-        rides.map(r => '<option value="' + escapeHtml(r) + '"' + (r === current ? ' selected' : '') + '>' + escapeHtml(r) + '</option>').join('');
-    }
-
-    window.filterRegs = () => {
-      const rideFilter = document.getElementById('reg-filter-ride').value.toLowerCase();
-      const search = document.getElementById('reg-search').value.toLowerCase();
-      const filtered = allRegs.filter(r => {
-        const rideMatch = !rideFilter || (r.ride || '').toLowerCase() === rideFilter;
-        const searchMatch = !search ||
-          (r.name || '').toLowerCase().includes(search) ||
-          (r.email || '').toLowerCase().includes(search) ||
-          (r.phone || '').toLowerCase().includes(search) ||
-          (r.instagram || '').toLowerCase().includes(search);
-        return rideMatch && searchMatch;
-      });
-      document.getElementById('reg-count').textContent = filtered.length + ' / ' + allRegs.length + ' registrations';
-      const tbody = document.getElementById('reg-tbody');
-      if (!filtered.length) {
-        tbody.innerHTML = '<tr><td colspan="6" class="reg-empty">' +
-          (allRegs.length ? 'No matches.' : 'No registrations yet.') + '</td></tr>';
-        return;
-      }
-      tbody.innerHTML = filtered.map(r => {
-        const d = r.timestamp ? new Date(r.timestamp).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : '—';
-        return '<tr>' +
-          '<td><strong>' + escapeHtml(r.name || '—') + '</strong></td>' +
-          '<td>' + escapeHtml(r.ride || '—') + '</td>' +
-          '<td>' + escapeHtml(r.phone || '—') + '</td>' +
-          '<td>' + escapeHtml(r.bike || '—') + '</td>' +
-          '<td>' + escapeHtml(r.instagram || '—') + '</td>' +
-          '<td style="white-space:nowrap;">' + d + '</td>' +
-        '</tr>';
-      }).join('');
-      updateRegRideFilter();
-    };
-
-  })();
-  </script>
+  <script type="module" src="assets/admin/admin-ui.js"></script>
 </body>
 </html>
